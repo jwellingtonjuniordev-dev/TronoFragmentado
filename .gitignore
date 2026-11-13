@@ -1,22 +1,32 @@
+# Godot caches
 .godot/
 .import/
+# Python caches and virtual environments
 __pycache__/
 *.py[cod]
 .venv/
 venv/
 .pytest_cache/
+# Local player and world data
 *.sqlite
 *.sqlite3
 *.sqlite3-*
 *.db
 *.db-*
+*.sqlite-wal
+*.sqlite-shm
+*.db-wal
+*.db-shm
 backups/
 data/
+# Secrets and local settings
 .env
 .env.*
 !.env.example
+# Editors and operating system
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+# Generated archives
 *.zip

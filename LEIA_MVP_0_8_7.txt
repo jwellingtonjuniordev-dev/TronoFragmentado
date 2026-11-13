@@ -1,0 +1,16 @@
+MVP 0.8.7 — Classes de combate (primeira fase)
+
+Abre o projeto Godot, carrega o John com N e prime K.
+Seleciona 5 Guerreiro, 6 Mago ou 7 Arqueiro.
+A classe e guardada no perfil SQLite do servidor.
+
+Guerreiro: +8 ATQ, +7 DEF; Golpe Arcano 165%.
+Mago: +3 ATQ, +1 DEF; Golpe Arcano 210%.
+Arqueiro: +6 ATQ, +3 DEF; Golpe Arcano 185%.
+
+Os bonus somam-se aos dos equipamentos e encantamentos.
+Esta e uma versao de testes: mudar classe e gratuito e reversivel.
+Ainda nao ha sprites, armas restritas nem habilidades exclusivas por classe.
+
+IMPORTANTE: faz backup da SQLite centralizada antes de iniciar.
+Nao substituas a base de dados do John.

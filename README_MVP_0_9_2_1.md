@@ -1,0 +1,1 @@
+Correção 0.9.2.1: clique esquerdo usa coordenadas do mundo (ecrã + deslocamento da câmara) para identificar qualquer monstro visível. Painel B bloqueia ataques no mapa. Mantém todas as funções e a base SQLite externa. Faz backup da base de dados. Testar no Godot localmente.

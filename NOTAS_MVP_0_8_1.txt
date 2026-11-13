@@ -1,0 +1,10 @@
+MVP 0.8.1 - Mochila de equipamentos individuais
+
+- Cada unidade de equipamento tem ID, nivel +0..+10 e encantamento proprio.
+- A mochila mostra cada equipamento numa entrada separada (roda do rato para navegar).
+- Clique esquerdo equipa a unidade especifica; clique direito perto do Ferreiro abre confirmacao de venda dessa unidade (quantidade 1).
+- O servidor valida o ID e impede equipar ou vender uma unidade inexistente.
+- O servidor reconcilia inventarios antigos ao carregar, sem substituir IDs existentes.
+
+ATENCAO: faz backup da base de dados SQLite ANTES de instalar. O ZIP nao contem a base de dados.
+Validacao: sintaxe Python compilada. Godot nao disponivel neste ambiente; testa a interface e as operacoes no jogo.

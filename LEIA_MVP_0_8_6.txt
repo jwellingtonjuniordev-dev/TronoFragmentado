@@ -1,0 +1,22 @@
+CRONICAS DO TRONO FRAGMENTADO - MVP 0.8.6
+
+BARRA DE HABILIDADES (versao inicial, sem classes ainda)
+
+1 - Ataque normal
+2 - Golpe Arcano (12 segundos de recarga, validada pelo servidor)
+3 - Pocao pequena
+4 - Ligar/desligar combate automatico
+
+Os quatro botoes tambem podem ser clicados com o rato.
+A barra aparece na parte inferior do mapa, acima do HUD.
+O Golpe Arcano mostra o tempo restante de recarga.
+
+Atalhos anteriores mantidos: ESPACO (ataque), R (Golpe Arcano), H (pocao), T (auto).
+Os antigos atalhos 1-4 de compra/equipamento foram substituidos pela barra;
+para comprar/equipar, utiliza os paineis de loja e inventario com o rato.
+
+NAO foi alterado o servidor nem o formato da base de dados.
+Mantem a tua SQLite centralizada e faz backup antes de substituir ficheiros.
+
+TESTES: ataque, Golpe Arcano, recarga, pocao, auto, clique nos botoes,
+loja, inventario, combate e persistencia.

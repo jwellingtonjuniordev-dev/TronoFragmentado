@@ -1,35 +1,45 @@
 # Crónicas do Trono Fragmentado
 
-**MMORPG original de fantasia medieval em desenvolvimento**, num universo de reinos fragmentados, alianças instáveis, ruínas ancestrais e a ameaça da Fenda. O projeto combina exploração, combate em tempo real, classes, talentos, profissões, crafting, missões e batalhas contra chefes, com apresentação 2.5D em pixel art detalhado.
+**MMORPG de fantasia medieval em desenvolvimento**, com um mundo original marcado por reinos fragmentados, alianças instáveis, ruínas ancestrais e a ameaça da Fenda. O projeto combina exploração, combate em tempo real, progressão de personagens, profissões, crafting, missões e batalhas contra chefes, numa apresentação 2.5D de pixel art detalhado inspirada na legibilidade dos RPGs clássicos.
 
-> **Estado atual:** protótipo jogável MVP 1.0.1; não é ainda um MMORPG completo.
+> Estado: protótipo jogável **MVP 1.0.1**; não é um MMORPG completo nem um lançamento de produção.
 
 ## Tecnologias
-- Cliente: Godot 4 / GDScript
-- Servidor: Python / FastAPI / WebSocket
-- Persistência: SQLite
-- Modelo: combate e recompensas validados pelo servidor
 
-## Funcionalidades implementadas
-- WASD, movimento e ataque por clique, pathfinding e combate automático
-- Guerreiro, Mago e Arqueiro, com habilidades, talentos e efeitos de estado
-- Lobos, saqueadores e Guardião das Ruínas com fases e ataques telegrafados
-- Missões com Tessa, exploração, baús, loot, ouro e XP
-- Inventário, equipamentos, crafting, encantamentos, profissões e recolha
-- MVP 1.0.1: missão introdutória **Ecos da Cripta do Sino Partido**, com investigação e progresso persistente
+- **Cliente:** Godot 4 / GDScript.
+- **Servidor:** Python / FastAPI / WebSocket.
+- **Persistência:** SQLite para personagens e estado local do mundo.
+- **Arquitetura:** servidor autoritativo para combate, movimento e recompensas.
+
+## Funcionalidades atuais
+
+- Movimento WASD, navegação por clique, seleção de alvos, perseguição e combate automático.
+- Três classes jogáveis: Guerreiro, Mago e Arqueiro, com habilidades, talentos e efeitos de estado.
+- Lobos, saqueadores e Guardião das Ruínas com fases, resistências e ataques telegrafados.
+- Missões com Tessa, exploração, baús, loot, experiência e progressão persistente.
+- Inventário, equipamento, forja, encantamentos, recolha de recursos e profissões.
+- **MVP 1.0.1:** início da linha narrativa da *Cripta do Sino Partido*, com investigação, caça e recompensa persistente.
 
 ## Executar localmente
-1. Instala Python 3.11+ e Godot 4.
-2. Na pasta `server`, executa `python -m pip install -r requirements.txt` e `python -m uvicorn main:app --host 127.0.0.1 --port 8000`.
-3. Abre `client/project.godot` no Godot e inicia o jogo.
-4. Teclas: **N** para carregar personagem, **E** para interagir, **Q** para diário.
 
-**Importante:** faz backup da SQLite antes de atualizar; não publiques dados reais nem credenciais.
+1. Instala **Python 3.11+** e **Godot 4**.
+2. No terminal, dentro de `server/`, instala as dependências do projeto (consulta `requirements.txt`).
+3. Inicia o servidor conforme `docs/INSTALACAO.md`.
+4. Abre `client/project.godot` no Godot e executa o projeto.
+5. Dentro do jogo, usa **N** para carregar o personagem pelo nome; **E** para interagir e **Q** para abrir o diário de missões.
+
+> **Dados pessoais:** a pasta de dados e ficheiros SQLite são excluídos do Git. Faz backup antes de atualizar.
 
 ## Documentação
-A distribuição do projeto contém `docs/INSTALACAO.md`, `docs/ARQUITETURA.md`, `docs/HISTORICO.md`, `docs/ROADMAP.md` e `docs/TESTES.md`.
 
-## Próximos passos
-Cripta do Sino Partido como dungeon instanciada, campanha de Valedouro, grupos, novas regiões, classes avançadas e preparação de infraestrutura segura para multiplayer.
+- [`docs/INSTALACAO.md`](docs/INSTALACAO.md): preparação e execução local.
+- [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md): responsabilidades do cliente, servidor e persistência.
+- [`docs/HISTORICO.md`](docs/HISTORICO.md): evolução e alterações.
+- [`docs/ROADMAP.md`](docs/ROADMAP.md): etapas futuras alinhadas com a Bíblia do Mundo.
+- [`docs/TESTES.md`](docs/TESTES.md): roteiro de validação.
 
-**Criador:** Wellington Júnior.
+## Universo e visão
+
+A campanha completa e as regiões futuras estão descritas nos documentos originais de conceção. O objetivo é evoluir o protótipo de Valedouro até um mundo persistente com dungeons, facções, classes avançadas e uma narrativa sobre os fragmentos do trono.
+
+**Desenvolvimento:** projeto original de Wellington Júnior. Código em evolução; funcionalidades podem mudar.

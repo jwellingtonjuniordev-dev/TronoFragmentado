@@ -1,0 +1,10 @@
+CRONICAS DO TRONO FRAGMENTADO — MVP 0.8.5
+GOLPE ARCANO (habilidade ativa inicial)
+- Tecla R: executa um golpe magico no monstro vivo mais proximo a ate 95 px.
+- Requer arma equipada. Dano: 160% do ataque normal, arredondado.
+- Recarga: 12 segundos, validada pelo servidor (nao pelo cliente).
+- Exibe GOLPE ARCANO! no alvo e o dano normal HIT.
+- A habilidade utiliza a rotina existente de morte/loot/XP/missoes.
+- Nao altera SQLite nem os itens existentes.
+- Testar no Godot e guardar backup da base de dados antes da troca.
+- Validacao feita: compilacao Python; Godot nao executado neste ambiente.

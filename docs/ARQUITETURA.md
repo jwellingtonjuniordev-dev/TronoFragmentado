@@ -1,9 +1,21 @@
-# Arquitetura
+# Arquitetura do protótipo
 
-Godot 4 (GDScript) comunica com FastAPI via WebSocket JSON. O servidor Python valida movimento, combate, efeitos de estado, recompensas e missões. A SQLite armazena personagens e mundo.
+```text
+Godot 4 (cliente) <-- WebSocket JSON --> FastAPI (servidor)
+                                            |
+                                            +--> simulação do mundo e combate
+                                            +--> validação de missões e recompensas
+                                            +--> SQLite (personagens e mundo)
+```
 
-- `client/scripts/main.gd`: interface, animações, input, navegação e representação de estado.
-- `server/main.py`: simulação autoritativa, validações, recompensas e persistência.
-- `server/requirements.txt`: dependências Python.
+## Cliente
+`client/scripts/main.gd` implementa apresentação do mundo, HUD, efeitos, input e envio de intenções. Não deve atribuir ouro, XP ou loot localmente.
 
-**Limites atuais:** protótipo local sem autenticação de produção, sem instâncias reais de dungeon e sem infraestrutura de escala. Não publicar o servidor na internet sem implementar segurança.
+## Servidor
+`server/main.py` mantém entidades, valida movimento, combate, interações, drops, fases de chefe e persistência. A implementação atual concentra funcionalidades num ficheiro e será modularizada progressivamente.
+
+## Persistência
+Personagens guardados por nome e estado serializado em SQLite. A evolução futura requer autenticação, sessões, migrações explícitas, transações e controlo de concorrência antes de disponibilizar servidores públicos.
+
+## Limites conhecidos
+Protótipo local sem autenticação robusta, escalabilidade, instâncias reais de dungeon ou pipeline de testes do Godot em CI. Não expor a porta do servidor diretamente na internet.
