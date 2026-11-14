@@ -1,17 +1,22 @@
-# MVP 1.0.4.4 — Respawn de monstros e mana
+# MVP 1.0.4.4 — Respawn de monstros e progressão de mana
 
-## Diagnóstico
-Na tarefa assíncrona `simulation()`, a variável local `distance` usada no movimento da Cripta ocultava a função global `distance(p, m)` utilizada pela IA do mundo. Isso podia terminar a simulação, impedindo o respawn dos monstros mesmo com o servidor ligado.
+## Causa do desaparecimento de monstros
+Na rotina `simulation()`, a variável local `distance` usada para a Cripta ocultava a função global `distance(p, m)` utilizada pela IA dos monstros do mundo. Isso podia interromper a tarefa assíncrona de simulação: os monstros deixavam de mover-se e reaparecer. Corrigido para `dungeon_distance`.
 
-## Alterações
-- Renomeada para `dungeon_distance` dentro da simulação.
-- Respawn de monstro sem posição segura tenta novamente em 3 segundos; recursos tentam novamente em 5 segundos.
-- Mana máxima cresce 1 MP por nível acima de 1 (100 MP no nível 1, 145 MP no nível 46).
-- Personagens existentes têm a capacidade sincronizada no carregamento, status e gravação.
-- HUD reorganizado: barra vermelha de vida, barra roxa de mana, barra azul de XP.
+## Robustez adicional
+- Se não houver posição segura para respawn, o monstro tenta novamente após três segundos, sem encerrar a simulação.
+- Se uma recolha não encontrar posição segura para renascer, tenta novamente após cinco segundos.
+- Monstros são partilhados no mundo entre personagens, mas reaparecem após o tempo normal (9 s para comuns, 180 s para o Guardião).
 
-## Validação
-Sintaxe Python compilada; simulação assíncrona com monstro morto e respawn validada; ZIP íntegro. Godot requer teste no Windows.
+## Mana
+- Cada nível acima de 1 acrescenta **1 MP máximo** (1% da mana base de 100 MP): nível 1 = 100, nível 46 = 145.
+- A atualização aplica-se também a personagens existentes ao carregar, preservando o valor atual de mana e adicionando a diferença de capacidade na primeira migração.
+- HUD: vida vermelha, mana roxa e XP azul, nessa ordem.
 
-## Publicação
-O ZIP completo foi entregue na conversa. O repositório remoto ainda contém código anterior; esta atualização de documentação **não** implica sincronização do código-fonte integral.
+## Testes
+- `python -m py_compile server/main.py`: passou.
+- Simulação assíncrona com um monstro morto e respawn após 1,3 s: passou.
+- Integração visual Godot: pendente de teste no Windows.
+
+## Instalação
+Faz backup de `data/characters.sqlite3` com o servidor parado. Substitui `server/main.py` e `client/scripts/main.gd` e reinicia servidor e cliente.

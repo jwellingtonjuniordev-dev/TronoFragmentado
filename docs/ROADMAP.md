@@ -17,3 +17,5 @@ Protótipo jogável em Valedouro, com cliente Godot, servidor Python, persistên
 - Recompensas concedidas pelo servidor, no máximo uma vez por objetivo.
 - Cliente e servidor testados em conjunto antes de marcar uma versão como aprovada.
 - Documentar limitações e funcionalidades ainda não implementadas.
+
+**Após 1.0.2:** transformar o painel tático em mapa interior navegável com inimigos, colisões e combate em tempo real.

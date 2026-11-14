@@ -88,6 +88,13 @@ var player_id := ""
 var players := {}
 var monsters := {}
 var profile := {}
+var dungeon_active := false
+var dungeon_stage := 0
+var dungeon_enemy_hp := 0
+var dungeon_pos := Vector2i(1, 2)
+var dungeon_enemy_pos := Vector2i(8, 2)
+var dungeon_enemy_name := "Esqueleto Errante"
+var dungeon_walk_timer := 0.0
 var notice := ""
 var guardian_banner := ""
 var guardian_banner_time := 0.0
@@ -243,6 +250,11 @@ var animation_time := 0.0
 var actor_motion: Dictionary = {}
 var actor_hurt: Dictionary = {}
 var attack_anim_left := 0.0
+# MVP 1.0.4.7: projectiles are cosmetic; hit confirmation comes from the server.
+var basic_projectiles: Array = []
+# MVP 1.0.4.8: impactos cosméticos de ataques básicos confirmados.
+var basic_impacts: Array = []
+var basic_attack_direction := Vector2.RIGHT
 var monster_attack_anim: Dictionary = {}
 const MONSTER_ATTACK_DURATION := 0.38
 
@@ -351,7 +363,12 @@ var nav_repath_cooldown := 0.0
 
 # MVP 0.5.6 - combate automatico (opt-in; servidor valida todos os golpes).
 const AUTO_DETECT_RANGE := 180.0
-const AUTO_ATTACK_RANGE := 57.0
+# Margem de 8 px abaixo do limite validado pelo servidor.
+func _basic_attack_stop_range() -> float:
+	match str(profile.get("combat_class", "Guerreiro")):
+		"Mago": return 117.0
+		"Arqueiro": return 142.0
+		_: return 57.0
 const AUTO_ATTACK_INTERVAL := 0.60
 const AUTO_REPATH_INTERVAL := 0.70
 var auto_combat := false
@@ -366,9 +383,7 @@ var auto_repath_elapsed := 0.0
 func _click_attack_update(delta: float, manual_movement: bool) -> void:
 	if click_attack_target_id == "" or not players.has(player_id):
 		return
-	if manual_movement:
-		click_attack_target_id = ""
-		return
+	# WASD controls movement, but does not suppress basic ranged attacks.
 	var enemy: Dictionary = monsters.get(click_attack_target_id, {})
 	if not bool(enemy.get("alive", false)):
 		click_attack_target_id = ""
@@ -377,13 +392,14 @@ func _click_attack_update(delta: float, manual_movement: bool) -> void:
 	var me: Dictionary = players[player_id]
 	var pos := Vector2(float(me.get("x", 0)), float(me.get("y", 0)))
 	var enemy_pos := Vector2(float(enemy.get("x", 0)), float(enemy.get("y", 0)))
-	if pos.distance_to(enemy_pos) <= AUTO_ATTACK_RANGE:
-		nav_active = false
+	if pos.distance_to(enemy_pos) <= _basic_attack_stop_range():
+		if not manual_movement:
+			nav_active = false
 		click_attack_elapsed -= delta
 		if click_attack_elapsed <= 0.0 and socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
 			click_attack_elapsed = 0.55
 			socket.send_text(JSON.stringify({"type":"attack", "target_id":click_attack_target_id}))
-	else:
+	elif not manual_movement:
 		auto_repath_elapsed -= delta
 		if auto_repath_elapsed <= 0.0 or not nav_active:
 			auto_repath_elapsed = 0.8
@@ -395,7 +411,7 @@ func _click_attack_update(delta: float, manual_movement: bool) -> void:
 			var best_goal := Vector2.ZERO
 			for i in range(16):
 				var angle := TAU * float(i) / 16.0
-				var candidate := enemy_pos + Vector2(cos(angle), sin(angle)) * 45.0
+				var candidate := enemy_pos + Vector2(cos(angle), sin(angle)) * maxf(45.0, _basic_attack_stop_range() - 12.0)
 				if _nav_blocked(candidate):
 					continue
 				var goal_cell := _nav_nearest_open(_nav_cell(candidate))
@@ -449,14 +465,13 @@ func _auto_update(delta: float, manual_movement: bool) -> void:
 		return
 	var target_pos := _auto_target_position()
 	var dist := pos.distance_to(target_pos)
-	if manual_movement or (manual_click_route and nav_active):
-		return
-	if dist <= AUTO_ATTACK_RANGE:
-		nav_active = false
+	if dist <= _basic_attack_stop_range():
+		if not manual_movement and not (manual_click_route and nav_active):
+			nav_active = false
 		if auto_attack_elapsed >= AUTO_ATTACK_INTERVAL:
 			auto_attack_elapsed = 0.0
-			socket.send_text(JSON.stringify({"type":"attack"}))
-	else:
+			socket.send_text(JSON.stringify({"type":"attack", "target_id":auto_target_id}))
+	elif not manual_movement and not (manual_click_route and nav_active):
 		auto_repath_elapsed -= delta
 		if auto_repath_elapsed <= 0.0:
 			auto_repath_elapsed = 1.1
@@ -470,7 +485,7 @@ func _auto_update(delta: float, manual_movement: bool) -> void:
 			# Search walkable points around the enemy, never its blocked body.
 			for i in range(16):
 				var angle := TAU * float(i) / 16.0
-				var candidate := target_pos + Vector2(cos(angle), sin(angle)) * 44.0
+				var candidate := target_pos + Vector2(cos(angle), sin(angle)) * maxf(44.0, _basic_attack_stop_range() - 12.0)
 				if _nav_blocked(candidate):
 					continue
 				var goal_cell := _nav_nearest_open(_nav_cell(candidate))
@@ -1182,6 +1197,14 @@ func _process(delta: float) -> void:
 	animation_time += delta
 	_refresh_actor_motion(delta)
 	attack_anim_left = maxf(0.0, attack_anim_left - delta)
+	for impact_index in range(basic_impacts.size() - 1, -1, -1):
+		basic_impacts[impact_index]["elapsed"] = float(basic_impacts[impact_index]["elapsed"]) + delta
+		if float(basic_impacts[impact_index]["elapsed"]) >= float(basic_impacts[impact_index]["duration"]):
+			basic_impacts.remove_at(impact_index)
+	for projectile_index in range(basic_projectiles.size() - 1, -1, -1):
+		basic_projectiles[projectile_index]["elapsed"] = float(basic_projectiles[projectile_index]["elapsed"]) + delta
+		if float(basic_projectiles[projectile_index]["elapsed"]) >= float(basic_projectiles[projectile_index]["duration"]):
+			basic_projectiles.remove_at(projectile_index)
 	for monster_key in monster_attack_anim.keys():
 		monster_attack_anim[monster_key] = maxf(0.0, float(monster_attack_anim[monster_key]) - delta)
 		if float(monster_attack_anim[monster_key]) <= 0.0:
@@ -1231,6 +1254,16 @@ func _process(delta: float) -> void:
 				_set_monsters(payload.get("monsters", []))
 			"profile":
 				profile = payload
+				dungeon_active = bool(payload.get("dungeon_active", false))
+				dungeon_stage = int(payload.get("dungeon_stage", 0))
+				dungeon_enemy_hp = int(payload.get("dungeon_enemy_hp", 0))
+				var crypt_cell: Array = payload.get("dungeon_pos", [1, 2])
+				if crypt_cell.size() >= 2:
+					dungeon_pos = Vector2i(int(crypt_cell[0]), int(crypt_cell[1]))
+				var enemy_cell: Array = payload.get("dungeon_enemy_pos", [8, 2])
+				if enemy_cell.size() >= 2:
+					dungeon_enemy_pos = Vector2i(int(enemy_cell[0]), int(enemy_cell[1]))
+				dungeon_enemy_name = str(payload.get("dungeon_enemy_name", "Inimigo"))
 				chest_server_clock_offset = float(payload.get("server_time", Time.get_unix_time_from_system())) - Time.get_unix_time_from_system()
 			"guardian_spawned":
 				guardian_banner = str(payload.get("text", "O GUARDIAO DAS RUINAS DESPERTOU!"))
@@ -1258,6 +1291,20 @@ func _process(delta: float) -> void:
 				if str(payload.get("attacker_id", "")) == player_id:
 					attack_flash_remaining = 0.16
 					attack_anim_left = 0.30
+					if players.has(player_id):
+						var attacker_data: Dictionary = players[player_id]
+						var attack_origin := Vector2(float(attacker_data.get("x", 0.0)), float(attacker_data.get("y", 0.0)))
+						var combat_class_name: String = str(profile.get("combat_class", "Guerreiro"))
+						basic_attack_direction = (hit_pos - attack_origin).normalized()
+						if basic_attack_direction.length_squared() < 0.01:
+							basic_attack_direction = Vector2.RIGHT
+						basic_impacts.append({"pos":hit_pos + Vector2(0, -25), "class":combat_class_name, "elapsed":0.0, "duration":0.38})
+						if basic_impacts.size() > 24:
+							basic_impacts.pop_front()
+						if combat_class_name == "Mago" or combat_class_name == "Arqueiro":
+							basic_projectiles.append({"from":attack_origin + Vector2(0, -28), "to":hit_pos + Vector2(0, -26), "class":combat_class_name, "elapsed":0.0, "duration":0.26})
+							if basic_projectiles.size() > 18:
+								basic_projectiles.pop_front()
 			"healing_effect":
 				var heal_at := Vector2(float(payload.get("x", 0.0)), float(payload.get("y", 0.0)))
 				_add_combat_effect(heal_at, "+%d HP" % int(payload.get("amount", 0)), Color("8dffac"), 1.3)
@@ -1365,9 +1412,28 @@ func _process(delta: float) -> void:
 	if not name_input.visible and _pressed_once(KEY_J):
 		if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
 			socket.send_text(JSON.stringify({"type":"use_mana_potion"}))
-	if not name_input.visible and _pressed_once(KEY_1):
+	var attack_key_pressed := _pressed_once(KEY_1)
+	var heal_key_pressed := _pressed_once(KEY_2)
+	var leave_key_pressed := _pressed_once(KEY_3)
+	if not dungeon_active and not name_input.visible and attack_key_pressed:
 		_hotbar_action(0)
-	if not name_input.visible and _pressed_once(KEY_2):
+	if not name_input.visible and _pressed_once(KEY_K) and not dungeon_active and socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
+		socket.send_text(JSON.stringify({"type":"dungeon_action","action":"enter"}))
+	if dungeon_active and not name_input.visible and socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
+		dungeon_walk_timer -= delta
+		if dungeon_walk_timer <= 0.0:
+			var crypt_dx := int(Input.is_physical_key_pressed(KEY_D)) - int(Input.is_physical_key_pressed(KEY_A))
+			var crypt_dy := int(Input.is_physical_key_pressed(KEY_S)) - int(Input.is_physical_key_pressed(KEY_W))
+			if abs(crypt_dx) + abs(crypt_dy) == 1:
+				dungeon_walk_timer = 0.15
+				socket.send_text(JSON.stringify({"type":"dungeon_action","action":"walk","dx":crypt_dx,"dy":crypt_dy}))
+		if attack_key_pressed:
+			socket.send_text(JSON.stringify({"type":"dungeon_action","action":"attack"}))
+		elif heal_key_pressed:
+			socket.send_text(JSON.stringify({"type":"dungeon_action","action":"heal"}))
+		elif leave_key_pressed:
+			socket.send_text(JSON.stringify({"type":"dungeon_action","action":"leave"}))
+	if not dungeon_active and not name_input.visible and heal_key_pressed:
 		_hotbar_action(1)
 	auto_attack_elapsed += delta
 	var manual_movement := Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_D)
@@ -1397,6 +1463,8 @@ func _process(delta: float) -> void:
 				direction = _nav_direction(delta)
 				if not nav_active:
 					manual_click_route = false
+			if dungeon_active:
+				direction = Vector2.ZERO
 			# Send zero vector too, to stop remote walk animation.
 			socket.send_text(JSON.stringify({"type": "move", "dx": direction.x, "dy": direction.y}))
 		if e_down and not was_e_down and players.has(player_id):
@@ -1607,15 +1675,19 @@ func _draw() -> void:
 		draw_arc(pulse_center, pulse_radius * pulse_fraction, 0.0, TAU, 64, Color(1.0, 0.90, 0.50, 0.88), 3.0)
 	_draw_gather_animations()
 	_draw_class_cast_fx()
+	_draw_basic_projectiles()
+	_draw_basic_impacts()
 	_draw_combat_effects()
 	if attack_flash_remaining > 0.0 and players.has(player_id):
 		var attacker: Dictionary = players[player_id]
 		var sword_pos := Vector2(float(attacker.get("x", 0.0)), float(attacker.get("y", 0.0)))
-		var intensity := clampf(attack_flash_remaining / 0.16, 0.0, 1.0)
-		draw_arc(sword_pos + Vector2(16, -22), 30.0, -1.6, 0.65, 20, Color(1.0, 0.90, 0.52, intensity), 4.0)
+		var intensity: float = clampf(attack_flash_remaining / 0.16, 0.0, 1.0)
+		_draw_basic_attack_fx(sword_pos, intensity)
 	draw_set_transform(Vector2.ZERO)
 	_draw_hud()
 	_draw_hotbar()
+	if dungeon_active:
+		_draw_crypt_dungeon()
 	if show_classes:
 		_draw_classes_panel()
 	if show_skill_tree:
@@ -2155,25 +2227,33 @@ func _draw_classes_panel() -> void:
 
 func _draw_hud() -> void:
 	var font := ThemeDB.fallback_font
-	draw_rect(Rect2(0,0,960,45),Color("172329",0.96))
-	draw_line(Vector2(0,44),Vector2(960,44),Color("c69a5c"),2)
-	draw_string(font,Vector2(16,29),"CRONICAS DO TRONO FRAGMENTADO   |   VALEDOURO",HORIZONTAL_ALIGNMENT_LEFT,-1,17,Color("f1d5a0"))
-	draw_rect(Rect2(0,538,960,102),Color("172329",0.95))
-	draw_line(Vector2(0,538),Vector2(960,538),Color("c69a5c"),2)
-	var hp := float(profile.get("hp",0))
-	var max_hp := maxf(1.0,float(profile.get("max_hp",1)))
-	var xp := float(profile.get("xp",0))
-	var xp_next := maxf(1.0,float(profile.get("xp_next",100)))
-	_bar(Rect2(15,550,220,16),hp/max_hp,Color("bb4d53"),"VIDA  %s / %s" % [str(int(hp)),str(int(max_hp))])
-	_bar(Rect2(15,574,220,12),xp/xp_next,Color("679cce"),"XP %s / %s" % [str(int(xp)),str(int(xp_next))])
-	draw_string(font, Vector2(15, 597), "MANA %d / %d" % [int(profile.get("mana", 100)), int(profile.get("max_mana", 100))], HORIZONTAL_ALIGNMENT_LEFT, 220, 12, Color("aabaff"))
-	draw_string(font,Vector2(252,565),"NIVEL %s  %s  OURO %s  LOBOS %s/3" % [str(profile.get("level",1)),str(profile.get("combat_class","Guerreiro")),str(profile.get("gold",0)),str(profile.get("kills",0))],HORIZONTAL_ALIGNMENT_LEFT,-1,15,Color("e9d49f"))
-	draw_string(font,Vector2(252,586),"WASD / DIREITO mover | ESQUERDO atacar | 1 Arcano 2 Classe | H vida J mana T auto | C classes B talentos | E falar I mochila M loja Q missoes P profissoes",HORIZONTAL_ALIGNMENT_LEFT,695,12,Color("d6e2dc"))
+	draw_rect(Rect2(0, 0, 960, 45), Color("172329", 0.96))
+	draw_line(Vector2(0, 44), Vector2(960, 44), Color("c69a5c"), 2)
+	draw_string(font, Vector2(16, 29), "CRONICAS DO TRONO FRAGMENTADO   |   VALEDOURO", HORIZONTAL_ALIGNMENT_LEFT, 928, 17, Color("f1d5a0"))
+	# Painel fixo: indicadores, atalhos e mensagens ocupam linhas independentes.
+	# O mundo continua clicavel apenas acima de y=538; nao alterar limites de input.
+	draw_rect(Rect2(0, 538, 960, 102), Color("172329", 0.98))
+	draw_line(Vector2(0, 538), Vector2(960, 538), Color("c69a5c"), 2)
+	var hp: float = float(profile.get("hp", 0))
+	var max_hp: float = maxf(1.0, float(profile.get("max_hp", 1)))
+	var xp: float = float(profile.get("xp", 0))
+	var xp_next: float = maxf(1.0, float(profile.get("xp_next", 100)))
+	var mana: float = float(profile.get("mana", 100))
+	var max_mana: float = maxf(1.0, float(profile.get("max_mana", 100)))
+	_bar(Rect2(15, 547, 220, 15), hp / max_hp, Color("bb4d53"), "VIDA %d / %d" % [int(hp), int(max_hp)])
+	_bar(Rect2(15, 567, 220, 15), mana / max_mana, Color("9663d4"), "MANA %d / %d" % [int(mana), int(max_mana)])
+	_bar(Rect2(15, 587, 220, 13), xp / xp_next, Color("679cce"), "XP %d / %d" % [int(xp), int(xp_next)])
+	draw_string(font, Vector2(252, 558), "NIVEL %s   %s   OURO %s   LOBOS %s/3" % [str(profile.get("level", 1)), str(profile.get("combat_class", "Guerreiro")), str(profile.get("gold", 0)), str(profile.get("kills", 0))], HORIZONTAL_ALIGNMENT_LEFT, 476, 14, Color("e9d49f"))
+	draw_string(font, Vector2(252, 577), "WASD mover | Clique atacar | 1 Arcano | 2 Classe | H Vida | J Mana | K Cripta", HORIZONTAL_ALIGNMENT_LEFT, 688, 11, Color("d6e2dc"))
+	draw_string(font, Vector2(252, 594), "T Auto | C Classes | B Talentos | E Falar | I Mochila | M Loja | Q Missoes | P Profissoes", HORIZONTAL_ALIGNMENT_LEFT, 688, 11, Color("d6e2dc"))
 	if auto_combat:
-		draw_string(font, Vector2(740, 566), "AUTO: ON", HORIZONTAL_ALIGNMENT_LEFT, 180, 13, Color("ffbd70"))
-	var connected := socket.get_ready_state() == WebSocketPeer.STATE_OPEN
-	draw_string(font,Vector2(15,611),("ONLINE" if connected else "SEM SERVIDOR") + "  |  " + notice,HORIZONTAL_ALIGNMENT_LEFT,920,13,Color("9fdeb6") if connected else Color("e3a0a0"))
-	draw_string(font,Vector2(15,632),npc_message,HORIZONTAL_ALIGNMENT_LEFT,920,13,Color("f4e8cf"))
+		draw_string(font, Vector2(760, 558), "AUTO: ON", HORIZONTAL_ALIGNMENT_LEFT, 180, 12, Color("ffbd70"))
+	# Separador impede que o texto verde invada a barra de XP.
+	draw_line(Vector2(15, 604), Vector2(945, 604), Color("53616b", 0.85), 1)
+	var connected: bool = socket.get_ready_state() == WebSocketPeer.STATE_OPEN
+	var status_text: String = ("ONLINE" if connected else "SEM SERVIDOR") + "  |  " + notice
+	draw_string(font, Vector2(15, 619), status_text, HORIZONTAL_ALIGNMENT_LEFT, 930, 12, Color("9fdeb6") if connected else Color("e3a0a0"))
+	draw_string(font, Vector2(15, 635), npc_message, HORIZONTAL_ALIGNMENT_LEFT, 930, 12, Color("f4e8cf"))
 
 func _bar(rect: Rect2, value: float, color: Color, title: String) -> void:
 	draw_rect(rect,Color("394247"))
@@ -2215,6 +2295,86 @@ func _draw_blacksmith() -> void:
 	draw_string(ThemeDB.fallback_font, pos + Vector2(-55, -76), "Ferreiro", HORIZONTAL_ALIGNMENT_CENTER, 110, 13, Color("ffe0a4"))
 
 
+# Ataques basicos: efeitos apenas visuais; dano e alcance continuam no servidor.
+# Ataques básicos orientados ao alvo, sem alterar dano ou colisão no servidor.
+func _draw_basic_attack_fx(pos: Vector2, intensity: float) -> void:
+	var combat_class: String = str(profile.get("combat_class", "Guerreiro"))
+	var center: Vector2 = pos + Vector2(0.0, -27.0)
+	var direction: Vector2 = basic_attack_direction
+	if direction.length_squared() < 0.01:
+		direction = Vector2.RIGHT
+	var angle: float = direction.angle()
+	if combat_class == "Mago":
+		var orb: Vector2 = center + direction * 25.0
+		var arcane: Color = Color(0.69, 0.43, 1.0, intensity)
+		draw_circle(orb, 10.0 + (1.0 - intensity) * 7.0, Color(0.52, 0.26, 0.96, intensity * 0.23))
+		draw_circle(orb, 5.0, arcane)
+		for i in range(4):
+			var a: float = float(i) * TAU / 4.0 + animation_time * 8.0
+			draw_circle(orb + Vector2(cos(a), sin(a)) * 13.0, 2.0, arcane)
+	elif combat_class == "Arqueiro":
+		var bow_center: Vector2 = center + direction * 14.0
+		var bow_side: Vector2 = direction.rotated(PI / 2.0)
+		var bow_top: Vector2 = bow_center + bow_side * 19.0
+		var bow_bottom: Vector2 = bow_center - bow_side * 19.0
+		var bow_front: Vector2 = bow_center + direction * 10.0
+		draw_line(bow_top, bow_front, Color(0.74, 0.52, 0.28, intensity), 3.0)
+		draw_line(bow_front, bow_bottom, Color(0.74, 0.52, 0.28, intensity), 3.0)
+		draw_line(bow_top, bow_bottom, Color(0.95, 0.92, 0.78, intensity), 1.5)
+		draw_line(center, center + direction * 46.0, Color(0.64, 0.98, 0.72, intensity), 2.5)
+	else:
+		var swing: float = 1.0 - intensity
+		var from_angle: float = angle - 1.15
+		var to_angle: float = from_angle + 2.35 * swing
+		var slash_center: Vector2 = center + direction * 18.0
+		draw_arc(slash_center, 34.0, from_angle, to_angle, 26, Color(1.0, 0.87, 0.48, intensity), 5.0)
+		draw_arc(slash_center, 40.0, from_angle, to_angle, 26, Color(1.0, 0.97, 0.72, intensity * 0.6), 2.0)
+
+# Efeito visual direcional de ataques basicos confirmados pelo servidor.
+func _draw_basic_projectiles() -> void:
+	for projectile in basic_projectiles:
+		var start: Vector2 = projectile["from"]
+		var target: Vector2 = projectile["to"]
+		var progress: float = clampf(float(projectile["elapsed"]) / maxf(0.01, float(projectile["duration"])), 0.0, 1.0)
+		var direction: Vector2 = (target - start).normalized()
+		if direction.length_squared() < 0.01:
+			direction = Vector2.RIGHT
+		var tip: Vector2 = start.lerp(target, progress)
+		var fade: float = clampf((1.0 - progress) * 3.0, 0.0, 1.0)
+		if str(projectile["class"]) == "Mago":
+			draw_line(tip - direction * 22.0, tip, Color(0.66, 0.38, 1.0, fade * 0.6), 6.0)
+			draw_circle(tip, 10.0, Color(0.57, 0.24, 1.0, fade * 0.25))
+			draw_circle(tip, 5.0, Color(0.84, 0.67, 1.0, fade))
+		else:
+			var tail: Vector2 = tip - direction * 25.0
+			draw_line(tail, tip, Color(0.77, 0.98, 0.67, fade), 3.0)
+			draw_line(tail, tail + direction.rotated(0.6) * 10.0, Color(0.43, 0.81, 0.49, fade), 2.0)
+			draw_line(tail, tail + direction.rotated(-0.6) * 10.0, Color(0.43, 0.81, 0.49, fade), 2.0)
+			draw_line(tip, tip - direction.rotated(0.7) * 10.0, Color(0.94, 0.96, 0.71, fade), 2.0)
+			draw_line(tip, tip - direction.rotated(-0.7) * 10.0, Color(0.94, 0.96, 0.71, fade), 2.0)
+
+# Impactos por classe; os números de dano continuam vindos do servidor.
+func _draw_basic_impacts() -> void:
+	for impact in basic_impacts:
+		var at: Vector2 = impact["pos"]
+		var progress: float = clampf(float(impact["elapsed"]) / maxf(0.01, float(impact["duration"])), 0.0, 1.0)
+		var alpha: float = 1.0 - progress
+		var radius: float = 6.0 + progress * 22.0
+		match str(impact["class"]):
+			"Mago":
+				draw_arc(at, radius, 0.0, TAU, 28, Color(0.75, 0.45, 1.0, alpha), 3.0)
+				for i in range(6):
+					var a: float = TAU * float(i) / 6.0 + progress
+					draw_circle(at + Vector2(cos(a), sin(a)) * radius, 2.5, Color(0.90, 0.72, 1.0, alpha))
+			"Arqueiro":
+				for i in range(4):
+					var a: float = TAU * float(i) / 4.0 + PI / 4.0
+					var ray: Vector2 = Vector2(cos(a), sin(a))
+					draw_line(at + ray * 4.0, at + ray * radius, Color(0.64, 0.98, 0.72, alpha), 2.5)
+			_:
+				draw_arc(at, radius, -2.5, 0.5, 20, Color(1.0, 0.82, 0.42, alpha), 4.0)
+				draw_line(at + Vector2(-radius * 0.5, -radius * 0.5), at + Vector2(radius * 0.5, radius * 0.5), Color(1.0, 0.95, 0.73, alpha), 2.0)
+
 func _draw_character(pos: Vector2, facing: String, walking: bool, label: String, npc: bool) -> void:
 	draw_ellipse_shadow(pos, 13.0)
 	var actor_key := "npc:tessa" if npc else ("p:" + player_id if label == "Tu" else "")
@@ -2227,7 +2387,7 @@ func _draw_character(pos: Vector2, facing: String, walking: bool, label: String,
 	if not npc and label == "Tu":
 		var equipment: Dictionary = profile.get("equipment", {})
 		var bob := sin(animation_time * 14.0) * 2.0 if walking else 0.0
-		if equipment.get("weapon") in ["Espada de cavaleiro", "Espada de aco do Guardiao", "Lamina real de Valedouro", "Espada de ferro", "Lamina de presas", "Espada ancestral", "Espada do saqueador"]:
+		if str(profile.get("combat_class", "Guerreiro")) == "Guerreiro" and equipment.get("weapon") in ["Espada de cavaleiro", "Espada de aco do Guardiao", "Lamina real de Valedouro", "Espada de ferro", "Lamina de presas", "Espada ancestral", "Espada do saqueador"]:
 			var swing := 1.0 - attack_anim_left / 0.30 if attack_anim_left > 0.0 else 0.0
 			var blade_tip := pos + Vector2(28,-43+bob)
 			if attack_anim_left > 0.0:
@@ -2242,7 +2402,8 @@ func _draw_character(pos: Vector2, facing: String, walking: bool, label: String,
 		# Equipamento visivel: cada categoria tem silhueta, material e detalhes proprios.
 		_draw_equipment_appearance(pos, equipment, bob)
 		_draw_enchantment_fx(pos, bob)
-		_draw_legendary_weapon_fx(pos, bob, equipment)
+		if str(profile.get("combat_class", "Guerreiro")) == "Guerreiro":
+			_draw_legendary_weapon_fx(pos, bob, equipment)
 	if npc:
 		draw_circle(pos + Vector2(0,-65), 9, Color("e6c46b"))
 		draw_string(ThemeDB.fallback_font,pos + Vector2(-3,-60),"!",HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color("463821"))
@@ -2329,7 +2490,7 @@ func _draw_equipment_appearance(pos: Vector2, equipment: Dictionary, bob: float)
 		draw_line(shield_center+Vector2(0,-shield_size+3),shield_center+Vector2(0,7),Color("f0d28c"),2.0)
 		if shield in ["Escudo reforcado de aco","Escudo da muralha"]:
 			draw_arc(shield_center+Vector2(0,-4),7,0.0,TAU,12,Color("f3d47d"),1.5)
-	if weapon != "":
+	if weapon != "" and str(profile.get("combat_class", "Guerreiro")) == "Guerreiro":
 		var tip: Vector2 = pos + Vector2(28,-43+bob)
 		var grip: Vector2 = pos + Vector2(18,-18+bob)
 		var blade_color: Color = Color("b3bdc7") if weapon in ["Espada de ferro","Lamina de presas"] else Color("d5e7f2") if weapon in ["Espada de cavaleiro","Espada de aco do Guardiao"] else Color("e6c66b") if weapon == "Lamina real de Valedouro" else Color("b8d5cc")
@@ -2397,3 +2558,47 @@ func _draw_monster(m: Dictionary) -> void:
 	draw_rect(Rect2(pos + Vector2(-bar_width / 2.0, bar_y), Vector2(bar_width * float(m.get("hp",0)) / maxf(1.0,float(m.get("max_hp",1))), 6)), Color("b47bda") if is_guardian else Color("70d47b"))
 	if not is_guardian:
 		draw_string(ThemeDB.fallback_font, pos + Vector2(-33, bar_y - 7), "Lobo" if is_wolf else "Saqueador", HORIZONTAL_ALIGNMENT_CENTER, 66, 12, Color.WHITE)
+
+# MVP 1.0.2: primeira instancia narrativa, com encontros validados pelo servidor.
+# MVP 1.0.3: mapa tatico exploravel, movimento por grelha e colisoes no servidor.
+func _draw_crypt_dungeon() -> void:
+	var panel := Rect2(100, 62, 760, 510)
+	draw_rect(panel, Color("10151e", 0.99))
+	draw_rect(panel, Color("b79b64"), false, 3.0)
+	var font := ThemeDB.fallback_font
+	var rooms := ["Vestibulo dos Ossos", "Galeria das Sentinelas", "Sala do Eco", "Guardiao do Sino"]
+	var stage := clampi(dungeon_stage, 0, 3)
+	draw_string(font, Vector2(125, 96), "CRIPTA DO SINO PARTIDO", HORIZONTAL_ALIGNMENT_LEFT, 700, 23, Color("f1d9a4"))
+	draw_string(font, Vector2(125, 124), "Sala %d/4 - %s" % [stage+1, rooms[stage]], HORIZONTAL_ALIGNMENT_LEFT, 700, 16, Color("c9e4e2"))
+	var cell_size := 48.0
+	var origin := Vector2(195, 151)
+	var blocks := [Vector2i(4,1), Vector2i(4,3), Vector2i(7,1), Vector2i(7,3)]
+	for yy in range(5):
+		for xx in range(10):
+			var cell := Vector2i(xx, yy)
+			var r := Rect2(origin + Vector2(xx, yy)*cell_size, Vector2(cell_size-2, cell_size-2))
+			var floor_color := Color("323e49") if (xx+yy)%2 == 0 else Color("3a4750")
+			if cell in blocks:
+				floor_color = Color("6e645d")
+			draw_rect(r, floor_color)
+			if cell in blocks:
+				draw_rect(r.grow(-8), Color("999080"), false, 3.0)
+			if cell == dungeon_enemy_pos:
+				draw_circle(r.get_center(), 15.0, Color("a33e4e"))
+				draw_circle(r.get_center()+Vector2(0,-4), 7.0, Color("e3b9a0"))
+			if cell == dungeon_pos:
+				draw_circle(r.get_center(), 15.0, Color("5bbdd3"))
+				draw_circle(r.get_center()+Vector2(0,-5), 7.0, Color("d6ebf0"))
+	var crypt_distance: int = absi(dungeon_pos.x - dungeon_enemy_pos.x) + absi(dungeon_pos.y - dungeon_enemy_pos.y)
+	var in_attack_range: bool = crypt_distance <= 2
+	var range_text: String = "ALCANCE OK - [1] ATACAR" if in_attack_range else "FORA DE ALCANCE - aproxima-te (distancia %d; max. 2)" % crypt_distance
+	draw_string(font, Vector2(125, 393), range_text, HORIZONTAL_ALIGNMENT_LEFT, 720, 16, Color("a6f4b5") if in_attack_range else Color("ffc18d"))
+	var enemy_max: int = [90, 140, 190, 260][stage]
+	var bar := Rect2(270, 416, 400, 14)
+	draw_rect(bar, Color("382a33"))
+	draw_rect(Rect2(bar.position, Vector2(bar.size.x*clampf(float(dungeon_enemy_hp)/float(enemy_max),0.0,1.0),bar.size.y)),Color("c75b60"))
+	draw_rect(bar, Color("e4c7a2"),false,1.0)
+	draw_string(font, Vector2(270, 410), "%s: %d/%d HP" % [dungeon_enemy_name, dungeon_enemy_hp, enemy_max], HORIZONTAL_ALIGNMENT_LEFT, 450, 15, Color("ffb1a3"))
+	draw_string(font, Vector2(125, 471), "WASD MOVER   [1] ATACAR (ate 2 casas)   [2] POCAO   [3] SAIR", HORIZONTAL_ALIGNMENT_LEFT, 720, 15, Color("d5f0cb"))
+	draw_string(font, Vector2(125, 503), "O inimigo persegue-te! Usa os pilares para contornar e evita ficar adjacente.", HORIZONTAL_ALIGNMENT_LEFT, 720, 13, Color("bac4c4"))
+	draw_string(font, Vector2(125, 533), "Ao vencer, avancas automaticamente para a sala seguinte | [3] sair", HORIZONTAL_ALIGNMENT_LEFT, 720, 12, Color("bac4c4"))

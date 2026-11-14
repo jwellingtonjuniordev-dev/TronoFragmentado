@@ -1,18 +1,21 @@
-# MVP 1.0.4.3 — Progressão automática na Cripta
+# MVP 1.0.4.3 — Progressão automática entre salas da Cripta
 
-## Causa confirmada
-Um herói de nível elevado derrota o Esqueleto Errante (90 HP) com um golpe. O servidor definia `dungeon_active = False` após **qualquer** sala concluída, fazendo desaparecer o painel. O jogador interpretava o encerramento como falha de ataque.
+## Diagnóstico
+Ao pressionar 1 perto do Esqueleto Errante, um herói de nível elevado derrota o inimigo com um golpe. O servidor definia `dungeon_active = False` depois de **cada** vitória, fechando o painel e obrigando a pressionar K novamente. Isso parecia uma falha de ataque.
 
 ## Correção
-- Salas 1, 2 e 3: o painel mantém-se aberto e a próxima sala inicia automaticamente.
-- O herói e o inimigo são reposicionados; o inimigo recebe a vida da nova etapa e o temporizador de ataque reinicia.
-- A Cripta fecha apenas na vitória final (sala 4) ou ao escolher sair (3).
-- Recompensa única e progressão individual são preservadas, sem alteração de SQLite.
+- O servidor mantém `dungeon_active = True` ao vencer as salas 1, 2 e 3.
+- A sala seguinte começa automaticamente, com John em [1,2], novo inimigo em [8,2], HP correspondente à etapa e temporizador de ataque reiniciado.
+- A Cripta só fecha ao concluir a sala 4 ou ao pressionar 3.
+- A recompensa única da sala final continua protegida contra duplicação.
+- O texto da interface indica a passagem automática entre salas.
+- A progressão da dungeon permanece independente por personagem e não requer migração SQLite.
 
-## Validação
-- Compilação Python: OK.
-- Integração WebSocket (FastAPI TestClient): quatro vitórias consecutivas, transição automática e fecho apenas na quarta sala: OK.
-- Integridade do ZIP: OK.
-- Teste visual Godot: pendente.
+## Testes
+- Compilação Python: passou.
+- Teste de integração WebSocket com FastAPI TestClient: passou nas quatro salas, incluindo transições e fecho final.
+- Integridade ZIP: passou.
+- Godot: validação visual pendente no computador do jogador.
 
-**Código corrigido:** entregue no ZIP MVP 1.0.4.3; publicação integral do código no GitHub ainda não confirmada.
+## Instalação
+Faz backup de `data/characters.sqlite3` com o servidor parado. Substitui `mvp/server/main.py` e `mvp/client/scripts/main.gd` pela versão atualizada. Reinicia o servidor e o Godot.

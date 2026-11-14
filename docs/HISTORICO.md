@@ -1,3 +1,8 @@
+## MVP 1.0.4.4 — Respawn e mana
+- Corrigido erro de escopo na simulação de monstros.
+- Recuperação segura de spawns e recursos.
+- Mana máxima +1 por nível e barra roxa acima da barra de XP.
+
 # Histórico de desenvolvimento
 
 ## MVP 1.0.1 — Ecos da Cripta do Sino Partido

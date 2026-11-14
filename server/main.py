@@ -1,5 +1,6 @@
 """MVP 0.3 - authoritative demo combat, quests and loot; in-memory, not production auth."""
 import asyncio
+import copy
 import json
 import math
 import heapq
@@ -232,7 +233,8 @@ def init_db():
         db.execute('CREATE TABLE IF NOT EXISTS characters (name TEXT PRIMARY KEY, data TEXT NOT NULL)')
 
 def save_character(p):
-    fields = ('hp','max_hp','level','xp','gold','inventory','quest','kills','equipment','name','opened_chests','chest_cooldowns','forest_quest','forest_quest_chests','guardian_quest','guardian_quest_kills','crypt_quest','crypt_raiders','gather_cooldowns','gather_positions','professions','subclass_tool','upgrade_levels','gear_bag','gear_equipped','gear_migrated','combat_class','mana','max_mana','mana_potion_starter','skill_mastery','skill_tree')
+    sync_level_mana(p)
+    fields = ('hp','max_hp','level','xp','gold','inventory','quest','kills','equipment','name','opened_chests','chest_cooldowns','forest_quest','forest_quest_chests','guardian_quest','guardian_quest_kills','crypt_quest','crypt_raiders','dungeon_stage','dungeon_claimed','gather_cooldowns','gather_positions','professions','subclass_tool','upgrade_levels','gear_bag','gear_equipped','gear_migrated','combat_class','mana','max_mana','mana_potion_starter','skill_mastery','skill_tree')
     data = {k:p[k] for k in fields}
     with sqlite3.connect(DB_PATH) as db:
         db.execute('INSERT INTO characters(name,data) VALUES(?,?) ON CONFLICT(name) DO UPDATE SET data=excluded.data', (p['name'],json.dumps(data)))
@@ -444,14 +446,23 @@ def public_monsters():
 def public_player(p):
     return {k: p[k] for k in ('id', 'x', 'y', 'hp', 'max_hp', 'level', 'facing', 'walking', 'equipment')}
 
+def sync_level_mana(p):
+    """One additional max MP per level above 1 (1% of base 100 MP)."""
+    target = 100 + max(0, int(p.get('level', 1)) - 1)
+    old_max = max(1, int(p.get('max_mana', 100)))
+    old_mana = max(0, int(p.get('mana', old_max)))
+    p['max_mana'] = target
+    p['mana'] = min(target, old_mana + max(0, target - old_max))
+
 async def status(pid):
     p = players.get(pid)
     if p:
+        sync_level_mana(p)
         await send(pid, {'type': 'profile', 'hp': p['hp'], 'max_hp': p['max_hp'],
                          'level': p['level'], 'xp': p['xp'], 'xp_next': p['level']*100,
                          'gold': p['gold'], 'mana':p.get('mana',100), 'max_mana':p.get('max_mana',100), 'inventory': p['inventory'],
                          'quest': p['quest'], 'kills': p['kills'], 'equipment':p['equipment'],
-                         'name':p['name'], 'combat_class':p.get('combat_class','Guerreiro'), 'skill_mastery':p.get('skill_mastery',{}), 'skill_tree':p.get('skill_tree',{}), 'opened_chests':p.get('opened_chests', []), 'chest_cooldowns':p.get('chest_cooldowns', {}), 'forest_quest':p.get('forest_quest', 'locked'), 'forest_quest_chests':p.get('forest_quest_chests', []), 'guardian_quest':p.get('guardian_quest','locked'), 'guardian_quest_kills':p.get('guardian_quest_kills',0), 'crypt_quest':p.get('crypt_quest','locked'), 'crypt_raiders':p.get('crypt_raiders',0), 'gather_cooldowns':p.get('gather_cooldowns', {}), 'subclass_tool':p.get('subclass_tool'), 'upgrade_levels':p.get('upgrade_levels',{}), 'gear_equipped':p.get('gear_equipped',{}), 'gear_bag':p.get('gear_bag',[]), 'professions':{k:profession_progress(int(p.get('professions', {}).get(k, 0))) for k in ('lenhador','mineiro','herbalista')}, 'resource_nodes':available_nodes(p), 'server_time':time.time(), 'attack':17+p['level']*3+bonuses(p)[0], 'defense':bonuses(p)[1]})
+                         'name':p['name'], 'combat_class':p.get('combat_class','Guerreiro'), 'skill_mastery':p.get('skill_mastery',{}), 'skill_tree':p.get('skill_tree',{}), 'opened_chests':p.get('opened_chests', []), 'chest_cooldowns':p.get('chest_cooldowns', {}), 'forest_quest':p.get('forest_quest', 'locked'), 'forest_quest_chests':p.get('forest_quest_chests', []), 'guardian_quest':p.get('guardian_quest','locked'), 'guardian_quest_kills':p.get('guardian_quest_kills',0), 'crypt_quest':p.get('crypt_quest','locked'), 'crypt_raiders':p.get('crypt_raiders',0), 'dungeon_stage':p.get('dungeon_run_stage',p.get('dungeon_stage',0)) if p.get('dungeon_active') else p.get('dungeon_stage',0), 'dungeon_claimed':p.get('dungeon_claimed',False), 'dungeon_active':p.get('dungeon_active',False), 'dungeon_enemy_hp':p.get('dungeon_enemy_hp',0), 'dungeon_pos':p.get('dungeon_pos',[1,2]), 'dungeon_enemy_pos':p.get('dungeon_enemy_pos',[8,2]), 'dungeon_enemy_name':CRYPT_NAMES[min(3,max(0,int(p.get('dungeon_run_stage',p.get('dungeon_stage',0)))))], 'gather_cooldowns':p.get('gather_cooldowns', {}), 'subclass_tool':p.get('subclass_tool'), 'upgrade_levels':p.get('upgrade_levels',{}), 'gear_equipped':p.get('gear_equipped',{}), 'gear_bag':p.get('gear_bag',[]), 'professions':{k:profession_progress(int(p.get('professions', {}).get(k, 0))) for k in ('lenhador','mineiro','herbalista')}, 'resource_nodes':available_nodes(p), 'server_time':time.time(), 'attack':17+p['level']*3+bonuses(p)[0], 'defense':bonuses(p)[1]})
 
 # MVP 0.9.7: vantagens e resistencias calculadas exclusivamente no servidor.
 # Multiplicadores aplicam-se apenas as habilidades exclusivas de classe.
@@ -505,6 +516,34 @@ async def award_monster_kill(pid, p, m):
     await status(pid)
     save_character(p)
 
+# MVP 1.0.4: IA tática da Cripta, simulada pelo servidor.
+CRYPT_BLOCKS = {(4, 1), (4, 3), (7, 1), (7, 3)}
+CRYPT_MAX_HP = (90, 140, 190, 260)
+CRYPT_NAMES = ('Esqueleto Errante', 'Sentinela Ossuda', 'Eco Corrompido', 'Guardiao do Sino')
+
+def crypt_valid(cell):
+    return 0 <= cell[0] < 10 and 0 <= cell[1] < 5 and tuple(cell) not in CRYPT_BLOCKS
+
+def crypt_next_step(start, target):
+    # BFS evita pilares, sem atravessar paredes nem o jogador.
+    from collections import deque
+    start, target = tuple(start), tuple(target)
+    queue = deque([start]); previous = {start: None}
+    while queue:
+        cell = queue.popleft()
+        if cell == target:
+            break
+        for delta in ((1,0),(-1,0),(0,1),(0,-1)):
+            nxt = (cell[0]+delta[0], cell[1]+delta[1])
+            if nxt not in previous and crypt_valid(nxt):
+                previous[nxt] = cell; queue.append(nxt)
+    if target not in previous:
+        return start
+    current = target
+    while previous[current] is not None and previous[current] != start:
+        current = previous[current]
+    return current
+
 async def simulation():
     tick_count = 0
     while True:
@@ -514,7 +553,12 @@ async def simulation():
         for resource in RESOURCE_WORLD.values():
             if resource['ready_at'] and resource['ready_at'] <= time.time():
                 old=(resource['x'],resource['y'])
-                nx,ny=random_resource_position(resource['radius'],previous=old)
+                try:
+                    nx,ny=random_resource_position(resource['radius'],previous=old)
+                except RuntimeError:
+                    # Try again later instead of stopping monster respawns.
+                    resource['ready_at'] = time.time() + 5.0
+                    continue
                 resource.update(x=nx,y=ny,ready_at=0.)
                 world_changed=True
         if world_changed:
@@ -524,11 +568,38 @@ async def simulation():
                 if active_pid in players:
                     await status(active_pid)
         now = time.monotonic()
+        # A cada 0.4 s, cada inimigo da Cripta aproxima-se do heroi.
+        # Ataques tem intervalo independente do movimento.
+        if tick_count % 2 == 0:
+            for active_pid, hero in list(players.items()):
+                if not hero.get('dungeon_active') or active_pid not in connections:
+                    continue
+                stage = int(hero.get('dungeon_run_stage', hero.get('dungeon_stage', 0)))
+                if stage >= 4 or hero.get('hp', 0) <= 0:
+                    continue
+                hero_pos = tuple(hero.get('dungeon_pos', [1,2]))
+                enemy_pos = tuple(hero.get('dungeon_enemy_pos', [8,2]))
+                dungeon_distance = abs(hero_pos[0]-enemy_pos[0])+abs(hero_pos[1]-enemy_pos[1])
+                if dungeon_distance > 1:
+                    step = crypt_next_step(enemy_pos, hero_pos)
+                    if step != hero_pos and step != enemy_pos:
+                        hero['dungeon_enemy_pos'] = list(step)
+                elif now >= float(hero.get('dungeon_enemy_next_hit', 0.)):
+                    damage = (5, 8, 11, 16)[min(stage,3)]
+                    hero['hp'] = max(1, int(hero['hp']) - damage)
+                    hero['dungeon_enemy_next_hit'] = now + (1.8 if stage < 3 else 1.25)
+                    await send(active_pid, {'type':'notice','text':f'{CRYPT_NAMES[stage]} atacou: -{damage} HP.'})
+                await status(active_pid)
         changed = False
         for m in monsters.values():
             if not m['alive']:
                 if now >= m['respawn_at']:
-                    x, y = safe_spawn(m['home_x'], m['home_y'], m['kind'], ignore_id='monster:'+m['id'])
+                    try:
+                        x, y = safe_spawn(m['home_x'], m['home_y'], m['kind'], ignore_id='monster:'+m['id'])
+                    except RuntimeError:
+                        # A temporarily crowded spawn area must never stop the entire world loop.
+                        m['respawn_at'] = now + 3.0
+                        continue
                     m.update(x=x, y=y, hp=m['max_hp'], alive=True, route=[], next_route_at=0., last_special=now, effects={}, boss_phase=1, pulse_warning=None)
                     changed = True
                     if m['kind'] == 'guardiao':
@@ -660,11 +731,12 @@ async def socket(ws: WebSocket):
     p = {'id':pid, 'x':480., 'y':360., 'hp':100, 'max_hp':100, 'level':1, 'xp':0,
          'gold':0, 'inventory':{}, 'quest':'not_started', 'kills':0,
          'facing':'down', 'walking':False, 'last_attack':0.,
-         'name':'', 'equipment':dict(DEFAULT_EQUIPMENT), 'opened_chests':[], 'chest_cooldowns':{}, 'forest_quest':'locked', 'forest_quest_chests':[], 'guardian_quest':'locked', 'guardian_quest_kills':0, 'crypt_quest':'locked', 'crypt_raiders':0, 'gather_cooldowns':{}, 'gather_positions':{}, 'professions':{'lenhador':0,'mineiro':0,'herbalista':0}, 'subclass_tool':None, 'upgrade_levels':{}, 'gear_bag':[], 'gear_equipped':{}, 'gear_migrated':False, 'combat_class':'Guerreiro', 'mana':100, 'max_mana':100, 'mana_potion_starter':False, 'skill_mastery':{}, 'skill_tree':{}}
+         'name':'', 'equipment':dict(DEFAULT_EQUIPMENT), 'opened_chests':[], 'chest_cooldowns':{}, 'forest_quest':'locked', 'forest_quest_chests':[], 'guardian_quest':'locked', 'guardian_quest_kills':0, 'crypt_quest':'locked', 'crypt_raiders':0, 'dungeon_stage':0, 'dungeon_claimed':False, 'gather_cooldowns':{}, 'gather_positions':{}, 'professions':{'lenhador':0,'mineiro':0,'herbalista':0}, 'subclass_tool':None, 'upgrade_levels':{}, 'gear_bag':[], 'gear_equipped':{}, 'gear_migrated':False, 'combat_class':'Guerreiro', 'mana':100, 'max_mana':100, 'mana_potion_starter':False, 'skill_mastery':{}, 'skill_tree':{}}
     for candidate in [(480.,360.), (480.,395.), (440.,395.), (520.,395.), (480.,430.), (440.,430.)]:
         if not blocked(*candidate, ignore_id=pid):
             p['x'],p['y'] = candidate
             break
+    fresh_hero_template = copy.deepcopy(p)
     connections[pid], players[pid] = ws, p
     await send(pid, {'type':'welcome','id':pid,'players':[public_player(v) for v in players.values()],
                      'monsters':public_monsters()})
@@ -683,9 +755,14 @@ async def socket(ws: WebSocket):
                     await send(pid,{'type':'notice','text':'Nome: 3-20 letras/numeros/underscore.'}); continue
                 if any(other['name']==name for other in players.values() if other['id']!=pid):
                     await send(pid,{'type':'notice','text':'Esse heroi ja esta ligado.'}); continue
+                # Trocar de nome nunca deve herdar atributos do heroi anterior.
+                if p.get('name') and p['name'] != name:
+                    save_character(p)
+                p.clear()
+                p.update(copy.deepcopy(fresh_hero_template))
                 data = load_character(name)
                 if data:
-                    p.update({k:v for k,v in data.items() if k in ('hp','max_hp','level','xp','gold','inventory','quest','kills','equipment','name','opened_chests','chest_cooldowns','forest_quest','forest_quest_chests','guardian_quest','guardian_quest_kills','crypt_quest','crypt_raiders','gather_cooldowns','gather_positions','professions','subclass_tool','upgrade_levels','gear_bag','gear_equipped','gear_migrated','combat_class','mana','max_mana','mana_potion_starter','skill_mastery','skill_tree')})
+                    p.update({k:v for k,v in data.items() if k in ('hp','max_hp','level','xp','gold','inventory','quest','kills','equipment','name','opened_chests','chest_cooldowns','forest_quest','forest_quest_chests','guardian_quest','guardian_quest_kills','crypt_quest','crypt_raiders','dungeon_stage','dungeon_claimed','gather_cooldowns','gather_positions','professions','subclass_tool','upgrade_levels','gear_bag','gear_equipped','gear_migrated','combat_class','mana','max_mana','mana_potion_starter','skill_mastery','skill_tree')})
                     p['equipment']={**DEFAULT_EQUIPMENT,**p.get('equipment',{})}
                 else:
                     p['name']=name
@@ -698,6 +775,7 @@ async def socket(ws: WebSocket):
                 if not p.get('mana_potion_starter', False):
                     p['inventory']['Pocao de mana'] = p['inventory'].get('Pocao de mana', 0) + 5
                     p['mana_potion_starter'] = True
+                sync_level_mana(p)
                 migrate_gear(p)
                 save_character(p)
                 await send(pid,{'type':'notice','text':f'Heroi {name} carregado e guardado.'})
@@ -953,10 +1031,106 @@ async def socket(ws: WebSocket):
                     await send(pid, {'type':'smith_dialog', 'name':'Ferreiro', 'text':'Bem-vindo a minha forja! Queres comprar, vender ou fabricar equipamentos e pocoes?'})
                 else:
                     await send(pid, {'type':'notice', 'text':'Aproxima-te do Ferreiro para conversar.'})
+            elif kind == 'dungeon_action':
+                # Instancia narrativa individual: validacao e recompensas no servidor.
+                # O estado do encontro e efemero; progresso entre salas e unico por heroi.
+                action = str(msg.get('action',''))
+                stage = int(p.get('dungeon_run_stage',p.get('dungeon_stage',0))) if p.get('dungeon_active') else int(p.get('dungeon_stage',0))
+                if not p.get('name') or p.get('crypt_quest') != 'completed':
+                    await send(pid, {'type':'notice','text':'Conclui primeiro Ecos da Cripta com Tessa.'})
+                    continue
+                if action == 'enter':
+                    if math.hypot(p['x']-1500.,p['y']-1040.) > 175.:
+                        await send(pid, {'type':'notice','text':'Aproxima-te do portal da Cripta para entrar.'})
+                        continue
+                    if stage >= 4:
+                        # Nova expedicao: reinicia as salas, mas nao o premio unico.
+                        stage = 0
+                        p['dungeon_run_stage'] = 0
+                        await send(pid, {'type':'notice','text':'Nova expedicao! A recompensa unica ja foi recebida.'})
+                    else:
+                        p['dungeon_run_stage'] = stage
+                    p['dungeon_active'] = True
+                    p['dungeon_pos'] = [1, 2]
+                    p['dungeon_enemy_pos'] = [8, 2]
+                    p['dungeon_enemy_next_hit'] = time.monotonic() + 1.8
+                    p['dungeon_enemy_hp'] = [90, 140, 190, 260][max(0,min(stage,3))]
+                    await send(pid, {'type':'notice','text':'Entraste na Cripta. WASD para explorar; aproxima-te do inimigo. 1 atacar, 2 curar, 3 sair.'})
+                elif action == 'leave':
+                    p['dungeon_active'] = False
+                    await send(pid, {'type':'notice','text':'Saíste da Cripta. O progresso entre salas foi guardado.'})
+                elif action == 'walk':
+                    if not p.get('dungeon_active') or stage >= 4:
+                        continue
+                    dx, dy = int(msg.get('dx',0)), int(msg.get('dy',0))
+                    if abs(dx)+abs(dy) != 1:
+                        continue
+                    # Corredor por sala: 10 x 5. Os pilares bloqueiam a passagem.
+                    blocks = CRYPT_BLOCKS
+                    old = p.get('dungeon_pos',[1,2])
+                    nx,ny = int(old[0])+dx,int(old[1])+dy
+                    if 0 <= nx < 10 and 0 <= ny < 5 and (nx,ny) not in blocks and (nx,ny) != tuple(p.get('dungeon_enemy_pos',[8,2])):
+                        p['dungeon_pos'] = [nx,ny]
+                    await status(pid)
+                elif action in ('attack','heal'):
+                    if not p.get('dungeon_active') or stage >= 4 or p.get('hp',0) <= 0:
+                        continue
+                    if action == 'heal':
+                        if p['inventory'].get('Pocao pequena',0) < 1:
+                            await send(pid, {'type':'notice','text':'Sem pocoes pequenas para curar.'})
+                            continue
+                        p['inventory']['Pocao pequena'] -= 1
+                        p['hp'] = min(p['max_hp'],p['hp']+40)
+                    else:
+                        cell = p.get('dungeon_pos',[1,2])
+                        enemy_cell = p.get('dungeon_enemy_pos',[8,2])
+                        dungeon_distance = abs(int(cell[0])-int(enemy_cell[0]))+abs(int(cell[1])-int(enemy_cell[1]))
+                        if dungeon_distance > 2:
+                            await send(pid, {'type':'notice','text':f'Fora de alcance: {dungeon_distance} casas. Aproxima-te ate 2 casas e pressiona 1.'})
+                            continue
+                        damage = max(12, 12 + p['level']*2 + bonuses(p)[0])
+                        p['dungeon_enemy_hp'] = max(0, int(p.get('dungeon_enemy_hp',90))-damage)
+                    if int(p.get('dungeon_enemy_hp',0)) <= 0:
+                        stage += 1
+                        p['dungeon_run_stage'] = stage
+                        if not p.get('dungeon_claimed',False):
+                            p['dungeon_stage'] = stage
+                        # Keep the tactical dungeon open between rooms. The hero
+                        # only exits after the fourth victory or by pressing 3.
+                        if stage < 4:
+                            p['dungeon_active'] = True
+                            p['dungeon_pos'] = [1, 2]
+                            p['dungeon_enemy_pos'] = [8, 2]
+                            p['dungeon_enemy_hp'] = [90, 140, 190, 260][stage]
+                            p['dungeon_enemy_next_hit'] = time.monotonic() + 1.8
+                        else:
+                            p['dungeon_active'] = False
+                        if stage == 4 and not p.get('dungeon_claimed',False):
+                            p['dungeon_claimed'] = True
+                            p['dungeon_stage'] = 4
+                            p['gold'] += 600
+                            p['xp'] += 700
+                            p['inventory']['Fragmento de metal antigo'] = p['inventory'].get('Fragmento de metal antigo',0)+3
+                            while p['xp'] >= p['level']*100:
+                                p['xp'] -= p['level']*100
+                                p['level'] += 1
+                                p['max_hp'] += 10
+                                p['hp'] = p['max_hp']
+                            await send(pid, {'type':'notice','text':'Sino Partido purificado! 700 XP, 600 ouro e 3 fragmentos antigos.'})
+                        elif stage == 4:
+                            await send(pid, {'type':'notice','text':'Cripta purificada novamente! Sem duplicar o premio unico.'})
+                        else:
+                            await send(pid, {'type':'notice','text':f'Sala {stage}/4 concluida! A sala {stage+1}/4 foi aberta automaticamente.'})
+                    else:
+                        await send(pid, {'type':'notice','text':f'{CRYPT_NAMES[stage]}: {p["dungeon_enemy_hp"]} HP. Cuidado com a perseguicao!'})
+                    if p['name']: save_character(p)
+                await status(pid)
             elif kind == 'interact':
                 # Primeiro capitulo da Cripta do Sino Partido: pista ambiental
                 # validada no servidor; nunca aceitar posicoes enviadas pelo cliente.
-                if p.get('crypt_quest') == 'active' and math.hypot(p['x']-1500., p['y']-1040.) <= 175.:
+                if p.get('crypt_quest') == 'completed' and math.hypot(p['x']-1500., p['y']-1040.) <= 175.:
+                    await send(pid, {'type':'npc','name':'Portal da Cripta','text':'O selo foi quebrado. Pressiona K para entrar na Cripta do Sino Partido.'})
+                elif p.get('crypt_quest') == 'active' and math.hypot(p['x']-1500., p['y']-1040.) <= 175.:
                     p['crypt_quest'] = 'investigated'
                     if p['name']: save_character(p)
                     await status(pid)
@@ -1168,9 +1342,11 @@ async def socket(ws: WebSocket):
                         continue
                 elif now-p['last_attack']<.55:
                     continue
-                candidates=[m for m in monsters.values() if m['alive'] and distance(p,m)<=(class_range if class_special else (95 if special else 65))]
+                basic_range = {'Guerreiro': 65, 'Mago': 125, 'Arqueiro': 150}.get(class_name_selected, 65)
+                effective_range = class_range if class_special else (95 if special else basic_range)
+                candidates=[m for m in monsters.values() if m['alive'] and distance(p,m)<=effective_range]
                 if not candidates:
-                    await send(pid,{'type':'notice','text':'Nenhum inimigo ao alcance (%d px).' % (class_range if class_special else (95 if special else 65))})
+                    await send(pid,{'type':'notice','text':'Nenhum inimigo ao alcance (%d px).' % effective_range})
                     continue
                 requested_target = str(msg.get('target_id', '')) if kind == 'attack' else ''
                 if requested_target:
