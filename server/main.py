@@ -462,7 +462,7 @@ async def status(pid):
                          'level': p['level'], 'xp': p['xp'], 'xp_next': p['level']*100,
                          'gold': p['gold'], 'mana':p.get('mana',100), 'max_mana':p.get('max_mana',100), 'inventory': p['inventory'],
                          'quest': p['quest'], 'kills': p['kills'], 'equipment':p['equipment'],
-                         'name':p['name'], 'combat_class':p.get('combat_class','Guerreiro'), 'skill_mastery':p.get('skill_mastery',{}), 'skill_tree':p.get('skill_tree',{}), 'opened_chests':p.get('opened_chests', []), 'chest_cooldowns':p.get('chest_cooldowns', {}), 'forest_quest':p.get('forest_quest', 'locked'), 'forest_quest_chests':p.get('forest_quest_chests', []), 'guardian_quest':p.get('guardian_quest','locked'), 'guardian_quest_kills':p.get('guardian_quest_kills',0), 'crypt_quest':p.get('crypt_quest','locked'), 'crypt_raiders':p.get('crypt_raiders',0), 'dungeon_stage':p.get('dungeon_run_stage',p.get('dungeon_stage',0)) if p.get('dungeon_active') else p.get('dungeon_stage',0), 'dungeon_claimed':p.get('dungeon_claimed',False), 'dungeon_active':p.get('dungeon_active',False), 'dungeon_enemy_hp':p.get('dungeon_enemy_hp',0), 'dungeon_pos':p.get('dungeon_pos',[1,2]), 'dungeon_enemy_pos':p.get('dungeon_enemy_pos',[8,2]), 'dungeon_enemy_name':CRYPT_NAMES[min(3,max(0,int(p.get('dungeon_run_stage',p.get('dungeon_stage',0)))))], 'gather_cooldowns':p.get('gather_cooldowns', {}), 'subclass_tool':p.get('subclass_tool'), 'upgrade_levels':p.get('upgrade_levels',{}), 'gear_equipped':p.get('gear_equipped',{}), 'gear_bag':p.get('gear_bag',[]), 'professions':{k:profession_progress(int(p.get('professions', {}).get(k, 0))) for k in ('lenhador','mineiro','herbalista')}, 'resource_nodes':available_nodes(p), 'server_time':time.time(), 'attack':17+p['level']*3+bonuses(p)[0], 'defense':bonuses(p)[1]})
+                         'name':p['name'], 'combat_class':p.get('combat_class','Guerreiro'), 'skill_mastery':p.get('skill_mastery',{}), 'skill_tree':p.get('skill_tree',{}), 'opened_chests':p.get('opened_chests', []), 'chest_cooldowns':p.get('chest_cooldowns', {}), 'forest_quest':p.get('forest_quest', 'locked'), 'forest_quest_chests':p.get('forest_quest_chests', []), 'guardian_quest':p.get('guardian_quest','locked'), 'guardian_quest_kills':p.get('guardian_quest_kills',0), 'crypt_quest':p.get('crypt_quest','locked'), 'crypt_raiders':p.get('crypt_raiders',0), 'dungeon_stage':p.get('dungeon_run_stage',p.get('dungeon_stage',0)) if p.get('dungeon_active') else p.get('dungeon_stage',0), 'dungeon_claimed':p.get('dungeon_claimed',False), 'dungeon_active':p.get('dungeon_active',False), 'dungeon_enemy_hp':p.get('dungeon_enemy_hp',0), 'dungeon_boss_phase':(3 if int(p.get('dungeon_enemy_hp',260)) <= 85 else (2 if int(p.get('dungeon_enemy_hp',260)) <= 170 else 1)) if int(p.get('dungeon_run_stage',p.get('dungeon_stage',0))) == 3 else 0, 'dungeon_enemy_attack_in':max(0.0, float(p.get('dungeon_enemy_next_hit',0.0))-time.monotonic()), 'dungeon_special_cells':p.get('dungeon_special_cells',[]), 'dungeon_special_in':max(0.0,float(p.get('dungeon_special_fire_at',0.0))-time.monotonic()) if p.get('dungeon_special_cells') else 0.0, 'dungeon_pos':p.get('dungeon_pos',[1,2]), 'dungeon_enemy_pos':p.get('dungeon_enemy_pos',[8,2]), 'dungeon_enemy_name':CRYPT_NAMES[min(3,max(0,int(p.get('dungeon_run_stage',p.get('dungeon_stage',0)))))], 'gather_cooldowns':p.get('gather_cooldowns', {}), 'subclass_tool':p.get('subclass_tool'), 'upgrade_levels':p.get('upgrade_levels',{}), 'gear_equipped':p.get('gear_equipped',{}), 'gear_bag':p.get('gear_bag',[]), 'professions':{k:profession_progress(int(p.get('professions', {}).get(k, 0))) for k in ('lenhador','mineiro','herbalista')}, 'resource_nodes':available_nodes(p), 'server_time':time.time(), 'attack':17+p['level']*3+bonuses(p)[0], 'defense':bonuses(p)[1]})
 
 # MVP 0.9.7: vantagens e resistencias calculadas exclusivamente no servidor.
 # Multiplicadores aplicam-se apenas as habilidades exclusivas de classe.
@@ -579,6 +579,46 @@ async def simulation():
                     continue
                 hero_pos = tuple(hero.get('dungeon_pos', [1,2]))
                 enemy_pos = tuple(hero.get('dungeon_enemy_pos', [8,2]))
+                # Guardian phases are derived from HP, not saved as extra state.
+                if stage == 3:
+                    boss_hp = int(hero.get('dungeon_enemy_hp', 260))
+                    phase = 3 if boss_hp <= 85 else (2 if boss_hp <= 170 else 1)
+                    old_phase = int(hero.get('dungeon_boss_phase', 1))
+                    if phase > old_phase:
+                        hero['dungeon_boss_phase'] = phase
+                        await send(active_pid, {'type':'notice','text':f'GUARDIAO: FASE {phase}! Os ataques especiais ficaram mais perigosos.'})
+                else:
+                    phase = 1
+                # Server-authoritative telegraphed attacks: lock the target cells
+                # before damage, allowing the player to dodge with WASD or click.
+                if stage >= 1:
+                    pending = hero.get('dungeon_special_cells', [])
+                    if pending and now >= float(hero.get('dungeon_special_fire_at', 0.0)):
+                        threatened = {tuple(c) for c in pending}
+                        if hero_pos in threatened:
+                            special_damage = (0, 10, 14, (22 + (phase - 1) * 5))[min(stage, 3)]
+                            hero['hp'] = max(1, int(hero['hp']) - special_damage)
+                            await send(active_pid, {'type':'notice','text':f'Ataque especial de {CRYPT_NAMES[stage]}: -{special_damage} HP!'})
+                        else:
+                            await send(active_pid, {'type':'notice','text':'Esquivaste o ataque especial!'})
+                        hero['dungeon_special_cells'] = []
+                        hero['dungeon_special_next'] = now + (7.0 if stage < 3 else (6.0 - (phase - 1) * 0.75))
+                    elif not pending and now >= float(hero.get('dungeon_special_next', now + 8.0)):
+                        x, y = hero_pos
+                        offsets = [(0, 0)]
+                        if stage == 2:
+                            offsets += [(-1, 0), (1, 0)]
+                        elif stage >= 3:
+                            offsets += [(-1, 0), (1, 0), (0, -1), (0, 1)]
+                            if phase >= 2:
+                                offsets += [(-2, 0), (2, 0)]
+                            if phase >= 3:
+                                offsets += [(0, -2), (0, 2)]
+                        blocks = {(4, 1), (4, 3), (7, 1), (7, 3)}
+                        hero['dungeon_special_cells'] = [[x + dx, y + dy] for dx, dy in offsets if 0 <= x + dx < 10 and 0 <= y + dy < 5 and (x + dx, y + dy) not in blocks]
+                        hero['dungeon_special_fire_at'] = now + (1.4 if stage < 3 else (1.4 - (phase - 1) * 0.15))
+                        await send(active_pid, {'type':'notice','text':'ATENCAO: sai das casas vermelhas!'})
+
                 dungeon_distance = abs(hero_pos[0]-enemy_pos[0])+abs(hero_pos[1]-enemy_pos[1])
                 if dungeon_distance > 1:
                     step = crypt_next_step(enemy_pos, hero_pos)
@@ -1054,6 +1094,10 @@ async def socket(ws: WebSocket):
                     p['dungeon_pos'] = [1, 2]
                     p['dungeon_enemy_pos'] = [8, 2]
                     p['dungeon_enemy_next_hit'] = time.monotonic() + 1.8
+                    p['dungeon_next_basic_attack'] = 0.0
+                    p['dungeon_special_cells'] = []
+                    p['dungeon_boss_phase'] = 1
+                    p['dungeon_special_next'] = time.monotonic() + 5.0
                     p['dungeon_enemy_hp'] = [90, 140, 190, 260][max(0,min(stage,3))]
                     await send(pid, {'type':'notice','text':'Entraste na Cripta. WASD para explorar; aproxima-te do inimigo. 1 atacar, 2 curar, 3 sair.'})
                 elif action == 'leave':
@@ -1082,12 +1126,18 @@ async def socket(ws: WebSocket):
                         p['inventory']['Pocao pequena'] -= 1
                         p['hp'] = min(p['max_hp'],p['hp']+40)
                     else:
+                        crypt_now = time.monotonic()
+                        if crypt_now < float(p.get('dungeon_next_basic_attack', 0.0)):
+                            continue
                         cell = p.get('dungeon_pos',[1,2])
                         enemy_cell = p.get('dungeon_enemy_pos',[8,2])
                         dungeon_distance = abs(int(cell[0])-int(enemy_cell[0]))+abs(int(cell[1])-int(enemy_cell[1]))
-                        if dungeon_distance > 2:
-                            await send(pid, {'type':'notice','text':f'Fora de alcance: {dungeon_distance} casas. Aproxima-te ate 2 casas e pressiona 1.'})
+                        crypt_class = str(p.get('combat_class', 'Guerreiro'))
+                        crypt_range = 1 if crypt_class == 'Guerreiro' else (3 if crypt_class == 'Arqueiro' else 2)
+                        if dungeon_distance > crypt_range:
+                            await send(pid, {'type':'notice','text':f'Fora de alcance: {dungeon_distance} casas. Alcance de {crypt_class}: {crypt_range} casas.'})
                             continue
+                        p['dungeon_next_basic_attack'] = crypt_now + 0.65
                         damage = max(12, 12 + p['level']*2 + bonuses(p)[0])
                         p['dungeon_enemy_hp'] = max(0, int(p.get('dungeon_enemy_hp',90))-damage)
                     if int(p.get('dungeon_enemy_hp',0)) <= 0:
@@ -1103,6 +1153,10 @@ async def socket(ws: WebSocket):
                             p['dungeon_enemy_pos'] = [8, 2]
                             p['dungeon_enemy_hp'] = [90, 140, 190, 260][stage]
                             p['dungeon_enemy_next_hit'] = time.monotonic() + 1.8
+                            p['dungeon_next_basic_attack'] = 0.0
+                            p['dungeon_special_cells'] = []
+                            p['dungeon_boss_phase'] = 1
+                            p['dungeon_special_next'] = time.monotonic() + 5.0
                         else:
                             p['dungeon_active'] = False
                         if stage == 4 and not p.get('dungeon_claimed',False):

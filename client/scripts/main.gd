@@ -91,10 +91,27 @@ var profile := {}
 var dungeon_active := false
 var dungeon_stage := 0
 var dungeon_enemy_hp := 0
+var dungeon_boss_phase := 0
 var dungeon_pos := Vector2i(1, 2)
 var dungeon_enemy_pos := Vector2i(8, 2)
 var dungeon_enemy_name := "Esqueleto Errante"
 var dungeon_walk_timer := 0.0
+var dungeon_click_path: Array[Vector2i] = []
+var dungeon_hero_visual := Vector2(1, 2)
+var dungeon_enemy_visual := Vector2(8, 2)
+var dungeon_visual_stage := -1
+var dungeon_hit_flash := 0.0
+var dungeon_enemy_attack_in := 0.0
+var dungeon_special_cells: Array[Vector2i] = []
+var dungeon_special_in := 0.0
+var dungeon_attack_flash := 0.0
+var dungeon_auto_attack_elapsed := 0.0
+var dungeon_auto_route: Array[Vector2i] = []
+var dungeon_manual_pause := 0.0
+var dungeon_auto_enemy_last := Vector2i(-1, -1)
+var dungeon_facing := Vector2.RIGHT
+var dungeon_show_range := true
+var dungeon_last_enemy_hp := -1
 var notice := ""
 var guardian_banner := ""
 var guardian_banner_time := 0.0
@@ -667,6 +684,17 @@ func _submit_name(value: String) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if dungeon_active and event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT and not name_input.visible:
+		var crypt_mouse := get_global_mouse_position()
+		var crypt_origin := Vector2(195, 151)
+		var crypt_rect := Rect2(crypt_origin, Vector2(480, 240))
+		if crypt_rect.has_point(crypt_mouse):
+			var destination := Vector2i(int((crypt_mouse.x - crypt_origin.x) / 48.0), int((crypt_mouse.y - crypt_origin.y) / 48.0))
+			dungeon_auto_route.clear()
+			dungeon_manual_pause = 1.2
+			dungeon_click_path = _crypt_find_path(dungeon_pos, destination)
+			get_viewport().set_input_as_handled()
+			return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var click_pos: Vector2 = get_global_mouse_position()
 		for slot in range(2):
@@ -1192,6 +1220,15 @@ func _draw_hotbar() -> void:
 			draw_string(font, Vector2(x + 12.0, HOTBAR_Y + 29.0), str(ceilf(left)), HORIZONTAL_ALIGNMENT_LEFT, 30, 18, Color.WHITE)
 
 func _process(delta: float) -> void:
+	# Smooth local presentation only; the server remains authoritative for positions.
+	if dungeon_active:
+		var smoothing := clampf(delta * 11.0, 0.0, 1.0)
+		dungeon_hero_visual = dungeon_hero_visual.lerp(Vector2(dungeon_pos), smoothing)
+		dungeon_enemy_visual = dungeon_enemy_visual.lerp(Vector2(dungeon_enemy_pos), smoothing)
+	dungeon_hit_flash = maxf(0.0, dungeon_hit_flash - delta)
+	dungeon_enemy_attack_in = maxf(0.0, dungeon_enemy_attack_in - delta)
+	dungeon_special_in = maxf(0.0, dungeon_special_in - delta)
+	dungeon_attack_flash = maxf(0.0, dungeon_attack_flash - delta)
 	skill_cooldown_left = maxf(0.0, skill_cooldown_left - delta)
 	class_skill_cooldown_left = maxf(0.0, class_skill_cooldown_left - delta)
 	animation_time += delta
@@ -1255,11 +1292,44 @@ func _process(delta: float) -> void:
 			"profile":
 				profile = payload
 				dungeon_active = bool(payload.get("dungeon_active", false))
-				dungeon_stage = int(payload.get("dungeon_stage", 0))
-				dungeon_enemy_hp = int(payload.get("dungeon_enemy_hp", 0))
+				if not dungeon_active:
+					dungeon_click_path.clear()
+					dungeon_auto_attack_elapsed = 0.0
+					dungeon_auto_route.clear()
+				var new_crypt_stage := int(payload.get("dungeon_stage", 0))
+				if new_crypt_stage != dungeon_stage or not dungeon_active:
+					dungeon_click_path.clear()
+					dungeon_auto_route.clear()
+				dungeon_stage = new_crypt_stage
+				if dungeon_visual_stage != dungeon_stage:
+					dungeon_visual_stage = dungeon_stage
+					dungeon_hero_visual = Vector2(1, 2)
+					dungeon_enemy_visual = Vector2(8, 2)
+					dungeon_last_enemy_hp = -1
+				var crypt_hp := int(payload.get("dungeon_enemy_hp", 0))
+				if dungeon_active and dungeon_last_enemy_hp > crypt_hp and crypt_hp > 0:
+					dungeon_hit_flash = 0.25
+					dungeon_attack_flash = 0.35
+					var aim := Vector2(dungeon_enemy_pos - dungeon_pos)
+					if aim.length_squared() > 0.0:
+						dungeon_facing = aim.normalized()
+				dungeon_enemy_hp = crypt_hp
+				dungeon_boss_phase = int(payload.get("dungeon_boss_phase", 0))
+				dungeon_enemy_attack_in = float(payload.get("dungeon_enemy_attack_in", 0.0))
+				dungeon_special_in = float(payload.get("dungeon_special_in", 0.0))
+				dungeon_special_cells.clear()
+				var warning_cells: Array = payload.get("dungeon_special_cells", [])
+				for warning_cell in warning_cells:
+					if warning_cell is Array and warning_cell.size() >= 2:
+						dungeon_special_cells.append(Vector2i(int(warning_cell[0]), int(warning_cell[1])))
+				dungeon_last_enemy_hp = crypt_hp
 				var crypt_cell: Array = payload.get("dungeon_pos", [1, 2])
 				if crypt_cell.size() >= 2:
 					dungeon_pos = Vector2i(int(crypt_cell[0]), int(crypt_cell[1]))
+				if not dungeon_click_path.is_empty() and dungeon_pos == dungeon_click_path[0]:
+					dungeon_click_path.pop_front()
+				if not dungeon_auto_route.is_empty() and dungeon_pos == dungeon_auto_route[0]:
+					dungeon_auto_route.pop_front()
 				var enemy_cell: Array = payload.get("dungeon_enemy_pos", [8, 2])
 				if enemy_cell.size() >= 2:
 					dungeon_enemy_pos = Vector2i(int(enemy_cell[0]), int(enemy_cell[1]))
@@ -1421,13 +1491,45 @@ func _process(delta: float) -> void:
 		socket.send_text(JSON.stringify({"type":"dungeon_action","action":"enter"}))
 	if dungeon_active and not name_input.visible and socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
 		dungeon_walk_timer -= delta
+		dungeon_manual_pause = maxf(0.0, dungeon_manual_pause - delta)
+		var crypt_dx := int(Input.is_physical_key_pressed(KEY_D)) - int(Input.is_physical_key_pressed(KEY_A))
+		var crypt_dy := int(Input.is_physical_key_pressed(KEY_S)) - int(Input.is_physical_key_pressed(KEY_W))
+		var crypt_manual: bool = absi(crypt_dx) + absi(crypt_dy) > 0
+		var crypt_class_move := str(profile.get("combat_class", "Guerreiro"))
+		var crypt_attack_range: int = 1 if crypt_class_move == "Guerreiro" else (3 if crypt_class_move == "Arqueiro" else 2)
+		var crypt_target_distance: int = absi(dungeon_pos.x - dungeon_enemy_pos.x) + absi(dungeon_pos.y - dungeon_enemy_pos.y)
+		if crypt_manual:
+			dungeon_click_path.clear()
+			dungeon_auto_route.clear()
+			dungeon_manual_pause = 0.8
+		elif auto_combat and dungeon_enemy_hp > 0 and dungeon_click_path.is_empty() and dungeon_manual_pause <= 0.0 and crypt_target_distance > crypt_attack_range:
+			if dungeon_auto_route.is_empty() or dungeon_auto_enemy_last != dungeon_enemy_pos:
+				dungeon_auto_route = _crypt_find_attack_route(dungeon_pos, dungeon_enemy_pos, crypt_attack_range)
+				dungeon_auto_enemy_last = dungeon_enemy_pos
+		else:
+			dungeon_auto_route.clear()
 		if dungeon_walk_timer <= 0.0:
-			var crypt_dx := int(Input.is_physical_key_pressed(KEY_D)) - int(Input.is_physical_key_pressed(KEY_A))
-			var crypt_dy := int(Input.is_physical_key_pressed(KEY_S)) - int(Input.is_physical_key_pressed(KEY_W))
+			if not crypt_manual:
+				var active_route: Array[Vector2i] = dungeon_click_path if not dungeon_click_path.is_empty() else dungeon_auto_route
+				if not active_route.is_empty():
+					var next_cell: Vector2i = active_route[0]
+					var step: Vector2i = next_cell - dungeon_pos
+					if absi(step.x) + absi(step.y) == 1:
+						crypt_dx = step.x
+						crypt_dy = step.y
+					else:
+						dungeon_click_path.clear()
+						dungeon_auto_route.clear()
 			if abs(crypt_dx) + abs(crypt_dy) == 1:
-				dungeon_walk_timer = 0.15
+				dungeon_walk_timer = 0.19
 				socket.send_text(JSON.stringify({"type":"dungeon_action","action":"walk","dx":crypt_dx,"dy":crypt_dy}))
-		if attack_key_pressed:
+		dungeon_auto_attack_elapsed += delta
+		var crypt_distance_now: int = absi(dungeon_pos.x - dungeon_enemy_pos.x) + absi(dungeon_pos.y - dungeon_enemy_pos.y)
+		var crypt_class_now := str(profile.get("combat_class", "Guerreiro"))
+		var crypt_range_now: int = 1 if crypt_class_now == "Guerreiro" else (3 if crypt_class_now == "Arqueiro" else 2)
+		var crypt_auto_ready: bool = auto_combat and dungeon_enemy_hp > 0 and crypt_distance_now <= crypt_range_now and dungeon_auto_attack_elapsed >= 0.8
+		if attack_key_pressed or crypt_auto_ready:
+			dungeon_auto_attack_elapsed = 0.0
 			socket.send_text(JSON.stringify({"type":"dungeon_action","action":"attack"}))
 		elif heal_key_pressed:
 			socket.send_text(JSON.stringify({"type":"dungeon_action","action":"heal"}))
@@ -1437,7 +1539,7 @@ func _process(delta: float) -> void:
 		_hotbar_action(1)
 	auto_attack_elapsed += delta
 	var manual_movement := Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_D)
-	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
+	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN and not dungeon_active:
 		_click_attack_update(delta, manual_movement)
 		_auto_update(delta, manual_movement)
 	send_elapsed += delta
@@ -2561,6 +2663,71 @@ func _draw_monster(m: Dictionary) -> void:
 
 # MVP 1.0.2: primeira instancia narrativa, com encontros validados pelo servidor.
 # MVP 1.0.3: mapa tatico exploravel, movimento por grelha e colisoes no servidor.
+func _crypt_find_path(start: Vector2i, goal: Vector2i) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	var obstacles := [Vector2i(4, 1), Vector2i(4, 3), Vector2i(7, 1), Vector2i(7, 3)]
+	if goal.x < 0 or goal.x >= 10 or goal.y < 0 or goal.y >= 5 or goal in obstacles or goal == dungeon_enemy_pos:
+		return result
+	var queue: Array[Vector2i] = [start]
+	var previous := {start: start}
+	var directions := [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
+	while not queue.is_empty():
+		var current: Vector2i = queue.pop_front()
+		if current == goal:
+			break
+		for direction in directions:
+			var next_cell: Vector2i = current + direction
+			if next_cell.x >= 0 and next_cell.x < 10 and next_cell.y >= 0 and next_cell.y < 5 and next_cell not in obstacles and next_cell != dungeon_enemy_pos and not previous.has(next_cell):
+				previous[next_cell] = current
+				queue.append(next_cell)
+	if not previous.has(goal):
+		return result
+	var cursor: Vector2i = goal
+	while cursor != start:
+		result.push_front(cursor)
+		cursor = previous[cursor]
+	return result
+
+
+# BFS: shortest reachable path to any free tile within the class attack radius.
+func _crypt_find_attack_route(start: Vector2i, enemy: Vector2i, attack_range: int) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	var blocked := [Vector2i(4, 1), Vector2i(4, 3), Vector2i(7, 1), Vector2i(7, 3)]
+	var queue: Array[Vector2i] = [start]
+	var previous := {start: start}
+	var directions := [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
+	var destination := Vector2i(-1, -1)
+	while not queue.is_empty():
+		var current: Vector2i = queue.pop_front()
+		var distance := absi(current.x - enemy.x) + absi(current.y - enemy.y)
+		if distance > 0 and distance <= attack_range:
+			destination = current
+			break
+		for direction in directions:
+			var candidate: Vector2i = current + direction
+			if candidate.x < 0 or candidate.x >= 10 or candidate.y < 0 or candidate.y >= 5:
+				continue
+			if candidate in blocked or candidate == enemy or previous.has(candidate):
+				continue
+			previous[candidate] = current
+			queue.append(candidate)
+	if destination.x < 0:
+		return result
+	var cursor := destination
+	while cursor != start:
+		result.push_front(cursor)
+		cursor = previous[cursor]
+	return result
+
+
+func _draw_crypt_shadow(center: Vector2, radius_x: float, radius_y: float, tint: Color) -> void:
+	var points := PackedVector2Array()
+	for i in range(20):
+		var angle := float(i) * TAU / 20.0
+		points.append(center + Vector2(cos(angle) * radius_x, sin(angle) * radius_y))
+	draw_colored_polygon(points, tint)
+
+
 func _draw_crypt_dungeon() -> void:
 	var panel := Rect2(100, 62, 760, 510)
 	draw_rect(panel, Color("10151e", 0.99))
@@ -2573,32 +2740,104 @@ func _draw_crypt_dungeon() -> void:
 	var cell_size := 48.0
 	var origin := Vector2(195, 151)
 	var blocks := [Vector2i(4,1), Vector2i(4,3), Vector2i(7,1), Vector2i(7,3)]
+	# Highlight attackable cells without changing server-side combat rules.
+	var crypt_class_name := str(profile.get("combat_class", "Guerreiro"))
+	var visible_range := 1 if crypt_class_name == "Guerreiro" else (3 if crypt_class_name == "Arqueiro" else 2)
+	# Crypt masonry: individual stone slabs, pillars, torchlight and visible actors.
+	var torch_positions := [Vector2(172, 172), Vector2(696, 172), Vector2(172, 358), Vector2(696, 358)]
 	for yy in range(5):
 		for xx in range(10):
 			var cell := Vector2i(xx, yy)
-			var r := Rect2(origin + Vector2(xx, yy)*cell_size, Vector2(cell_size-2, cell_size-2))
-			var floor_color := Color("323e49") if (xx+yy)%2 == 0 else Color("3a4750")
-			if cell in blocks:
-				floor_color = Color("6e645d")
+			var r := Rect2(origin + Vector2(xx, yy) * cell_size, Vector2(cell_size - 2, cell_size - 2))
+			var floor_color := Color("343b42") if (xx + yy) % 2 == 0 else Color("3b454c")
 			draw_rect(r, floor_color)
+			draw_rect(r.grow(-3), Color("52606a", 0.5), false, 1.0)
+			if (xx * 3 + yy * 7 + stage) % 9 == 0:
+				draw_line(r.position + Vector2(12, 12), r.position + Vector2(20, 18), Color("242c33", 0.75), 1.5)
 			if cell in blocks:
-				draw_rect(r.grow(-8), Color("999080"), false, 3.0)
-			if cell == dungeon_enemy_pos:
-				draw_circle(r.get_center(), 15.0, Color("a33e4e"))
-				draw_circle(r.get_center()+Vector2(0,-4), 7.0, Color("e3b9a0"))
-			if cell == dungeon_pos:
-				draw_circle(r.get_center(), 15.0, Color("5bbdd3"))
-				draw_circle(r.get_center()+Vector2(0,-5), 7.0, Color("d6ebf0"))
+				draw_rect(r.grow(-4), Color("24282c"))
+				draw_rect(r.grow(-9), Color("7b746b"))
+				draw_rect(r.grow(-13), Color("a9a093"), false, 2.0)
+				draw_line(r.position + Vector2(11, 11), r.position + Vector2(34, 11), Color("d3c4a3", 0.6), 2.0)
+			if dungeon_show_range and cell != dungeon_pos and cell not in blocks and absi(cell.x - dungeon_pos.x) + absi(cell.y - dungeon_pos.y) <= visible_range:
+				draw_rect(r.grow(-7), Color(0.38, 0.67, 0.82, 0.24), false, 1.0)
+			if cell in dungeon_auto_route:
+				draw_rect(r.grow(-5), Color("e5b86a", 0.7), false, 2.0)
+			if cell in dungeon_special_cells:
+				var pulse: float = 0.24 + 0.16 * sin(animation_time * 14.0)
+				draw_rect(r.grow(-3), Color(0.95, 0.18, 0.14, pulse), true)
+				draw_rect(r.grow(-3), Color(1.0, 0.34, 0.25, 0.9), false, 2.5)
+			if cell in dungeon_click_path:
+				draw_rect(r.grow(-5), Color("91d3ac", 0.8), false, 2.0)
+	for torch_position in torch_positions:
+		var flame := 4.0 + sin(animation_time * 7.0 + torch_position.x) * 2.0
+		draw_circle(torch_position, 16.0, Color(1.0, 0.55, 0.15, 0.10))
+		draw_line(torch_position + Vector2(0, 5), torch_position + Vector2(0, 15), Color("886b45"), 4.0)
+		draw_circle(torch_position + Vector2(0, -flame), 5.0, Color("ffc16c"))
+		draw_circle(torch_position + Vector2(0, -flame - 2), 2.5, Color("fff0b1"))
+	var hero_center := origin + (dungeon_hero_visual + Vector2(0.5, 0.5)) * cell_size
+	var enemy_center := origin + (dungeon_enemy_visual + Vector2(0.5, 0.5)) * cell_size
+	# Telegraph only an imminent melee attack. The server remains authoritative.
+	var crypt_gap: int = absi(dungeon_pos.x - dungeon_enemy_pos.x) + absi(dungeon_pos.y - dungeon_enemy_pos.y)
+	if dungeon_enemy_hp > 0 and crypt_gap == 1 and dungeon_enemy_attack_in <= 0.55:
+		var warning_alpha: float = 0.35 + 0.25 * sin(animation_time * 18.0)
+		draw_arc(enemy_center, 24.0, 0.0, TAU, 32, Color(1.0, 0.32, 0.24, warning_alpha + 0.4), 3.0)
+		draw_line(enemy_center + Vector2(-8.0, -31.0), enemy_center + Vector2(8.0, -31.0), Color(1.0, 0.4, 0.27), 3.0)
+	var hero_class := str(profile.get("combat_class", "Guerreiro"))
+	var hero_color := Color("68b8dd") if hero_class == "Guerreiro" else (Color("b08ce4") if hero_class == "Mago" else Color("83c49a"))
+	_draw_crypt_shadow(hero_center + Vector2(0, 12), 14.0, 5.0, Color(0, 0, 0, 0.5))
+	draw_rect(Rect2(hero_center + Vector2(-9, -6), Vector2(18, 22)), hero_color)
+	draw_circle(hero_center + Vector2(0, -12), 8.0, Color("e3c4a5"))
+	if hero_class == "Guerreiro":
+		draw_line(hero_center + Vector2(11, -6), hero_center + Vector2(17, 10), Color("e8d3a0"), 3.0)
+	elif hero_class == "Mago":
+		draw_circle(hero_center + Vector2(12, -4), 4.0, Color("cba7ff"))
+	else:
+		draw_arc(hero_center + Vector2(13, 1), 9.0, -1.3, 1.3, 14, Color("dfb77d"), 2.0)
+	_draw_crypt_shadow(enemy_center + Vector2(0, 12), 15.0, 5.0, Color(0, 0, 0, 0.5))
+	draw_rect(Rect2(enemy_center + Vector2(-10, -5), Vector2(20, 22)), Color("a64b59") if stage < 3 else Color("8f64b2"))
+	draw_circle(enemy_center + Vector2(0, -12), 9.0, Color("e2c4b4") if stage < 3 else Color("d5b0e5"))
+	draw_circle(enemy_center + Vector2(-3, -13), 1.8, Color("581d27"))
+	draw_circle(enemy_center + Vector2(3, -13), 1.8, Color("581d27"))
+	if dungeon_hit_flash > 0.0:
+		draw_arc(enemy_center, 19.0 + (0.25 - dungeon_hit_flash) * 25.0, 0.0, TAU, 28, Color(1.0, 0.8, 0.35, dungeon_hit_flash * 3.0), 3.0)
+	# Class-specific dungeon attack feedback, aligned with the target.
+	if dungeon_attack_flash > 0.0:
+		var progress := 1.0 - dungeon_attack_flash / 0.35
+		var direction := enemy_center - hero_center
+		var aim := direction.normalized() if direction.length_squared() > 1.0 else dungeon_facing
+		var side := Vector2(-aim.y, aim.x)
+		var opacity := clampf(dungeon_attack_flash / 0.35, 0.0, 1.0)
+		if hero_class == "Guerreiro":
+			var slash_center := enemy_center - aim * 14.0
+			draw_line(slash_center - side * 17.0, slash_center + side * 17.0 + aim * 8.0, Color(1.0, 0.79, 0.32, opacity), 4.0)
+			draw_arc(enemy_center, 13.0 + progress * 14.0, -0.9, 1.7, 16, Color(1.0, 0.65, 0.28, opacity), 3.0)
+		elif hero_class == "Mago":
+			var orb := hero_center.lerp(enemy_center, clampf(progress * 1.8, 0.0, 1.0))
+			draw_circle(orb, 6.0 + 2.0 * sin(animation_time * 18.0), Color(0.73, 0.42, 1.0, opacity))
+			draw_arc(enemy_center, 9.0 + progress * 22.0, 0.0, TAU, 28, Color(0.74, 0.48, 1.0, opacity), 2.5)
+		else:
+			var arrow_tip := hero_center.lerp(enemy_center, clampf(progress * 2.2, 0.0, 1.0))
+			draw_line(arrow_tip - aim * 17.0, arrow_tip, Color(0.64, 0.95, 0.68, opacity), 3.0)
+			draw_line(arrow_tip, arrow_tip - aim * 7.0 + side * 5.0, Color(0.96, 0.87, 0.55, opacity), 2.0)
+			draw_line(arrow_tip, arrow_tip - aim * 7.0 - side * 5.0, Color(0.96, 0.87, 0.55, opacity), 2.0)
+			draw_arc(enemy_center, 7.0 + progress * 14.0, 0.0, TAU, 18, Color(0.56, 0.93, 0.63, opacity), 2.0)
 	var crypt_distance: int = absi(dungeon_pos.x - dungeon_enemy_pos.x) + absi(dungeon_pos.y - dungeon_enemy_pos.y)
-	var in_attack_range: bool = crypt_distance <= 2
-	var range_text: String = "ALCANCE OK - [1] ATACAR" if in_attack_range else "FORA DE ALCANCE - aproxima-te (distancia %d; max. 2)" % crypt_distance
+	var crypt_class := str(profile.get("combat_class", "Guerreiro"))
+	var crypt_range := 1 if crypt_class == "Guerreiro" else (3 if crypt_class == "Arqueiro" else 2)
+	var in_attack_range: bool = crypt_distance <= crypt_range
+	var range_text: String = "ALCANCE OK - [1] ATACAR" if in_attack_range else "FORA DE ALCANCE - aproxima-te (distancia %d; max. %d)" % [crypt_distance, crypt_range]
 	draw_string(font, Vector2(125, 393), range_text, HORIZONTAL_ALIGNMENT_LEFT, 720, 16, Color("a6f4b5") if in_attack_range else Color("ffc18d"))
 	var enemy_max: int = [90, 140, 190, 260][stage]
 	var bar := Rect2(270, 416, 400, 14)
 	draw_rect(bar, Color("382a33"))
 	draw_rect(Rect2(bar.position, Vector2(bar.size.x*clampf(float(dungeon_enemy_hp)/float(enemy_max),0.0,1.0),bar.size.y)),Color("c75b60"))
 	draw_rect(bar, Color("e4c7a2"),false,1.0)
-	draw_string(font, Vector2(270, 410), "%s: %d/%d HP" % [dungeon_enemy_name, dungeon_enemy_hp, enemy_max], HORIZONTAL_ALIGNMENT_LEFT, 450, 15, Color("ffb1a3"))
-	draw_string(font, Vector2(125, 471), "WASD MOVER   [1] ATACAR (ate 2 casas)   [2] POCAO   [3] SAIR", HORIZONTAL_ALIGNMENT_LEFT, 720, 15, Color("d5f0cb"))
-	draw_string(font, Vector2(125, 503), "O inimigo persegue-te! Usa os pilares para contornar e evita ficar adjacente.", HORIZONTAL_ALIGNMENT_LEFT, 720, 13, Color("bac4c4"))
+	var enemy_title: String = "%s: %d/%d HP" % [dungeon_enemy_name, dungeon_enemy_hp, enemy_max]
+	if dungeon_stage == 3 and dungeon_boss_phase > 0:
+		enemy_title += "  |  FASE %d/3" % dungeon_boss_phase
+	draw_string(font, Vector2(270, 410), enemy_title, HORIZONTAL_ALIGNMENT_LEFT, 450, 15, Color("ffb1a3"))
+	draw_string(font, Vector2(125, 471), "WASD / CLIQUE MOVER   [1] ATACAR   [T] AUTO: %s   [2] POCAO   [3] SAIR" % ("ON" if auto_combat else "OFF"), HORIZONTAL_ALIGNMENT_LEFT, 720, 15, Color("d5f0cb"))
+	var crypt_help: String = "PERIGO! Sai das celulas vermelhas! %.1f s" % dungeon_special_in if not dungeon_special_cells.is_empty() else "Azul: alcance | Verde: clique | Dourado: AUTO (T) | WASD interrompe."
+	draw_string(font, Vector2(125, 503), crypt_help, HORIZONTAL_ALIGNMENT_LEFT, 720, 13, Color("bac4c4"))
 	draw_string(font, Vector2(125, 533), "Ao vencer, avancas automaticamente para a sala seguinte | [3] sair", HORIZONTAL_ALIGNMENT_LEFT, 720, 12, Color("bac4c4"))
