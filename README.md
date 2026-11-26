@@ -2,11 +2,11 @@
 
 **MMORPG de fantasia medieval em desenvolvimento**, com um mundo original marcado por reinos fragmentados, alianças instáveis, ruínas ancestrais e a ameaça da Fenda. O projeto combina exploração, combate em tempo real, progressão de personagens, profissões, crafting, missões e batalhas contra chefes, numa apresentação 2.5D de pixel art detalhado inspirada na legibilidade dos RPGs clássicos.
 
-> Estado: protótipo jogável **MVP 1.0.1**; não é um MMORPG completo nem um lançamento de produção.
+> Estado: protótipo jogável **MVP 1.1.0.8.5** (versão local a publicar; esta branch ainda não contém todos os assets); não é um MMORPG completo nem um lançamento de produção.
 
 ## Tecnologias
 
-- **Cliente:** Godot 4 / GDScript.
+- **Cliente:** Godot 4.7 / GDScript.
 - **Servidor:** Python / FastAPI / WebSocket.
 - **Persistência:** SQLite para personagens e estado local do mundo.
 - **Arquitetura:** servidor autoritativo para combate, movimento e recompensas.
@@ -15,18 +15,18 @@
 
 - Movimento WASD, navegação por clique, seleção de alvos, perseguição e combate automático.
 - Três classes jogáveis: Guerreiro, Mago e Arqueiro, com habilidades, talentos e efeitos de estado.
-- Lobos, saqueadores e Guardião das Ruínas com fases, resistências e ataques telegrafados.
+- Lobos, saqueadores e Guardiões da Tempestade e do Sino Partido, além de Velkran na cripta, com fases, resistências e ataques telegrafados.
 - Missões com Tessa, exploração, baús, loot, experiência e progressão persistente.
 - Inventário, equipamento, forja, encantamentos, recolha de recursos e profissões.
 - **MVP 1.0.1:** início da linha narrativa da *Cripta do Sino Partido*, com investigação, caça e recompensa persistente.
 
 ## Executar localmente
 
-1. Instala **Python 3.11+** e **Godot 4**.
-2. No terminal, dentro de `server/`, instala as dependências do projeto (consulta `requirements.txt`).
-3. Inicia o servidor conforme `docs/INSTALACAO.md`.
-4. Abre `client/project.godot` no Godot e executa o projeto.
-5. Dentro do jogo, usa **N** para carregar o personagem pelo nome; **E** para interagir e **Q** para abrir o diário de missões.
+1. Instala **Python 3.11+** e **Godot 4.7**.
+2. No terminal, dentro de `mvp/server/` (ou `server/` se o repositório já estiver aberto nessa pasta), executa `python -m pip install -r requirements.txt`.
+3. Inicia o servidor com `python -m uvicorn main:app --host 127.0.0.1 --port 8000`, na pasta do servidor; consulta também `docs/INSTALACAO.md`.
+4. Abre `mvp/client/project.godot` (ou `client/project.godot`, conforme a raiz extraída) no Godot e executa o projeto.
+5. Dentro do jogo, usa **Z** para abrir a seleção de heróis existentes, **N** para criar um novo herói, **E** para interagir e **Q** para abrir o diário de missões. A seleção por Z requer validação funcional no Godot (correção do clique no dropdown ainda em teste).
 
 > **Dados pessoais:** a pasta de dados e ficheiros SQLite são excluídos do Git. Faz backup antes de atualizar.
 
