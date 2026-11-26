@@ -2,7 +2,7 @@
 
 **MMORPG de fantasia medieval em desenvolvimento**, com um mundo original marcado por reinos fragmentados, alianças instáveis, ruínas ancestrais e a ameaça da Fenda. O projeto combina exploração, combate em tempo real, progressão de personagens, profissões, crafting, missões e batalhas contra chefes, numa apresentação 2.5D de pixel art detalhado inspirada na legibilidade dos RPGs clássicos.
 
-> Estado: protótipo jogável **MVP 1.1.0.8.5** (versão local a publicar; esta branch ainda não contém todos os assets); não é um MMORPG completo nem um lançamento de produção.
+> Estado: protótipo jogável **MVP 1.1.0.8.5** (branch de desenvolvimento; testes de regressão ainda pendentes); não é um MMORPG completo nem um lançamento de produção.
 
 ## Tecnologias
 
@@ -26,7 +26,7 @@
 2. No terminal, dentro de `mvp/server/` (ou `server/` se o repositório já estiver aberto nessa pasta), executa `python -m pip install -r requirements.txt`.
 3. Inicia o servidor com `python -m uvicorn main:app --host 127.0.0.1 --port 8000`, na pasta do servidor; consulta também `docs/INSTALACAO.md`.
 4. Abre `mvp/client/project.godot` (ou `client/project.godot`, conforme a raiz extraída) no Godot e executa o projeto.
-5. Dentro do jogo, usa **Z** para abrir a seleção de heróis existentes, **N** para criar um novo herói, **E** para interagir e **Q** para abrir o diário de missões. A seleção por Z requer validação funcional no Godot (correção do clique no dropdown ainda em teste).
+5. Dentro do jogo, usa **Z** para abrir a seleção de heróis existentes, **N** para criar um novo herói, **E** para interagir e **Q** para abrir o diário de missões. A seleção por Z requer validação funcional no Godot (clique no dropdown ainda em teste).
 
 > **Dados pessoais:** a pasta de dados e ficheiros SQLite são excluídos do Git. Faz backup antes de atualizar.
 
@@ -43,3 +43,13 @@
 A campanha completa e as regiões futuras estão descritas nos documentos originais de conceção. O objetivo é evoluir o protótipo de Valedouro até um mundo persistente com dungeons, facções, classes avançadas e uma narrativa sobre os fragmentos do trono.
 
 **Desenvolvimento:** projeto original de Wellington Júnior. Código em evolução; funcionalidades podem mudar.
+
+## Verificação mínima
+
+Com o servidor local iniciado, executa na raiz do repositório:
+
+```powershell
+python -m unittest discover -s tests -p 'test_health.py' -v
+```
+
+Este teste verifica apenas `GET /health`; **não valida combate, seleção de heróis ou multiplayer**. Consulta [a auditoria da MVP 1.1.0.8.5](docs/AUDITORIA_MVP_1_1_0_8_5.md) antes de disponibilizar o servidor publicamente. A seleção de personagens por nome ainda não comprova propriedade de conta.
