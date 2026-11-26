@@ -18,6 +18,82 @@ var visual_icons := {
 	"Pele de lobo": preload("res://assets/visual060/pelt.png"),
 	"Retalho de tecido": preload("res://assets/visual060/cloth.png")
 }
+
+# Icones oficiais recebidos na MVP 1.1.0.8.2.
+var official_item_icons := {
+	"Espada de ferro": preload("res://assets/icones/itens/espadas/espada_de_ferro.png"),
+	"Escudo de madeira": preload("res://assets/icones/itens/escudos/escudo_de_madeira.png"),
+	"Arco do Vigia Runico": preload("res://assets/icones/itens/arcos/arco_do_vigia_runico.png"),
+	"Aljava do Sino Partido": preload("res://assets/icones/itens/aljavas/aljava_do_sino_partido.png"),
+	"Cajado do Firmamento": preload("res://assets/icones/itens/cajados/cajado_do_firmamento.png"),
+	"Orbe do Sino Partido": preload("res://assets/icones/itens/orbes_grimorios/orbe_do_sino_partido.png"),
+	"Manto das Estrelas": preload("res://assets/icones/itens/tunicas/manto_das_estrelas.png"),
+	"Colete da Sombra Verde": preload("res://assets/icones/itens/vestimentas_arqueiro/colete_da_sombra_verde.png"),
+	"Armadura do trono": preload("res://assets/icones/itens/armaduras/armadura_do_trono.png"),
+	"Picareta de aco": preload("res://assets/icones/itens/ferramentas/picareta_de_aco.png"),
+	"Pocao pequena": preload("res://assets/icones/itens/consumiveis/pocao_pequena.png"),
+	"Presa de lobo": preload("res://assets/icones/itens/materiais/presa_de_lobo.png"),
+	"Marca da Tempestade": preload("res://assets/icones/itens/itens_especiais/marca_da_tempestade.png"),
+	"Espada de cavaleiro": preload("res://assets/icones/itens/espadas/espada_de_cavaleiro.png"),
+	"Lamina de presas": preload("res://assets/icones/itens/espadas/lamina_de_presas.png"),
+	"Espada ancestral": preload("res://assets/icones/itens/espadas/espada_ancestral.png"),
+	"Espada do saqueador": preload("res://assets/icones/itens/espadas/espada_do_saqueador.png"),
+	"Lamina da Vigilia Runica": preload("res://assets/icones/itens/espadas/lamina_da_vigilia_runica.png"),
+	"Espada de aco do Guardiao": preload("res://assets/icones/itens/espadas/espada_de_aco_do_guardiao.png"),
+	"Espada da Guarda de Valedouro": preload("res://assets/icones/itens/espadas/espada_da_guarda_de_valedouro.png"),
+	"Lamina real de Valedouro": preload("res://assets/icones/itens/espadas/lamina_real_de_valedouro.png"),
+	"Lamina do Sino Partido": preload("res://assets/icones/itens/espadas/lamina_do_sino_partido.png"),
+	"Lamina da Aurora de Valedouro": preload("res://assets/icones/itens/espadas/lamina_da_aurora_de_valedouro.png"),
+	"Escudo reforcado": preload("res://assets/icones/itens/escudos/escudo_reforcado.png"),
+	"Escudo de ferro": preload("res://assets/icones/itens/escudos/escudo_de_ferro.png"),
+	"Escudo do saqueador": preload("res://assets/icones/itens/escudos/escudo_do_saqueador.png"),
+	"Escudo reforcado de aco": preload("res://assets/icones/itens/escudos/escudo_reforcado_de_aco.png"),
+	"Escudo da muralha": preload("res://assets/icones/itens/escudos/escudo_da_muralha.png"),
+	"Escudo do Sino Partido": preload("res://assets/icones/itens/escudos/escudo_do_sino_partido.png"),
+	"Arco do Aprendiz": preload("res://assets/icones/itens/arcos/arco_do_aprendiz.png"),
+	"Arco do Sino Partido": preload("res://assets/icones/itens/arcos/arco_do_sino_partido.png"),
+	"Arco da Bruma Antiga": preload("res://assets/icones/itens/arcos/arco_da_bruma_antiga.png"),
+	"Cajado do Aprendiz": preload("res://assets/icones/itens/cajados/cajado_do_aprendiz.png"),
+	"Cajado do Eco Runico": preload("res://assets/icones/itens/cajados/cajado_do_eco_runico.png"),
+	"Cajado do Sino Partido": preload("res://assets/icones/itens/cajados/cajado_do_sino_partido.png"),
+	"Veste do Aprendiz": preload("res://assets/icones/itens/tunicas/veste_do_aprendiz.png"),
+	"Manto do Eco": preload("res://assets/icones/itens/tunicas/manto_do_eco.png"),
+	"Manto do Sino Partido": preload("res://assets/icones/itens/tunicas/manto_do_sino_partido.png"),
+	"Colete do Explorador": preload("res://assets/icones/itens/vestimentas_arqueiro/colete_do_explorador.png"),
+	"Colete do Batedor": preload("res://assets/icones/itens/vestimentas_arqueiro/colete_do_batedor.png"),
+	"Colete do Sino Partido": preload("res://assets/icones/itens/vestimentas_arqueiro/colete_do_sino_partido.png"),
+	"Armadura de couro": preload("res://assets/icones/itens/armaduras/armadura_de_couro.png"),
+	"Armadura de pedra": preload("res://assets/icones/itens/armaduras/armadura_de_pedra.png"),
+	"Armadura de ferro": preload("res://assets/icones/itens/armaduras/armadura_de_ferro.png"),
+	"Couraca da Guarda": preload("res://assets/icones/itens/armaduras/couraca_da_guarda.png"),
+	"Armadura de placas reais": preload("res://assets/icones/itens/armaduras/armadura_de_placas_reais.png"),
+	"Armadura do Sino Partido": preload("res://assets/icones/itens/armaduras/armadura_do_sino_partido.png"),
+	"Armadura do Bastião": preload("res://assets/icones/itens/armaduras/armadura_do_bastiao.png"),
+	"Machado de lenhador": preload("res://assets/icones/itens/ferramentas/machado_de_lenhador.png"),
+	"Machado de aco": preload("res://assets/icones/itens/ferramentas/machado_de_aco.png"),
+	"Picareta de mineiro": preload("res://assets/icones/itens/ferramentas/picareta_de_mineiro.png"),
+	"Kit de herbalista": preload("res://assets/icones/itens/ferramentas/kit_de_herbalista.png"),
+	"Kit botanico": preload("res://assets/icones/itens/ferramentas/kit_botanico.png"),
+	"Pocao media": preload("res://assets/icones/itens/consumiveis/pocao_media.png"),
+	"Pocao completa": preload("res://assets/icones/itens/consumiveis/pocao_completa.png"),
+	"Pocao de mana": preload("res://assets/icones/itens/consumiveis/pocao_de_mana.png"),
+	"Pele de lobo": preload("res://assets/icones/itens/materiais/pele_de_lobo.png"),
+	"Retalho de tecido": preload("res://assets/icones/itens/materiais/retalho_de_tecido.png"),
+	"Adaga enferrujada": preload("res://assets/icones/itens/materiais/adaga_enferrujada.png"),
+	"Fragmento de metal antigo": preload("res://assets/icones/itens/materiais/fragmento_de_metal_antigo.png"),
+	"Minerio de ferro": preload("res://assets/icones/itens/materiais/minerio_de_ferro.png"),
+	"Barra de ferro": preload("res://assets/icones/itens/materiais/barra_de_ferro.png"),
+	"Madeira": preload("res://assets/icones/itens/materiais/madeira.png"),
+	"Fragmento de madeira": preload("res://assets/icones/itens/materiais/fragmento_de_madeira.png"),
+	"Fragmento de rocha": preload("res://assets/icones/itens/materiais/fragmento_de_rocha.png"),
+	"Tabua de madeira": preload("res://assets/icones/itens/materiais/tabua_de_madeira.png"),
+	"Bloco de pedra": preload("res://assets/icones/itens/materiais/bloco_de_pedra.png"),
+	"Erva rara": preload("res://assets/icones/itens/materiais/erva_rara.png"),
+	"Lasca de runa": preload("res://assets/icones/itens/materiais/lasca_de_runa.png"),
+	"Nucleo runico": preload("res://assets/icones/itens/materiais/nucleo_runico.png"),
+	"Selo das Ruinas": preload("res://assets/icones/itens/itens_especiais/selo_das_ruinas.png"),
+}
+
 # MVP 0.6.2 - world camera, original 960x640 viewport and UI retained.
 const WORLD_W := 1920.0
 const WORLD_H := 1280.0
@@ -49,6 +125,7 @@ func _screen_to_world(screen_pos: Vector2) -> Vector2:
 var forest_ground: Texture2D = preload("res://assets/visual063/forest_ground.png")
 var forest_ruins: Texture2D = preload("res://assets/visual063/ruins.png")
 var forest_chest: Texture2D = preload("res://assets/visual063/forest_chest.png")
+var forest_chest_open: Texture2D = preload("res://assets/visual063/forest_chest_open.png")
 
 const CHEST_LOCATIONS := {
 	"forest_ancient_01": Vector2(1735, 1060),
@@ -65,9 +142,19 @@ func _chest_seconds_remaining(chest_id: String) -> int:
 func _draw_forest() -> void:
 	draw_texture_rect(forest_ground, Rect2(960, 640, 960, 640), false)
 	draw_texture_rect(forest_ruins, Rect2(1450, 1015, 220, 165), false)
+	# Runic landmark: visible only after Tessa unlocks the investigation.
+	if str(profile.get("rune_ruins_quest", "locked")) in ["active", "ready", "completed"]:
+		var rune_pos: Vector2 = Vector2(1500, 1030)
+		var rune_tint: Color = Color("8ed9ff") if str(profile.get("rune_ruins_quest", "")) == "active" else Color("e4c27c")
+		draw_arc(rune_pos, 28.0, 0.0, TAU, 32, rune_tint, 2.0)
+		draw_line(rune_pos + Vector2(-10, 9), rune_pos + Vector2(0, -12), rune_tint, 3.0)
+		draw_line(rune_pos + Vector2(0, -12), rune_pos + Vector2(10, 9), rune_tint, 3.0)
+		draw_line(rune_pos + Vector2(-7, 1), rune_pos + Vector2(7, 1), rune_tint, 2.0)
 	for chest_id in CHEST_LOCATIONS:
 		var chest_pos: Vector2 = CHEST_LOCATIONS[chest_id]
-		draw_texture_rect(forest_chest, Rect2(chest_pos + Vector2(-45, -40), Vector2(90, 75)), false)
+		# Baú fechado enquanto disponível; aberto durante o tempo de reposição.
+		var chest_texture: Texture2D = forest_chest_open if _chest_seconds_remaining(chest_id) > 0 else forest_chest
+		draw_texture_rect(chest_texture, Rect2(chest_pos + Vector2(-45, -40), Vector2(90, 75)), false)
 		if _chest_seconds_remaining(chest_id) > 0:
 			draw_rect(Rect2(chest_pos + Vector2(-22, -26), Vector2(45, 13)), Color("3d3229"))
 			draw_line(chest_pos + Vector2(-22, -26), chest_pos + Vector2(23, -26), Color("e3c88b"), 3.0)
@@ -77,6 +164,8 @@ func _draw_forest() -> void:
 const OBSTACLES = [Rect2(115, 100, 155, 115), Rect2(620, 110, 190, 135), Rect2(100, 410, 180, 135), Rect2(685, 420, 170, 120), Rect2(1110, 115, 155, 115), Rect2(1450, 125, 190, 135), Rect2(1100, 440, 180, 135), Rect2(1500, 430, 170, 120), Rect2(120, 825, 155, 115), Rect2(640, 825, 190, 135), Rect2(120, 1070, 180, 135), Rect2(685, 1070, 170, 120)]
 const TESSA = Vector2(350, 300)
 const BLACKSMITH = Vector2(550, 310)
+const BANK_KEEPER: Vector2 = Vector2(665, 310)
+const BANK_RANGE: float = 85.0
 # The collision centers must match TREE_TRUNKS in server/main.py.
 const TREE_BASES = [Vector2(45,103), Vector2(315,148), Vector2(550,88), Vector2(885,128), Vector2(45,493), Vector2(350,548), Vector2(610,538), Vector2(925,503), Vector2(1020, 100), Vector2(1330, 110), Vector2(1720, 100), Vector2(1850, 450), Vector2(1040, 520), Vector2(1370, 565), Vector2(1710, 575), Vector2(40, 790), Vector2(340, 810), Vector2(580, 795), Vector2(905, 815), Vector2(45, 1190), Vector2(350, 1190), Vector2(620, 1210), Vector2(940, 1180), Vector2(1030, 810), Vector2(1370, 830), Vector2(1710, 820), Vector2(1850, 1190), Vector2(1070,760), Vector2(1225,860), Vector2(1435,830), Vector2(1580,835), Vector2(1790,840), Vector2(1850,810), Vector2(1100,930), Vector2(1280,910), Vector2(1480,920), Vector2(1640,895), Vector2(1810,950), Vector2(1080,1100), Vector2(1230,1160), Vector2(1410,1110), Vector2(1600,1150), Vector2(1800,1150)]
 const ROCKS = [Vector3(290,368,19), Vector3(650,382,22), Vector3(540,480,16), Vector3(78,375,18), Vector3(1090, 355, 20), Vector3(1680, 380, 21), Vector3(1180, 1040, 20), Vector3(1580, 1040, 23)]
@@ -95,6 +184,9 @@ var dungeon_boss_phase := 0
 var dungeon_pos := Vector2i(1, 2)
 var dungeon_enemy_pos := Vector2i(8, 2)
 var dungeon_enemy_name := "Esqueleto Errante"
+# MVP 1.1.0.7.8: orientação visual da cripta, independente do combate no servidor.
+var dungeon_hero_facing := "down"
+var dungeon_boss_facing := "down"
 var dungeon_walk_timer := 0.0
 var dungeon_click_path: Array[Vector2i] = []
 var dungeon_hero_visual := Vector2(1, 2)
@@ -113,6 +205,9 @@ var dungeon_facing := Vector2.RIGHT
 var dungeon_show_range := true
 var dungeon_last_enemy_hp := -1
 var notice := ""
+# Victory presentation: the server alone grants rewards.
+var crypt_victory_time: float = 0.0
+var crypt_victory_first: bool = false
 var guardian_banner := ""
 var guardian_banner_time := 0.0
 # MVP 0.5.7: efeitos visuais temporarios; dano e recompensas sao do servidor.
@@ -320,12 +415,24 @@ const GATHER_CHANCES := {"wood":100, "ore":70, "herb":20}
 const GATHER_LABELS := {"wood":"Madeira", "ore":"Minerio de ferro", "herb":"Erva rara"}
 var smith_recipe_page := 0
 var sell_page := 0
-var sell_quantity := 1
 var pending_sale_item := ""
 var pending_sale_gear_id := ""
 var pending_sale_quantity := 1
 var sell_confirm_open := false
 const SMITH_RECIPES := [
+	{"id":"aurora_blade", "name":"Lamina da Aurora de Valedouro", "cost":"10 Barra de ferro + 12 Lasca de runa + 5 Fragmento de metal antigo | Nivel 40", "chance":55},
+	{"id":"mist_bow", "name":"Arco da Bruma Antiga", "cost":"12 Tabua de madeira + 12 Lasca de runa + 2 Nucleo runico | Nivel 40", "chance":55},
+	{"id":"sky_staff", "name":"Cajado do Firmamento", "cost":"20 Fragmento de madeira + 12 Lasca de runa + 3 Nucleo runico | Nivel 40", "chance":50},
+	{"id":"bastion_armor", "name":"Armadura do Bastião", "cost":"18 Barra de ferro + 10 Fragmento de metal antigo + 3 Nucleo runico | Nivel 60", "chance":40},
+	{"id":"shadow_vest", "name":"Colete da Sombra Verde", "cost":"20 Pele de lobo + 18 Retalho de tecido + 3 Nucleo runico | Nivel 60", "chance":45},
+	{"id":"star_mantle", "name":"Manto das Estrelas", "cost":"24 Retalho de tecido + 10 Erva rara + 4 Nucleo runico | Nivel 60", "chance":40},
+	{"id":"guard_sword", "name":"Espada da Guarda de Valedouro", "cost":"5 Barra de ferro + 4 Lasca de runa", "chance":70},
+	{"id":"ranger_bow", "name":"Arco do Vigia Runico", "cost":"5 Tabua de madeira + 5 Lasca de runa", "chance":70},
+	{"id":"mage_staff", "name":"Cajado do Eco Runico", "cost":"12 Fragmento de madeira + 5 Lasca de runa + 1 Nucleo runico", "chance":65},
+	{"id":"guard_armor", "name":"Couraca da Guarda", "cost":"6 Barra de ferro + 4 Pele de lobo", "chance":70},
+	{"id":"ranger_armor", "name":"Colete do Batedor", "cost":"8 Pele de lobo + 5 Retalho de tecido", "chance":75},
+	{"id":"mage_armor", "name":"Manto do Eco", "cost":"10 Retalho de tecido + 2 Erva rara", "chance":75},
+
 	{"id":"steel_axe", "name":"Machado de aco", "cost":"24 madeira + 5 barras + 2 adagas | Lenhador 6", "chance":55},
 	{"id":"steel_pick", "name":"Picareta de aco", "cost":"24 pedra + 6 barras + 5 minerios | Mineiro 6", "chance":50},
 	{"id":"botanical_kit", "name":"Kit botanico", "cost":"5 ervas + 4 tabuas + 1 metal antigo | Herbalista 6", "chance":45},
@@ -342,11 +449,16 @@ const SMITH_RECIPES := [
 	{"id":"full_potion", "name":"Pocao completa", "cost":"3 ervas + 2 medias + 1 metal", "chance":15},
 	{"id":"raider_shield", "name":"Escudo do saqueador", "cost":"4 adagas + 3 barras + 2 tabuas", "chance":25},
 	{"id":"raider_sword", "name":"Espada do saqueador", "cost":"6 adagas + 4 barras + 3 presas", "chance":12},
-	{"id":"ancient_blade", "name":"Espada ancestral", "cost":"5 metais + 6 barras + 8 presas + 12 frag. madeira", "chance":3}
+	{"id":"ancient_blade", "name":"Espada ancestral", "cost":"5 metais + 6 barras + 8 presas + 12 frag. madeira", "chance":3},
+	{"id":"rune_blade", "name":"Lamina da Vigilia Runica", "cost":"8 lascas + 1 nucleo + 4 barras", "chance":65}
 ]
 
 var key_previous := {}
 var name_input: LineEdit
+var pending_new_hero_name: String = ""
+var class_picker: OptionButton
+var saved_hero_picker: OptionButton
+var saved_hero_names: Array[String] = []
 const HERO_CONFIG := "user://hero_profile.cfg"
 var remembered_hero: String = ""
 var show_shop := false
@@ -355,6 +467,7 @@ var upgrade_confirm_slot := ""
 var smith_dialog := false
 var smith_dialog_click_targets: Array = []
 var show_quests := false
+var quest_page: int = 0
 var show_professions := false
 var show_classes := false
 var show_skill_tree := false
@@ -365,6 +478,16 @@ var inventory_click_targets: Array = []
 var shop_click_targets: Array = []
 var crafting_click_targets: Array = []
 var inventory_page := 0
+# MVP 1.0.6.8: local-only inventory organization. Server remains authoritative.
+var inventory_category_index: int = 0
+var inventory_rarity_index: int = 0
+var inventory_sort_index: int = 0
+var inventory_search: String = ""
+var inventory_search_active: bool = false
+const INVENTORY_CATEGORIES := ["Todos", "Equipamentos", "Materiais", "Consumiveis", "Missao"]
+const INVENTORY_RARITIES := ["Todas", "Comum", "Incomum", "Raro", "Epico", "Lendario"]
+const INVENTORY_SORTS := ["Nome", "Quantidade", "Raridade"]
+
 var dialog_speaker := ""
 var dialog_text := ""
 
@@ -547,7 +670,7 @@ func _nav_blocked(pos: Vector2) -> bool:
 	for obstacle in BARRELS:
 		if pos.distance_squared_to(Vector2(obstacle.x, obstacle.y)) < pow(BODY_RADIUS + obstacle.z, 2):
 			return true
-	if pos.distance_squared_to(TESSA) < pow(BODY_RADIUS + 12.0, 2) or pos.distance_squared_to(BLACKSMITH) < pow(BODY_RADIUS + 12.0, 2):
+	if pos.distance_squared_to(TESSA) < pow(BODY_RADIUS + 12.0, 2) or pos.distance_squared_to(BLACKSMITH) < pow(BODY_RADIUS + 12.0, 2) or pos.distance_squared_to(BANK_KEEPER) < pow(BODY_RADIUS + 12.0, 2):
 		return true
 	return false
 
@@ -632,10 +755,66 @@ func _nav_direction(delta: float) -> Vector2:
 const SPRITE_W := 96
 const SPRITE_H := 112
 var hero_sprite: Texture2D = preload("res://assets/sprites/hero.png")
-var hero_unarmed_sprite: Texture2D = preload("res://assets/sprites/hero_unarmed.png")
-var tessa_sprite: Texture2D = preload("res://assets/sprites/tessa.png")
+var hero_unarmed_sprite: Texture2D = preload("res://assets/visual110/hero_unarmed_detailed.png")
+var district_terrain: Array[Texture2D] = [
+	preload("res://assets/visual110/terrain_0.png"),
+	preload("res://assets/visual110/terrain_1.png"),
+	preload("res://assets/visual110/terrain_2.png"),
+	preload("res://assets/visual110/terrain_3.png")
+]
+# MVP 1.1.0.7.5: atlas direcionais independentes para movimento e ataque.
+# Ordem provisoria das linhas: baixo, cima, esquerda, direita.
+var character_animation_atlases: Dictionary = {
+	"guerreiro": {"move": preload("res://assets/characters/guerreiro/move.png"), "attack": preload("res://assets/characters/guerreiro/attack.png")},
+	"arqueiro": {"move": preload("res://assets/characters/arqueiro/move.png"), "attack": preload("res://assets/characters/arqueiro/attack.png")},
+	"mago": {"move": preload("res://assets/characters/mago/move.png"), "attack": preload("res://assets/characters/mago/attack.png")},
+	"lobo": {"move": preload("res://assets/characters/lobo/move.png"), "attack": preload("res://assets/characters/lobo/attack.png")},
+	"saqueador": {"move": preload("res://assets/characters/saqueador/move.png"), "attack": preload("res://assets/characters/saqueador/attack.png")},
+	"sentinela_runica": {"move": preload("res://assets/characters/sentinela_runica/move.png"), "attack": preload("res://assets/characters/sentinela_runica/attack.png")},
+	"guardiao_tempestade": {"move": preload("res://assets/characters/guardiao_tempestade/move.png"), "attack": preload("res://assets/characters/guardiao_tempestade/attack.png")},
+	"guardiao_sino_partido": {"move": preload("res://assets/characters/guardiao_sino_partido/move.png"), "attack": preload("res://assets/characters/guardiao_sino_partido/attack.png")},
+	"velkran": {"move": preload("res://assets/characters/velkran/move.png"), "attack": preload("res://assets/characters/velkran/attack.png")},
+}
+
+var class_hero_sprites: Dictionary = {
+	"Guerreiro": preload("res://assets/visual110/hero_warrior.png"),
+	"Arqueiro": preload("res://assets/visual110/hero_archer.png"),
+	"Mago": preload("res://assets/visual110/hero_mage.png")
+}
+var city_npc_sprites: Dictionary = {
+	"cartographer": preload("res://assets/visual110/npc_cartographer.png"),
+	"merchant": preload("res://assets/visual110/npc_merchant.png"),
+	"sentinel": preload("res://assets/visual110/npc_sentinel.png")
+}
+var tessa_sprite: Texture2D = preload("res://assets/visual110/npc_tessa_atlas.png")
 var wolf_sprite: Texture2D = preload("res://assets/sprites/wolf.png")
 var raider_sprite: Texture2D = preload("res://assets/sprites/raider.png")
+var visual_npc_tessa_atlas: Texture2D = preload("res://assets/visual110/npc_tessa_atlas.png")
+var visual_npc_ferreiro_detail: Texture2D = preload("res://assets/visual110/npc_ferreiro_detail.png")
+var visual_wolf_detail: Texture2D = preload("res://assets/visual110/wolf_detail.png")
+var visual_wolf_walk: Texture2D = preload("res://assets/visual110/wolf_walk.png")
+var visual_wolf_real: Texture2D = preload("res://assets/visual110/wolf_anim_real.png")
+var visual_raider_fighter_real: Texture2D = preload("res://assets/visual110/raider_fighter_real.png")
+var visual_raider_hooded_real: Texture2D = preload("res://assets/visual110/raider_hooded_real.png")
+var visual_raider_shaman_real: Texture2D = preload("res://assets/visual110/raider_shaman_real.png")
+var visual_decor_reference: Texture2D = preload("res://assets/visual110/decor_reference_strip.png")
+var visual_items_reference: Texture2D = preload("res://assets/visual110/items_reference_strip.png")
+var visual_raider_walk: Texture2D = preload("res://assets/visual110/raider_walk.png")
+var visual_boss_bell_walk: Texture2D = preload("res://assets/visual110/boss_bell_walk.png")
+var visual_boss_storm_walk: Texture2D = preload("res://assets/visual110/boss_storm_walk.png")
+
+var visual_raider_detail: Texture2D = preload("res://assets/visual110/raider_detail.png")
+var visual_boss_bell_detail: Texture2D = preload("res://assets/visual110/boss_bell_detail.png")
+var visual_boss_storm_detail: Texture2D = preload("res://assets/visual110/boss_storm_detail.png")
+var visual_house_cottage: Texture2D = preload("res://assets/visual110/house_cottage.png")
+var visual_house_workshop: Texture2D = preload("res://assets/visual110/house_workshop.png")
+var visual_house_guild: Texture2D = preload("res://assets/visual110/house_guild.png")
+var visual_house_townhall: Texture2D = preload("res://assets/visual110/house_townhall.png")
+var visual_tree_oak: Texture2D = preload("res://assets/visual110/tree_oak.png")
+var visual_tree_autumn: Texture2D = preload("res://assets/visual110/tree_autumn.png")
+var visual_tree_blossom: Texture2D = preload("res://assets/visual110/tree_blossom.png")
+var visual_tree_pine: Texture2D = preload("res://assets/visual110/tree_pine.png")
+
 
 
 func _pressed_once(key: Key) -> bool:
@@ -648,9 +827,11 @@ func _send_action(kind: String, item: String = "") -> void:
 	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
 		socket.send_text(JSON.stringify({"type":kind, "item":item}))
 
-func _send_sell(item: String) -> void:
-	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
-		socket.send_text(JSON.stringify({"type":"sell", "item":item, "quantity":sell_quantity}))
+func _bank_nearby() -> bool:
+	if not players.has(player_id):
+		return false
+	var hero: Dictionary = players[player_id]
+	return Vector2(float(hero.get("x", 0)), float(hero.get("y", 0))).distance_to(BANK_KEEPER) <= BANK_RANGE
 
 func _smith_nearby() -> bool:
 	if not players.has(player_id):
@@ -668,22 +849,239 @@ func _ask_sell(item: String, gear_id: String = "") -> void:
 	# Server checks allowed items; rare items are protected there.
 	pending_sale_item = item
 	pending_sale_gear_id = gear_id
-	pending_sale_quantity = mini(sell_quantity, int(stock.get(item, 0)))
-	# Quantity is selected explicitly; do not silently sell fewer items.
-	pending_sale_quantity = 1 if gear_id != "" else sell_quantity
+	# Quantity is chosen in the confirmation dialog, never in the smith shop.
+	pending_sale_quantity = 1
 	sell_confirm_open = true
 
 func _equip_label(value: Variant) -> String:
 	return "Nao equipado" if value == null or str(value) == "" else str(value)
 
 func _submit_name(value: String) -> void:
-	if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
-		socket.send_text(JSON.stringify({"type":"name", "name":value}))
+	# Primeiro consulta o servidor; nunca escolhe classe antes de validar o nome.
+	if socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
+		return
+	if value.strip_edges().length() < 3:
+		notice = "Nome deve ter pelo menos 3 caracteres."
+		return
+	socket.send_text(JSON.stringify({"type":"check_hero_name", "name":value.strip_edges()}))
+
+# Selecao de personagens persistidos; o servidor continua a validar o carregamento.
+func _on_saved_hero_selected(index: int) -> void:
+	if index <= 0 or index >= saved_hero_picker.item_count:
+		return
+	if socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
+		return
+	var chosen: String = saved_hero_picker.get_item_text(index)
+	# Solicita explicitamente o carregamento do heroi escolhido, sem criar outro.
+	socket.send_text(JSON.stringify({"type":"select_hero", "name":chosen}))
+	saved_hero_picker.hide()
+	notice = "A carregar heroi: " + chosen
+
+func _refresh_saved_hero_picker(heroes: Array) -> void:
+	saved_hero_picker.clear()
+	saved_hero_picker.add_item("Selecionar heroi existente...")
+	for hero_entry in heroes:
+		var hero_name := str(hero_entry.get("name", ""))
+		if hero_name != "":
+			saved_hero_picker.add_item(hero_name)
+	saved_hero_picker.select(0)
+
+func _on_creation_class_selected(index: int) -> void:
+	if pending_new_hero_name == "" or socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
+		return
+	var chosen_class := class_picker.get_item_text(index)
+	socket.send_text(JSON.stringify({"type":"name", "name":pending_new_hero_name, "class":chosen_class, "create_only":true}))
+	pending_new_hero_name = ""
 	name_input.hide()
+	class_picker.hide()
 	name_input.release_focus()
 
 
+var show_attributes: bool = false
+var show_bank: bool = false
+var bank_click_targets: Array = []
+var bank_page: int = 0
+
+func _paged_panel_page_count() -> int:
+	# Only panels with more than two pages respond to Up / Down.
+	if show_quests:
+		var mission_count: int = 2 # Protecao de Valedouro e Primeira Entrega
+		if str(profile.get("quest", "not_started")) == "completed":
+			mission_count += 1 # Floresta
+		if str(profile.get("forest_quest", "locked")) == "completed":
+			mission_count += 1 # Selo
+		if str(profile.get("guardian_quest", "locked")) == "completed":
+			mission_count += 1 # Cripta
+		if bool(profile.get("bank_intro_done", false)):
+			mission_count += 1 # Reserva
+		return maxi(1, int(ceili(float(mission_count) / 3.0)))
+	if show_bank:
+		var bag_count: int = 0
+		var bank_count: int = 0
+		for item in profile.get("inventory", {}):
+			if str(item) != "Selo das Ruinas" and not EQUIPMENT_RARITY.has(str(item)):
+				bag_count += 1
+		bag_count += profile.get("gear_bag", []).size()
+		for item in profile.get("bank_items", {}):
+			if not EQUIPMENT_RARITY.has(str(item)):
+				bank_count += 1
+		bank_count += profile.get("bank_gear", []).size()
+		return maxi(1, int(ceili(float(maxi(bag_count, bank_count)) / 8.0)))
+	if show_inventory:
+		var entries: Array = []
+		var items: Dictionary = profile.get("inventory", {})
+		for item in items:
+			if int(items[item]) > 0 and not EQUIPMENT_RARITY.has(str(item)):
+				entries.append({"name":str(item), "amount":int(items[item]), "id":"", "level":0, "enchant":""})
+		for gear_value in profile.get("gear_bag", []):
+			if gear_value is Dictionary:
+				entries.append({"name":str(gear_value.get("name", "")), "amount":1, "id":str(gear_value.get("id", "")), "level":int(gear_value.get("level", 0)), "enchant":str(gear_value.get("enchant", ""))})
+		return maxi(1, int(ceili(float(_inventory_visible_entries(entries).size()) / 8.0)))
+	if show_shop and smith_mode == "craft":
+		return maxi(1, int(ceili(float(SMITH_RECIPES.size()) / 5.0)))
+	if show_shop and smith_mode == "shop":
+		return 3
+	return 1
+
+func _navigate_paged_panel(direction: int) -> bool:
+	var pages: int = _paged_panel_page_count()
+	if pages <= 1:
+		return false
+	if show_quests:
+		quest_page = clampi(quest_page + direction, 0, pages - 1)
+	elif show_bank:
+		bank_page = clampi(bank_page + direction, 0, pages - 1)
+	elif show_inventory:
+		inventory_page = clampi(inventory_page + direction, 0, pages - 1)
+	elif show_shop and smith_mode == "craft":
+		smith_recipe_page = clampi(smith_recipe_page + direction, 0, pages - 1)
+	elif show_shop and smith_mode == "shop":
+		sell_page = clampi(sell_page + direction, 0, pages - 1)
+	else:
+		return false
+	queue_redraw()
+	return true
+
 func _input(event: InputEvent) -> void:
+	# O menu de herois tem prioridade sobre a navegacao/combate por clique.
+	# Nao marcar o evento como handled: o OptionButton e o seu PopupMenu
+	# precisam de receber o clique atraves do sistema de GUI do Godot.
+	if is_instance_valid(saved_hero_picker) and saved_hero_picker.visible:
+		if event is InputEventMouseButton or event is InputEventMouseMotion:
+			return
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_O and not name_input.visible and not inventory_search_active:
+		show_attributes = not show_attributes
+		if show_attributes:
+			show_classes = false
+			show_skill_tree = false
+		get_viewport().set_input_as_handled()
+		queue_redraw()
+		return
+	if show_attributes and event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var point: Vector2 = event.position
+		for i in range(5):
+			if Rect2(640, 167 + i * 58, 38, 32).has_point(point):
+				if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
+					socket.send_text(JSON.stringify({"type":"allocate_attribute", "attribute":["forca","vitalidade","destreza","inteligencia","agilidade"][i]}))
+				get_viewport().set_input_as_handled()
+				return
+
+	# Capture arrow key presses while a paginated panel is open.
+	# A two-page panel must also be navigable.
+	if event is InputEventKey and event.pressed and not event.echo and not name_input.visible and not inventory_search_active:
+		var arrow_direction: int = 0
+		if event.keycode == KEY_UP or event.physical_keycode == KEY_UP:
+			arrow_direction = -1
+		elif event.keycode == KEY_DOWN or event.physical_keycode == KEY_DOWN:
+			arrow_direction = 1
+		if arrow_direction != 0 and _navigate_paged_panel(arrow_direction):
+			get_viewport().set_input_as_handled()
+			return
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_B and not name_input.visible and not inventory_search_active:
+		if not show_bank and not _bank_nearby():
+			notice = "Aproxima-te da Guardiã do Armazém (junto ao Ferreiro) e prime B."
+			get_viewport().set_input_as_handled()
+			return
+		show_bank = not show_bank
+		if show_bank:
+			notice = "Guardiã: Bem-vindo ao armazém! Os teus pertences estão seguros comigo."
+			show_inventory = false
+			show_shop = false
+			bank_page = 0
+		get_viewport().set_input_as_handled()
+		return
+	if show_bank and not _bank_nearby():
+		show_bank = false
+		notice = "Afastaste-te do armazém."
+	if show_bank and event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			bank_page += 1
+			get_viewport().set_input_as_handled()
+			return
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			bank_page = maxi(0, bank_page - 1)
+			get_viewport().set_input_as_handled()
+			return
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			for target in bank_click_targets:
+				if target["rect"].has_point(event.position):
+					if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
+						socket.send_text(JSON.stringify({"type":"bank_transfer", "direction":str(target["direction"]), "item":str(target["item"]), "gear_id":str(target.get("gear_id",""))}))
+					else:
+						notice = "Sem ligacao ao servidor. Nao foi possivel transferir o item."
+					get_viewport().set_input_as_handled()
+					return
+		if Rect2(180, 75, 620, 430).has_point(event.position):
+			get_viewport().set_input_as_handled()
+			return
+
+	# Filter controls and text search live entirely inside the backpack window.
+	if show_inventory and not name_input.visible and not sell_confirm_open:
+		if inventory_search_active and event is InputEventKey and event.pressed:
+			if event.keycode == KEY_ESCAPE or event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
+				inventory_search_active = false
+			elif event.keycode == KEY_BACKSPACE:
+				if inventory_search.length() > 0:
+					inventory_search = inventory_search.substr(0, inventory_search.length() - 1)
+					inventory_page = 0
+			elif event.unicode >= 32 and not event.ctrl_pressed and not event.alt_pressed and inventory_search.length() < 40:
+				inventory_search += char(event.unicode)
+				inventory_page = 0
+			get_viewport().set_input_as_handled()
+			return
+		if event is InputEventMouseButton and event.pressed:
+			var filter_click: Vector2 = get_global_mouse_position()
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				for tab_index in range(INVENTORY_CATEGORIES.size()):
+					var tab_rect: Rect2 = Rect2(511 + tab_index * 84, 250, 81, 20)
+					if tab_rect.has_point(filter_click):
+						inventory_category_index = tab_index
+						inventory_page = 0
+						inventory_search_active = false
+						get_viewport().set_input_as_handled()
+						return
+				if Rect2(511, 273, 100, 20).has_point(filter_click):
+					inventory_rarity_index = (inventory_rarity_index + 1) % INVENTORY_RARITIES.size()
+					inventory_page = 0
+					inventory_search_active = false
+					get_viewport().set_input_as_handled()
+					return
+				if Rect2(615, 273, 102, 20).has_point(filter_click):
+					inventory_sort_index = (inventory_sort_index + 1) % INVENTORY_SORTS.size()
+					inventory_page = 0
+					inventory_search_active = false
+					get_viewport().set_input_as_handled()
+					return
+				if Rect2(721, 273, 207, 20).has_point(filter_click):
+					inventory_search_active = true
+					get_viewport().set_input_as_handled()
+					return
+			elif event.button_index == MOUSE_BUTTON_RIGHT and Rect2(721, 273, 207, 20).has_point(filter_click):
+				inventory_search = ""
+				inventory_page = 0
+				inventory_search_active = false
+				get_viewport().set_input_as_handled()
+				return
 	if dungeon_active and event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT and not name_input.visible:
 		var crypt_mouse := get_global_mouse_position()
 		var crypt_origin := Vector2(195, 151)
@@ -693,6 +1091,21 @@ func _input(event: InputEvent) -> void:
 			dungeon_auto_route.clear()
 			dungeon_manual_pause = 1.2
 			dungeon_click_path = _crypt_find_path(dungeon_pos, destination)
+			get_viewport().set_input_as_handled()
+			return
+	# Diary controls use viewport coordinates, never world coordinates.
+	if show_quests and event is InputEventMouseButton and event.pressed:
+		var diary_rect: Rect2 = Rect2(155, 55, 650, 465)
+		if diary_rect.has_point(event.position):
+			if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				quest_page += 1
+			elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				quest_page = maxi(0, quest_page - 1)
+			elif event.button_index == MOUSE_BUTTON_LEFT:
+				if Rect2(570, 479, 95, 29).has_point(event.position):
+					quest_page = maxi(0, quest_page - 1)
+				elif Rect2(670, 479, 115, 29).has_point(event.position):
+					quest_page += 1
 			get_viewport().set_input_as_handled()
 			return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -721,7 +1134,7 @@ func _input(event: InputEvent) -> void:
 			if Rect2(280, 174 + j * 38, 395, 35).has_point(class_mouse):
 				var chosen: String = ["Guerreiro", "Mago", "Arqueiro"][j]
 				if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
-					socket.send_text(JSON.stringify({"type":"choose_class", "class":chosen}))
+					notice = "Classe definitiva: " + str(profile.get("combat_class", "Guerreiro"))
 				show_classes = false
 				get_viewport().set_input_as_handled()
 				return
@@ -775,11 +1188,18 @@ func _input(event: InputEvent) -> void:
 	if sell_confirm_open and event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			var point := get_global_mouse_position()
-			if Rect2(500, 332, 185, 43).has_point(point):
-				if socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
+			var owned: int = int(profile.get("inventory", {}).get(pending_sale_item, 0))
+			for qty_index in range(6):
+				var qty_rect := Rect2(500 + qty_index * 65, 292, 61, 32)
+				if qty_rect.has_point(point):
+					var qty_value: int = [1, 5, 10, 20, 50, owned][qty_index]
+					pending_sale_quantity = 1 if pending_sale_gear_id != "" else mini(9999, mini(owned, qty_value))
+					break
+			if Rect2(500, 350, 185, 43).has_point(point):
+				if pending_sale_quantity > 0 and pending_sale_quantity <= owned and socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
 					socket.send_text(JSON.stringify({"type":"sell", "item":pending_sale_item, "quantity":pending_sale_quantity, "gear_id":pending_sale_gear_id}))
 				sell_confirm_open = false
-			elif Rect2(696, 332, 185, 43).has_point(point):
+			elif Rect2(696, 350, 185, 43).has_point(point):
 				sell_confirm_open = false
 		get_viewport().set_input_as_handled()
 		return
@@ -795,13 +1215,11 @@ func _input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 					return
 		# Evita movimentacao ao clicar nas janelas.
-		if (show_inventory and Rect2(495, 60, 448, 458).has_point(click)) or (show_quests and Rect2(15, 60, 426, 348).has_point(click)):
+		if (show_inventory and Rect2(495, 60, 448, 458).has_point(click)) or (show_quests and Rect2(155, 55, 650, 465).has_point(click)):
 			return
 		if show_shop or show_dialog:
 			return
-		var me: Dictionary = players[player_id]
-		_nav_route(Vector2(float(me.get("x", 0)), float(me.get("y", 0))), _screen_to_world(click))
-		manual_click_route = nav_active
+		# Botao direito reservado para venda e acoes de contexto.
 		get_viewport().set_input_as_handled()
 		return
 	if event is InputEventMouseButton and event.pressed and show_inventory and Rect2(495, 60, 448, 458).has_point(get_global_mouse_position()):
@@ -824,7 +1242,7 @@ func _input(event: InputEvent) -> void:
 			return
 	if event is InputEventMouseButton and event.pressed and show_shop and smith_mode == "shop" and Rect2(16, 62, 435, 520).has_point(get_global_mouse_position()):
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			sell_page = mini(1, sell_page + 1)
+			sell_page = mini(2, sell_page + 1)
 			get_viewport().set_input_as_handled()
 			return
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
@@ -869,11 +1287,6 @@ func _input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 					return
 		if show_shop:
-			for target in shop_click_targets:
-				if target["rect"].has_point(mouse) and str(target["action"]) == "batch":
-					sell_quantity = int(target["item"])
-					get_viewport().set_input_as_handled()
-					return
 			for target in crafting_click_targets:
 				if target["rect"].has_point(mouse):
 					socket.send_text(JSON.stringify({"type":"craft","recipe":str(target["recipe"])}))
@@ -882,7 +1295,7 @@ func _input(event: InputEvent) -> void:
 			for target in shop_click_targets:
 				if target["rect"].has_point(mouse):
 					if str(target["action"]) == "sell":
-						_send_sell(str(target["item"]))
+						_ask_sell(str(target["item"]))
 					else:
 						_send_action(str(target["action"]), str(target["item"]))
 					get_viewport().set_input_as_handled()
@@ -907,11 +1320,81 @@ func _input(event: InputEvent) -> void:
 				click_attack_elapsed = 0.0
 				auto_repath_elapsed = 0.0
 				manual_click_route = false
-			elif socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
+			else:
+				# Clique esquerdo: monstro > material > deslocacao.
 				click_attack_target_id = ""
-				socket.send_text(JSON.stringify({"type":"attack"}))
+				var resource_id := ""
+				var resource_distance := 35.0
+				for resource in profile.get("resource_nodes", []):
+					var resource_pos := Vector2(float(resource.get("x", 0)), float(resource.get("y", 0)))
+					var distance := attack_world.distance_to(resource_pos)
+					if distance < resource_distance:
+						resource_distance = distance
+						resource_id = str(resource.get("id", ""))
+				if resource_id != "":
+					if players.has(player_id):
+						var me: Dictionary = players[player_id]
+						var hero_pos := Vector2(float(me.get("x", 0)), float(me.get("y", 0)))
+						if hero_pos.distance_to(attack_world) <= 85.0 and socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
+							socket.send_text(JSON.stringify({"type":"gather", "node_id":resource_id}))
+						else:
+							_nav_route(hero_pos, attack_world)
+							manual_click_route = nav_active
+							notice = "Aproxima-te do recurso e clica novamente para recolher."
+				elif players.has(player_id):
+					var me: Dictionary = players[player_id]
+					_nav_route(Vector2(float(me.get("x", 0)), float(me.get("y", 0))), attack_world)
+					manual_click_route = nav_active
 			get_viewport().set_input_as_handled()
 			return
+
+# Inventory categories and sorting only change what is displayed, never the inventory itself.
+func _inventory_entry_category(entry: Dictionary) -> String:
+	var item_name: String = str(entry.get("name", ""))
+	if item_name == "Selo das Ruinas":
+		return "Missao"
+	if str(entry.get("id", "")) != "" or EQUIPMENT_RARITY.has(item_name):
+		return "Equipamentos"
+	if item_name.begins_with("Pocao"):
+		return "Consumiveis"
+	return "Materiais"
+
+func _inventory_visible_entries(entries: Array) -> Array:
+	var result: Array = []
+	var category: String = INVENTORY_CATEGORIES[inventory_category_index]
+	var rarity: String = INVENTORY_RARITIES[inventory_rarity_index]
+	var query: String = inventory_search.strip_edges().to_lower()
+	for value in entries:
+		if not (value is Dictionary):
+			continue
+		var entry: Dictionary = value
+		var item_name: String = str(entry.get("name", ""))
+		if category != "Todos" and _inventory_entry_category(entry) != category:
+			continue
+		var entry_rarity: String = str(EQUIPMENT_RARITY.get(item_name, "Comum"))
+		if rarity != "Todas" and entry_rarity != rarity:
+			continue
+		if query != "" and not item_name.to_lower().contains(query):
+			continue
+		result.append(entry)
+	var order: int = inventory_sort_index
+	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var an: String = str(a.get("name", ""))
+		var bn: String = str(b.get("name", ""))
+		if order == 1:
+			var aq: int = int(a.get("amount", 0))
+			var bq: int = int(b.get("amount", 0))
+			if aq != bq:
+				return aq > bq
+		elif order == 2:
+			var rank: Dictionary = {"Comum":0, "Incomum":1, "Raro":2, "Epico":3, "Lendario":4}
+			var ar: int = int(rank.get(str(EQUIPMENT_RARITY.get(an, "Comum")), 0))
+			var br: int = int(rank.get(str(EQUIPMENT_RARITY.get(bn, "Comum")), 0))
+			if ar != br:
+				return ar > br
+		return an.naturalnocasecmp_to(bn) < 0
+	)
+	return result
 
 func _item_icon(item: String) -> String:
 	match item:
@@ -959,6 +1442,12 @@ func _item_icon(item: String) -> String:
 	return "???"
 
 func _item_description(item: String) -> String:
+	if EQUIPMENT_COMPARE.has(item) and EQUIPMENT_LEVEL_REQUIREMENTS.has(item):
+		var item_data: Dictionary = EQUIPMENT_COMPARE[item]
+		var required_level: int = int(EQUIPMENT_LEVEL_REQUIREMENTS[item])
+		var required_class: String = str(EQUIPMENT_REQUIRED_CLASS.get(item, ""))
+		var stat_text: String = "+%d ATQ" % int(item_data.get("attack", 0)) if int(item_data.get("attack", 0)) > 0 else "+%d DEF" % int(item_data.get("defense", 0))
+		return "%s | %s | Nivel %d | %s" % [item, stat_text, required_level, required_class]
 	match item:
 		"Espada de cavaleiro": return "Ataque +18 | Compra: 520 ouro"
 		"Espada de aco do Guardiao": return "Ataque +32 | Compra: 1250 ouro"
@@ -1005,7 +1494,45 @@ func _item_description(item: String) -> String:
 
 
 # Apenas dados de apresentacao; o servidor continua a ser autoritativo.
+const EQUIPMENT_CLASS_REQUIREMENTS := {
+	"Arco do Sino Partido": "Arqueiro",
+	"Aljava do Sino Partido": "Arqueiro",
+	"Colete do Sino Partido": "Arqueiro",
+	"Cajado do Sino Partido": "Mago",
+	"Orbe do Sino Partido": "Mago",
+	"Manto do Sino Partido": "Mago",
+	"Lamina do Sino Partido": "Guerreiro",
+	"Escudo do Sino Partido": "Guerreiro",
+	"Armadura do Sino Partido": "Guerreiro",
+}
+const EQUIPMENT_LEVEL_REQUIREMENTS := {"Lamina da Aurora de Valedouro": 40, "Arco da Bruma Antiga": 40, "Cajado do Firmamento": 40, "Armadura do Bastião": 60, "Colete da Sombra Verde": 60, "Manto das Estrelas": 60, "Arco do Aprendiz": 1, "Colete do Explorador": 1, "Cajado do Aprendiz": 1, "Veste do Aprendiz": 1, "Espada da Guarda de Valedouro": 20, "Arco do Vigia Runico": 20, "Cajado do Eco Runico": 20, "Couraca da Guarda": 20, "Colete do Batedor": 20, "Manto do Eco": 20}
+const EQUIPMENT_REQUIRED_CLASS := {"Lamina da Aurora de Valedouro": "Guerreiro", "Arco da Bruma Antiga": "Arqueiro", "Cajado do Firmamento": "Mago", "Armadura do Bastião": "Guerreiro", "Colete da Sombra Verde": "Arqueiro", "Manto das Estrelas": "Mago", "Arco do Aprendiz": "Arqueiro", "Colete do Explorador": "Arqueiro", "Cajado do Aprendiz": "Mago", "Veste do Aprendiz": "Mago", "Espada da Guarda de Valedouro": "Guerreiro", "Arco do Vigia Runico": "Arqueiro", "Cajado do Eco Runico": "Mago", "Couraca da Guarda": "Guerreiro", "Colete do Batedor": "Arqueiro", "Manto do Eco": "Mago"}
 const EQUIPMENT_COMPARE := {
+	"Arco do Sino Partido": {"slot":"weapon", "attack":35, "defense":0, "price":0},
+	"Aljava do Sino Partido": {"slot":"offhand", "attack":0, "defense":20, "price":0},
+	"Colete do Sino Partido": {"slot":"armor", "attack":0, "defense":30, "price":0},
+	"Cajado do Sino Partido": {"slot":"weapon", "attack":35, "defense":0, "price":0},
+	"Orbe do Sino Partido": {"slot":"offhand", "attack":0, "defense":20, "price":0},
+	"Manto do Sino Partido": {"slot":"armor", "attack":0, "defense":30, "price":0},
+
+	"Lamina da Aurora de Valedouro": {"slot":"weapon", "attack":44, "defense":0, "price":0},
+	"Arco da Bruma Antiga": {"slot":"weapon", "attack":42, "defense":0, "price":0},
+	"Cajado do Firmamento": {"slot":"weapon", "attack":41, "defense":0, "price":0},
+	"Armadura do Bastião": {"slot":"armor", "attack":0, "defense":40, "price":0},
+	"Colete da Sombra Verde": {"slot":"armor", "attack":0, "defense":30, "price":0},
+	"Manto das Estrelas": {"slot":"armor", "attack":0, "defense":25, "price":0},
+	"Arco do Aprendiz": {"slot":"weapon", "attack":11, "defense":0, "price":180},
+	"Colete do Explorador": {"slot":"armor", "attack":0, "defense":9, "price":210},
+	"Cajado do Aprendiz": {"slot":"weapon", "attack":12, "defense":0, "price":180},
+	"Veste do Aprendiz": {"slot":"armor", "attack":0, "defense":8, "price":210},
+
+	"Espada da Guarda de Valedouro": {"slot":"weapon", "attack":29, "defense":0, "price":0},
+	"Arco do Vigia Runico": {"slot":"weapon", "attack":27, "defense":0, "price":0},
+	"Cajado do Eco Runico": {"slot":"weapon", "attack":26, "defense":0, "price":0},
+	"Couraca da Guarda": {"slot":"armor", "attack":0, "defense":24, "price":0},
+	"Colete do Batedor": {"slot":"armor", "attack":0, "defense":17, "price":0},
+	"Manto do Eco": {"slot":"armor", "attack":0, "defense":13, "price":0},
+
 	"Espada de ferro": {"slot":"weapon", "attack":8, "defense":0, "price":65},
 	"Escudo de madeira": {"slot":"offhand", "attack":0, "defense":3, "price":45},
 	"Armadura de couro": {"slot":"armor", "attack":0, "defense":5, "price":90},
@@ -1024,17 +1551,47 @@ const EQUIPMENT_COMPARE := {
 	"Escudo da muralha": {"slot":"offhand", "attack":0, "defense":29, "price":1950},
 	"Armadura de placas reais": {"slot":"armor", "attack":0, "defense":25, "price":1600},
 	"Armadura do trono": {"slot":"armor", "attack":0, "defense":37, "price":3400},
+	"Lamina do Sino Partido": {"slot":"weapon", "attack":35, "defense":0, "price":0},
+	"Escudo do Sino Partido": {"slot":"offhand", "attack":0, "defense":20, "price":0},
+	"Armadura do Sino Partido": {"slot":"armor", "attack":0, "defense":30, "price":0},
+	"Lamina da Vigilia Runica": {"slot":"weapon", "attack":30, "defense":0, "price":0},
 }
 
 # Raridade e uma classificacao visual fixa dos equipamentos existentes.
 # Os atributos e os precos permanecem sob autoridade do servidor.
 const EQUIPMENT_RARITY := {
+	"Arco do Sino Partido":"Raro",
+	"Aljava do Sino Partido":"Raro",
+	"Colete do Sino Partido":"Raro",
+	"Cajado do Sino Partido":"Raro",
+	"Orbe do Sino Partido":"Raro",
+	"Manto do Sino Partido":"Raro",
+
+	"Lamina da Aurora de Valedouro":"Epico",
+	"Arco da Bruma Antiga":"Epico",
+	"Cajado do Firmamento":"Epico",
+	"Armadura do Bastião":"Epico",
+	"Colete da Sombra Verde":"Epico",
+	"Manto das Estrelas":"Epico",
+	"Arco do Aprendiz":"Comum",
+	"Colete do Explorador":"Comum",
+	"Cajado do Aprendiz":"Comum",
+	"Veste do Aprendiz":"Comum",
+
+	"Espada da Guarda de Valedouro":"Raro",
+	"Arco do Vigia Runico":"Raro",
+	"Cajado do Eco Runico":"Raro",
+	"Couraca da Guarda":"Raro",
+	"Colete do Batedor":"Raro",
+	"Manto do Eco":"Raro",
+
 	"Espada de ferro":"Comum", "Escudo de madeira":"Comum", "Armadura de couro":"Comum",
 	"Espada de cavaleiro":"Incomum", "Escudo de ferro":"Incomum", "Armadura de ferro":"Incomum",
 	"Lamina de presas":"Incomum", "Escudo reforcado":"Incomum", "Armadura de pedra":"Incomum",
-	"Escudo do saqueador":"Raro", "Espada do saqueador":"Raro", "Espada de aco do Guardiao":"Raro",
+	"Escudo do saqueador":"Raro", "Espada do saqueador":"Raro", "Lamina da Vigilia Runica":"Raro", "Espada de aco do Guardiao":"Raro",
 	"Escudo reforcado de aco":"Raro", "Armadura de placas reais":"Epico", "Escudo da muralha":"Epico",
-	"Espada ancestral":"Epico", "Lamina real de Valedouro":"Lendario", "Armadura do trono":"Lendario"
+	"Espada ancestral":"Epico", "Lamina real de Valedouro":"Lendario", "Armadura do trono":"Lendario",
+	"Lamina do Sino Partido":"Raro", "Escudo do Sino Partido":"Raro", "Armadura do Sino Partido":"Raro"
 }
 
 func _rarity_color(item: String) -> Color:
@@ -1085,7 +1642,29 @@ func _draw_individual_gear_comparison(gear_id: String) -> void:
 	_draw_panel_text(origin + Vector2(12, 69), "Equipado: " + (current_name + " +%d" % current_level if current.has(attribute) else "Nenhum"), Color("cdd7d1"), 12, 418.0)
 	_draw_panel_text(origin + Vector2(12, 92), "%s atual: %d    Selecionado: %d" % [label, old_stat, new_stat], Color.WHITE, 13)
 	_draw_panel_text(origin + Vector2(12, 116), "Variacao: %+d %s" % [difference, label], Color("85e5a3") if difference > 0 else Color("f29a8d") if difference < 0 else Color("d2d5ce"), 14)
-	_draw_panel_text(origin + Vector2(12, 142), "Encanto equipado: " + (current_enchant if current_enchant != "" else "Nenhum"), Color("b5d8bd"), 11)
+	if name in ["Lamina do Sino Partido", "Escudo do Sino Partido", "Armadura do Sino Partido", "Arco do Sino Partido", "Aljava do Sino Partido", "Colete do Sino Partido", "Cajado do Sino Partido", "Orbe do Sino Partido", "Manto do Sino Partido"]:
+		var pieces: Array[String] = ["Lamina do Sino Partido", "Escudo do Sino Partido", "Armadura do Sino Partido"]
+		if str(profile.get("combat_class", "Guerreiro")) == "Arqueiro":
+			pieces = ["Arco do Sino Partido", "Aljava do Sino Partido", "Colete do Sino Partido"]
+		elif str(profile.get("combat_class", "Guerreiro")) == "Mago":
+			pieces = ["Cajado do Sino Partido", "Orbe do Sino Partido", "Manto do Sino Partido"]
+		var count_before: int = 0
+		for piece_slot in ["weapon", "offhand", "armor"]:
+			if str(equipped_items.get(piece_slot, "")) in pieces:
+				count_before += 1
+		var count_after: int = count_before
+		if current_name != name:
+			if current_name in pieces:
+				count_after -= 1
+			count_after += 1
+		var preview: String = "Conjunto: %d/3 -> %d/3" % [count_before, count_after]
+		if count_after >= 3:
+			preview += "  (+8 DEF, +12 ATQ)"
+		elif count_after >= 2:
+			preview += "  (+8 DEF)"
+		_draw_panel_text(origin + Vector2(12, 142), preview, Color("90caff"), 11, 418.0)
+	else:
+		_draw_panel_text(origin + Vector2(12, 142), "Encanto equipado: " + (current_enchant if current_enchant != "" else "Nenhum"), Color("b5d8bd"), 11)
 	_draw_panel_text(origin + Vector2(12, 162), "Unidade: " + gear_id.substr(0, 8) + " | Clica para equipar", Color("d6c8a8"), 11)
 
 func _draw_equipment_comparison(item: String) -> bool:
@@ -1121,10 +1700,33 @@ func _draw_item_slot(rect: Rect2, item: String, amount: int, action: String, is_
 	draw_rect(rect, Color("e8c76b") if highlighted else _rarity_color(item), false, 1.5)
 	var icon_rect := Rect2(rect.position + Vector2(5, 5), Vector2(43, rect.size.y - 10))
 	draw_rect(icon_rect, Color("364943"))
-	if visual_icons.has(item):
+	if official_item_icons.has(item):
+		draw_texture_rect(official_item_icons[item], Rect2(icon_rect.position + Vector2(2, 0), Vector2(39, 39)), false)
+	elif visual_icons.has(item):
 		draw_texture_rect(visual_icons[item], Rect2(icon_rect.position + Vector2(2, 0), Vector2(39, 39)), false)
 	else:
-		_draw_panel_text(icon_rect.position + Vector2(5, 25), _item_icon(item), Color("f4d28c"), 12)
+		var fallback_icon: Texture2D = null
+		var lower_name: String = item.to_lower()
+		if lower_name.contains("espada") or lower_name.contains("lamina") or lower_name.contains("arco") or lower_name.contains("cajado"):
+			fallback_icon = visual_icons.get("Espada de ferro", null)
+		elif lower_name.contains("escudo") or lower_name.contains("aljava") or lower_name.contains("orbe"):
+			fallback_icon = visual_icons.get("Escudo de madeira", null)
+		elif lower_name.contains("armadura") or lower_name.contains("colete") or lower_name.contains("manto") or lower_name.contains("veste"):
+			fallback_icon = visual_icons.get("Armadura de couro", null)
+		elif lower_name.contains("pocao"):
+			fallback_icon = visual_icons.get("Pocao pequena", null)
+		if fallback_icon != null:
+			var category_index: int = 0
+			if lower_name.contains("arco"): category_index = 2
+			elif lower_name.contains("cajado"): category_index = 3
+			elif lower_name.contains("escudo"): category_index = 4
+			elif lower_name.contains("armadura") or lower_name.contains("colete"): category_index = 5
+			elif lower_name.contains("manto") or lower_name.contains("veste"): category_index = 6
+			elif lower_name.contains("pocao"): category_index = 13
+			var source_x: float = float(category_index) * 69.75
+			draw_texture_rect_region(visual_items_reference, Rect2(icon_rect.position + Vector2(2, 0), Vector2(39, 39)), Rect2(source_x, 0, 69.75, 121))
+		else:
+			_draw_panel_text(icon_rect.position + Vector2(5, 25), _item_icon(item), Color("f4d28c"), 12)
 	var name_max_width := rect.size.x - 111.0
 	var font := ThemeDB.fallback_font
 	var name_size := 11
@@ -1165,6 +1767,25 @@ func _ready() -> void:
 	name_input.visible = false
 	add_child(name_input)
 	name_input.text_submitted.connect(_submit_name)
+	class_picker = OptionButton.new()
+	class_picker.position = Vector2(315, 215)
+	class_picker.size = Vector2(320, 38)
+	for hero_class in ["Guerreiro", "Arqueiro", "Mago"]:
+		class_picker.add_item(hero_class)
+	class_picker.visible = false
+	add_child(class_picker)
+	class_picker.item_selected.connect(_on_creation_class_selected)
+	# Lista de herois existente, independente da criacao de um novo heroi.
+	saved_hero_picker = OptionButton.new()
+	saved_hero_picker.position = Vector2(315, 112)
+	saved_hero_picker.size = Vector2(320, 38)
+	saved_hero_picker.add_item("A aguardar personagens...")
+	# Impedir que o clique na interface atravesse para o mundo 2D.
+	saved_hero_picker.mouse_filter = Control.MOUSE_FILTER_STOP
+	#saved_hero_picker.get_popup().mouse_filter = Control.MOUSE_FILTER_STOP
+	saved_hero_picker.item_selected.connect(_on_saved_hero_selected)
+	saved_hero_picker.hide() # Apenas a tecla Z apresenta a lista.
+	add_child(saved_hero_picker)
 	var cfg := ConfigFile.new()
 	if cfg.load(HERO_CONFIG) == OK:
 		remembered_hero = str(cfg.get_value("hero", "name", ""))
@@ -1225,6 +1846,7 @@ func _process(delta: float) -> void:
 		var smoothing := clampf(delta * 11.0, 0.0, 1.0)
 		dungeon_hero_visual = dungeon_hero_visual.lerp(Vector2(dungeon_pos), smoothing)
 		dungeon_enemy_visual = dungeon_enemy_visual.lerp(Vector2(dungeon_enemy_pos), smoothing)
+	crypt_victory_time = maxf(0.0, crypt_victory_time - delta)
 	dungeon_hit_flash = maxf(0.0, dungeon_hit_flash - delta)
 	dungeon_enemy_attack_in = maxf(0.0, dungeon_enemy_attack_in - delta)
 	dungeon_special_in = maxf(0.0, dungeon_special_in - delta)
@@ -1270,16 +1892,40 @@ func _process(delta: float) -> void:
 		if typeof(payload) != TYPE_DICTIONARY:
 			continue
 		match payload.get("type", ""):
+			"hero_name_check":
+				var candidate := str(payload.get("name", ""))
+				if bool(payload.get("exists", false)):
+					notice = "O nome '" + candidate + "' ja existe. Escolhe outro nome."
+					name_input.show()
+					class_picker.hide()
+					name_input.grab_focus()
+				else:
+					pending_new_hero_name = candidate
+					notice = "Nome disponivel. Escolhe a classe definitiva no menu."
+					class_picker.select(-1)
+					class_picker.show()
+			"hero_list":
+				_refresh_saved_hero_picker(payload.get("heroes", []))
+			"hero_selected":
+				# O servidor confirmou que os dados do personagem foram carregados.
+				remembered_hero = str(payload.get("name", ""))
+				saved_hero_picker.hide()
+				name_input.hide()
+				class_picker.hide()
+				var cfg := ConfigFile.new()
+				cfg.set_value("hero", "name", remembered_hero)
+				cfg.save(HERO_CONFIG)
+				notice = "A jogar com " + remembered_hero
 			"welcome":
 				player_id = str(payload.get("id", ""))
-				if remembered_hero.length() >= 3:
-					socket.send_text(JSON.stringify({"type":"name", "name":remembered_hero}))
+				# Nao carregar automaticamente: permitir escolher o heroi existente.
+				socket.send_text(JSON.stringify({"type":"list_heroes"}))
 				for p in payload.get("players", []):
 					players[p["id"]] = p
 				_set_monsters(payload.get("monsters", []))
 				for boss in payload.get("monsters", []):
-					if str(boss.get("kind", "")) == "guardiao" and bool(boss.get("alive", false)):
-						guardian_banner = "O GUARDIAO DAS RUINAS ESTA NA FLORESTA!"
+					if str(boss.get("kind", "")) in ["guardiao", "guardiao_tempestade"] and bool(boss.get("alive", false)):
+						guardian_banner = "O GUARDIAO DO SINO PARTIDO ESTA NA FLORESTA!"
 						guardian_banner_time = 5.0
 			"join", "state":
 				var p = payload.get("player", {})
@@ -1323,9 +1969,15 @@ func _process(delta: float) -> void:
 					if warning_cell is Array and warning_cell.size() >= 2:
 						dungeon_special_cells.append(Vector2i(int(warning_cell[0]), int(warning_cell[1])))
 				dungeon_last_enemy_hp = crypt_hp
+				var old_crypt_pos: Vector2i = dungeon_pos
 				var crypt_cell: Array = payload.get("dungeon_pos", [1, 2])
 				if crypt_cell.size() >= 2:
 					dungeon_pos = Vector2i(int(crypt_cell[0]), int(crypt_cell[1]))
+				var hero_step: Vector2i = dungeon_pos - old_crypt_pos
+				if hero_step.x != 0:
+					dungeon_hero_facing = "right" if hero_step.x > 0 else "left"
+				elif hero_step.y != 0:
+					dungeon_hero_facing = "down" if hero_step.y > 0 else "up"
 				if not dungeon_click_path.is_empty() and dungeon_pos == dungeon_click_path[0]:
 					dungeon_click_path.pop_front()
 				if not dungeon_auto_route.is_empty() and dungeon_pos == dungeon_auto_route[0]:
@@ -1336,7 +1988,7 @@ func _process(delta: float) -> void:
 				dungeon_enemy_name = str(payload.get("dungeon_enemy_name", "Inimigo"))
 				chest_server_clock_offset = float(payload.get("server_time", Time.get_unix_time_from_system())) - Time.get_unix_time_from_system()
 			"guardian_spawned":
-				guardian_banner = str(payload.get("text", "O GUARDIAO DAS RUINAS DESPERTOU!"))
+				guardian_banner = str(payload.get("text", "O GUARDIAO DO SINO PARTIDO DESPERTOU!"))
 				guardian_banner_time = 6.0
 			"skill_cast":
 				var skill_pos := Vector2(float(payload.get("x", 0.0)), float(payload.get("y", 0.0)))
@@ -1349,14 +2001,14 @@ func _process(delta: float) -> void:
 						class_cast_fx.pop_front()
 				if str(payload.get("attacker_id", "")) == player_id:
 					if is_class_skill:
-						class_skill_cooldown_left = float(payload.get("cooldown", 14.0))
+						class_skill_cooldown_left = float(payload.get("cooldown", 7.0))
 					else:
-						skill_cooldown_left = 12.0
+						skill_cooldown_left = float(payload.get("cooldown", 9.0))
 					attack_flash_remaining = 0.28
 					attack_anim_left = 0.42
 			"combat_hit":
 				var hit_pos := Vector2(float(payload.get("x", 0.0)), float(payload.get("y", 0.0)))
-				_add_combat_effect(hit_pos, "HIT -%d" % int(payload.get("damage", 0)), Color("ffdf9b"))
+				_add_combat_effect(hit_pos, ("CRITICO -%d!" if bool(payload.get("critical", false)) else "HIT -%d") % int(payload.get("damage", 0)), Color("ff6f56") if bool(payload.get("critical", false)) else Color("ffdf9b"), 1.5 if bool(payload.get("critical", false)) else 1.0)
 				actor_hurt["m:" + str(payload.get("target_id", ""))] = 0.24
 				if str(payload.get("attacker_id", "")) == player_id:
 					attack_flash_remaining = 0.16
@@ -1405,7 +2057,7 @@ func _process(delta: float) -> void:
 				var monster_key := "m:" + str(payload.get("attacker_id", ""))
 				monster_attack_anim[monster_key] = MONSTER_ATTACK_DURATION
 				var damage_at := Vector2(float(payload.get("x", 0.0)), float(payload.get("y", 0.0)))
-				_add_combat_effect(damage_at, "HIT -%d" % int(payload.get("damage", 0)), Color("ff8e86"), 1.1)
+				_add_combat_effect(damage_at, "MISS" if bool(payload.get("miss", false)) else ("0" if int(payload.get("damage", 0)) == 0 else "HIT -%d" % int(payload.get("damage", 0))), Color("a8c7d4") if bool(payload.get("miss", false)) or int(payload.get("damage", 0)) == 0 else Color("ff8e86"), 1.1)
 				actor_hurt["p:" + str(payload.get("target_id", ""))] = 0.24
 			"chest_reward":
 				var reward_at := Vector2(float(payload.get("x", 1735.0)), float(payload.get("y", 1060.0)))
@@ -1415,11 +2067,18 @@ func _process(delta: float) -> void:
 				_add_combat_effect(reward_pos, "+%d XP  +%d ouro" % [int(payload.get("xp", 0)), int(payload.get("gold", 0))], Color("a9f0ac"), 1.35)
 			"notice":
 				notice = str(payload.get("text", ""))
+				if notice.begins_with("Sino Partido purificado!"):
+					crypt_victory_first = true
+					crypt_victory_time = 8.0
+				elif notice.begins_with("Cripta purificada novamente!"):
+					crypt_victory_first = false
+					crypt_victory_time = 8.0
 				if notice.begins_with("Heroi ") and notice.ends_with(" carregado e guardado."):
 					remembered_hero = notice.trim_prefix("Heroi ").trim_suffix(" carregado e guardado.")
 					var cfg := ConfigFile.new()
 					cfg.set_value("hero", "name", remembered_hero)
 					cfg.save(HERO_CONFIG)
+					socket.send_text(JSON.stringify({"type":"list_heroes"}))
 			"smith_dialog":
 				dialog_speaker = "Ferreiro"
 				dialog_text = str(payload.get("text", ""))
@@ -1454,7 +2113,7 @@ func _process(delta: float) -> void:
 	if _pressed_once(KEY_C) and not name_input.visible:
 		show_classes = not show_classes
 		show_skill_tree = false
-	if _pressed_once(KEY_B) and not name_input.visible:
+	if _pressed_once(KEY_L) and not name_input.visible:
 		show_skill_tree = not show_skill_tree
 		show_classes = false
 	if _pressed_once(KEY_P) and not name_input.visible:
@@ -1462,6 +2121,7 @@ func _process(delta: float) -> void:
 	if _pressed_once(KEY_Q) and not name_input.visible:
 		show_quests = not show_quests
 	if _pressed_once(KEY_ESCAPE):
+		show_bank = false
 		show_dialog = false
 		smith_dialog = false
 		show_inventory = false
@@ -1470,8 +2130,17 @@ func _process(delta: float) -> void:
 		show_professions = false
 		show_classes = false
 		show_skill_tree = false
+		show_attributes = false
+	if _pressed_once(KEY_Z) and not name_input.visible:
+		# Z abre/fecha a lista; nao interfere com a criacao (N).
+		saved_hero_picker.visible = not saved_hero_picker.visible
+		if saved_hero_picker.visible and socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
+			socket.send_text(JSON.stringify({"type":"list_heroes"}))
 	if _pressed_once(KEY_N):
+		saved_hero_picker.hide()
 		name_input.show()
+		class_picker.hide()
+		pending_new_hero_name = ""
 		name_input.grab_focus()
 	if _pressed_once(KEY_M) and not name_input.visible:
 		show_shop = not show_shop
@@ -1610,6 +2279,51 @@ func _process(delta: float) -> void:
 	_update_camera(delta)
 	queue_redraw()
 
+
+func _draw_city_districts() -> void:
+	# Cosmetic only. No changes to navigation, collisions or authoritative world coordinates.
+	var font := ThemeDB.fallback_font
+	var signs: Array = [
+		{"p":Vector2(435, 375),"title":"VALEDOURO","subtitle":"Praca dos Viajantes","color":Color("e9c78b")},
+		{"p":Vector2(1430, 352),"title":"BAIRRO DAS RUNAS","subtitle":"Mercado Oriental","color":Color("a4d8e4")},
+		{"p":Vector2(475, 1110),"title":"VILA DOS ARTIFICES","subtitle":"Oficinas e Armazens","color":Color("e7bb83")},
+		{"p":Vector2(1425, 1130),"title":"FRONTEIRA ANTIGA","subtitle":"Estrada das Ruinas","color":Color("b2d6a0")}
+	]
+	for sign_data in signs:
+		var p: Vector2 = sign_data["p"]
+		var tint: Color = sign_data["color"]
+		draw_rect(Rect2(p + Vector2(-86, -20), Vector2(172, 37)), Color("19272c", 0.86))
+		draw_rect(Rect2(p + Vector2(-86, -20), Vector2(172, 3)), tint)
+		draw_string(font, p + Vector2(-80, -2), str(sign_data["title"]), HORIZONTAL_ALIGNMENT_LEFT, 165, 12, tint)
+		draw_string(font, p + Vector2(-80, 12), str(sign_data["subtitle"]), HORIZONTAL_ALIGNMENT_LEFT, 165, 10, Color("e5e1d4"))
+	# Carved entrance arches, market flags, paving accents and banners.
+	for gate in [Vector2(485, 42), Vector2(1450, 42), Vector2(480, 680)]:
+		for side in [-38.0, 38.0]:
+			var foot: Vector2 = gate + Vector2(side, 0)
+			draw_rect(Rect2(foot + Vector2(-7, -25), Vector2(14, 65)), Color("58635d"))
+			draw_rect(Rect2(foot + Vector2(-4, -21), Vector2(7, 54)), Color("9fa69b"))
+			draw_rect(Rect2(foot + Vector2(-9, -31), Vector2(18, 9)), Color("c3b99b"))
+		draw_rect(Rect2(gate + Vector2(-46, -41), Vector2(92, 14)), Color("777d70"))
+		draw_rect(Rect2(gate + Vector2(-39, -38), Vector2(78, 5)), Color("c2b99a"))
+		for flag_side in [-32.0, 32.0]:
+			var flag: Vector2 = gate + Vector2(flag_side, -47)
+			draw_line(flag, flag + Vector2(0, -29), Color("b4a37b"), 2.0)
+			draw_colored_polygon(PackedVector2Array([flag + Vector2(0, -28), flag + Vector2(21, -23), flag + Vector2(0, -12)]), Color("a84f54"))
+	# Lively fountains and water ripple in eastern plaza; visual only.
+	var fountain: Vector2 = Vector2(1445, 645)
+	draw_ellipse_shadow(fountain + Vector2(0, 9), 31.0)
+	draw_circle(fountain, 26.0, Color("8d8f86"))
+	draw_circle(fountain, 20.0, Color("30687a"))
+	draw_arc(fountain, 16.0 + sin(animation_time * 2.0) * 2.0, 0.0, TAU, 28, Color("9cd4df", 0.7), 1.5)
+	draw_rect(Rect2(fountain + Vector2(-4, -23), Vector2(8, 24)), Color("a9aba0"))
+	draw_circle(fountain + Vector2(0, -26), 7.0, Color("d5d0b7"))
+	# Street lanterns with day/night-aware warm light.
+	for lantern in [Vector2(330, 375), Vector2(735, 355), Vector2(1260, 350), Vector2(1600, 705), Vector2(350, 1020), Vector2(740, 1030)]:
+		draw_line(lantern, lantern + Vector2(0, -42), Color("4c3d31"), 5.0)
+		draw_rect(Rect2(lantern + Vector2(-9, -55), Vector2(18, 17)), Color("4e3f32"))
+		draw_rect(Rect2(lantern + Vector2(-6, -52), Vector2(12, 11)), Color("f2cb77", 0.90))
+		draw_arc(lantern + Vector2(0, -46), 16.0, 0.0, TAU, 20, Color("f5c96f", 0.17), 2.0)
+
 func _draw_expansion_decor() -> void:
 	# Market stalls and well; signage drawn as foreground overlay.
 	# Market stalls near the eastern square.
@@ -1628,6 +2342,27 @@ func _draw_expansion_decor() -> void:
 	draw_circle(Vector2(480, 1000), 18.0, Color("2c6170"))
 	draw_arc(Vector2(480, 1000), 23.0, 0.0, TAU, 32, Color("d1b88b"), 5.0)
 
+func _draw_rune_outpost() -> void:
+	# Eastern patrol landmark; decoration only, without new collision geometry.
+	var center: Vector2 = Vector2(1740, 460)
+	var glow: Color = Color("82c8e8", 0.55)
+	for ring_index in range(3):
+		draw_arc(center, 33.0 + float(ring_index) * 17.0, 0.0, TAU, 40, Color(glow.r, glow.g, glow.b, 0.25 - float(ring_index) * 0.05), 2.0)
+	for rune_index in range(4):
+		var angle: float = float(rune_index) * TAU / 4.0
+		var rune_center: Vector2 = center + Vector2(cos(angle), sin(angle)) * 48.0
+		draw_line(rune_center + Vector2(-5, 9), rune_center + Vector2(0, -11), glow, 2.0)
+		draw_line(rune_center + Vector2(0, -11), rune_center + Vector2(6, 9), glow, 2.0)
+	# Cracked rune monolith and its shadow.
+	draw_ellipse_shadow(center + Vector2(0, 10), 26.0)
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-18, 10), center + Vector2(-13, -45),
+		center + Vector2(1, -63), center + Vector2(20, -37),
+		center + Vector2(18, 10)]), Color("4b5961"))
+	draw_line(center + Vector2(1, -53), center + Vector2(-3, -16), Color("92d8f5"), 3.0)
+	draw_line(center + Vector2(-3, -16), center + Vector2(8, -3), Color("92d8f5"), 3.0)
+	draw_line(center + Vector2(1, -53), center + Vector2(12, -36), Color("92d8f5"), 2.0)
+
 func _draw_region_signs() -> void:
 	# Foreground signs are always above tree canopies; labels never clipped by foliage.
 	var font := ThemeDB.fallback_font
@@ -1635,7 +2370,8 @@ func _draw_region_signs() -> void:
 		{"pos":Vector2(1040, 565), "label":"MERCADO DO LESTE"},
 		{"pos":Vector2(295, 750), "label":"BAIRRO DOS ARTESAOS"},
 		{"pos":Vector2(1470, 790), "label":"PORTAO DA FLORESTA"},
-		{"pos":Vector2(1130, 660), "label":"FLORESTA DE VALEDOURO"}
+		{"pos":Vector2(1130, 660), "label":"FLORESTA DE VALEDOURO"},
+		{"pos":Vector2(1630, 190), "label":"POSTO DAS RUNAS"}
 	]
 	for region_sign in signs:
 		var at: Vector2 = region_sign["pos"]
@@ -1683,10 +2419,11 @@ func _draw() -> void:
 	for tile_y in range(2):
 		for tile_x in range(2):
 			var tile_pos := Vector2(tile_x * 960.0, tile_y * 640.0)
-			draw_texture_rect(visual_terrain, Rect2(tile_pos, Vector2(960, 640)), false)
+			draw_texture_rect(district_terrain[tile_y * 2 + tile_x], Rect2(tile_pos, Vector2(960, 640)), false)
 	_draw_forest()
 	_draw_forest_arch()
 	_draw_expansion_decor()
+	_draw_rune_outpost()
 	if nav_active:
 		for waypoint in nav_path:
 			draw_circle(waypoint, 3.0, Color(0.98, 0.80, 0.36, 0.65))
@@ -1698,7 +2435,8 @@ func _draw() -> void:
 	for rect in OBSTACLES:
 		var building_index: int = OBSTACLES.find(rect)
 		var building_rect := Rect2(rect.position + Vector2(-13, -40), rect.size + Vector2(26, 55))
-		draw_texture_rect(visual_houses[building_index % visual_houses.size()], building_rect, false)
+		_draw_house(rect)
+	_draw_city_districts()
 	# Draw by foot/trunk Y so characters pass behind canopies naturally.
 	var drawables: Array = []
 	for resource in profile.get("resource_nodes", []):
@@ -1720,6 +2458,7 @@ func _draw() -> void:
 			drawables.append({"kind":"monster", "y":float(m.get("y", 0)), "data":m})
 	drawables.append({"kind":"tessa", "y":TESSA.y})
 	drawables.append({"kind":"ferreiro", "y":BLACKSMITH.y})
+	drawables.append({"kind":"armazem", "y":BANK_KEEPER.y})
 	for id in players:
 		var p: Dictionary = players[id]
 		drawables.append({"kind":"player", "y":float(p.get("y",0)), "data":p, "id":id})
@@ -1728,7 +2467,7 @@ func _draw() -> void:
 		match entry["kind"]:
 			"tree":
 				var tree_base: Vector2 = entry["pos"]
-				draw_texture_rect(visual_tree, Rect2(tree_base + Vector2(-52, -120), Vector2(104, 126)), false)
+				_draw_tree(tree_base)
 			"rock":
 				_draw_rock(entry["pos"])
 			"bush":
@@ -1743,6 +2482,8 @@ func _draw() -> void:
 				_draw_character(TESSA, "down", false, "Tessa", true)
 			"ferreiro":
 				_draw_blacksmith()
+			"armazem":
+				_draw_bank_keeper()
 			"player":
 				var p: Dictionary = entry["data"]
 				var pos := Vector2(float(p.get("x",0)), float(p.get("y",0)))
@@ -1753,10 +2494,11 @@ func _draw() -> void:
 	# Boss label above scenery and trees, centered without truncation.
 	for monster_id in monsters:
 		var boss: Dictionary = monsters[monster_id]
+		# O Guardião da Tempestade já tem o nome desenhado na rotina do monstro.
 		if str(boss.get("kind", "")) == "guardiao" and bool(boss.get("alive", false)):
 			var boss_pos := Vector2(float(boss.get("x", 0)), float(boss.get("y", 0)))
-			draw_string_outline(ThemeDB.fallback_font, boss_pos + Vector2(-120, -116), "GUARDIAO DAS RUINAS", HORIZONTAL_ALIGNMENT_CENTER, 240, 15, 3, Color("27162d"))
-			draw_string(ThemeDB.fallback_font, boss_pos + Vector2(-120, -116), "GUARDIAO DAS RUINAS", HORIZONTAL_ALIGNMENT_CENTER, 240, 15, Color("f4d7ff"))
+			draw_string_outline(ThemeDB.fallback_font, boss_pos + Vector2(-120, -116), "GUARDIAO DO SINO PARTIDO", HORIZONTAL_ALIGNMENT_CENTER, 240, 15, 3, Color("27162d"))
+			draw_string(ThemeDB.fallback_font, boss_pos + Vector2(-120, -116), "GUARDIAO DO SINO PARTIDO", HORIZONTAL_ALIGNMENT_CENTER, 240, 15, Color("f4d7ff"))
 	# Combat overlay: always above roads, houses, trees, actors and HUD terrain.
 	if players.has(player_id):
 		var hero: Dictionary = players[player_id]
@@ -1790,8 +2532,12 @@ func _draw() -> void:
 	_draw_hotbar()
 	if dungeon_active:
 		_draw_crypt_dungeon()
+	if crypt_victory_time > 0.0:
+		_draw_crypt_victory()
 	if show_classes:
 		_draw_classes_panel()
+	if show_attributes:
+		_draw_attributes_panel()
 	if show_skill_tree:
 		_draw_skill_tree_panel()
 	if show_professions:
@@ -1841,30 +2587,23 @@ func _draw() -> void:
 				_draw_panel_text(rr.position + Vector2(9, 21), str(recipe["name"]) + " - %d%% sucesso" % int(recipe["chance"]), Color("f7dc9b"), 13)
 				_draw_panel_text(rr.position + Vector2(9, 45), str(recipe["cost"]), Color("ffffff"), 12)
 				crafting_click_targets.append({"rect":rr, "recipe":recipe["id"]})
-			_draw_panel_text(Vector2(32, 508), "Forja %d/%d | Roda do rato para mais receitas" % [smith_recipe_page + 1, int(ceili(float(SMITH_RECIPES.size()) / 5.0))], Color("e5bda1"), 11)
+			_draw_panel_text(Vector2(32, 508), "Forja %d/%d | Roda / Setas para mais receitas" % [smith_recipe_page + 1, int(ceili(float(SMITH_RECIPES.size()) / 5.0))], Color("e5bda1"), 11)
 		else:
 			_draw_panel_text(Vector2(32, 117), "CLICA PARA COMPRAR | CORES = RARIDADE", Color("f3ce80"), 12)
-			var shop_items := ["Espada de ferro", "Escudo de madeira", "Armadura de couro", "Espada de cavaleiro", "Escudo de ferro", "Armadura de ferro", "Espada de aco do Guardiao", "Escudo reforcado de aco", "Armadura de placas reais", "Lamina real de Valedouro", "Escudo da muralha", "Armadura do trono"]
-			var shop_prices := [65, 45, 90, 520, 480, 650, 1250, 850, 1600, 2800, 1950, 3400]
-			var shop_attack := [8, 0, 0, 18, 0, 0, 32, 0, 0, 46, 0, 0]
-			var shop_defense := [0, 3, 5, 0, 11, 16, 0, 19, 25, 0, 29, 37]
-			for i in range(6):
+			var shop_items := ["Espada de ferro", "Escudo de madeira", "Armadura de couro", "Espada de cavaleiro", "Escudo de ferro", "Armadura de ferro", "Espada de aco do Guardiao", "Escudo reforcado de aco", "Armadura de placas reais", "Lamina real de Valedouro", "Escudo da muralha", "Armadura do trono", "Arco do Aprendiz", "Colete do Explorador", "Cajado do Aprendiz", "Veste do Aprendiz"]
+			var shop_prices := [65, 45, 90, 520, 480, 650, 1250, 850, 1600, 2800, 1950, 3400, 180, 210, 180, 210]
+			var shop_attack := [8, 0, 0, 18, 0, 0, 32, 0, 0, 46, 0, 0, 11, 0, 12, 0]
+			var shop_defense := [0, 3, 5, 0, 11, 16, 0, 19, 25, 0, 29, 37, 0, 9, 0, 8]
+			for i in range(mini(6, shop_items.size() - sell_page * 6)):
 				var idx: int = sell_page * 6 + i
 				var rr := Rect2(30, 130 + i * 55, 404, 51)
 				_draw_item_slot(rr, shop_items[idx], 0, "buy", true)
 				var bonus := "+%d ATQ" % shop_attack[idx] if shop_attack[idx] > 0 else "+%d DEF" % shop_defense[idx]
 				_draw_panel_text(Vector2(326, 147 + i * 55), bonus, Color("b5d8bd"), 11)
 				_draw_panel_text(Vector2(337, 165 + i * 55), "%d G" % shop_prices[idx], Color("f3ce80"), 11)
-			_draw_panel_text(Vector2(32, 469), "LOJA %d/2 | Roda do rato | U: MELHORIAS" % [sell_page + 1], Color("b5d8bd"), 11)
-			for j in range(5):
-				var qty: int = [1, 5, 10, 20, 50][j]
-				var batch_rect := Rect2(30 + j * 81, 480, 76, 29)
-				draw_rect(batch_rect, Color("64734b") if sell_quantity == qty else Color("304b49"))
-				draw_rect(batch_rect, Color("e8c778"), false, 1.0)
-				_draw_panel_text(batch_rect.position + Vector2(12, 20), "%dx" % qty, Color.WHITE, 12)
-				shop_click_targets.append({"rect":batch_rect, "item":str(qty), "action":"batch"})
-			_draw_panel_text(Vector2(32, 519), "Escolhe o lote; abre mochila (I) e clica direito", Color("b5d8bd"), 11)
-			_draw_panel_text(Vector2(32, 540), "no item perto do Ferreiro.", Color("b5d8bd"), 11)
+			_draw_panel_text(Vector2(32, 469), "LOJA %d/%d | Roda / Setas | U: MELHORIAS" % [sell_page + 1, int(ceili(float(shop_items.size()) / 6.0))], Color("b5d8bd"), 11)
+			_draw_panel_text(Vector2(32, 493), "Vendas: abre a mochila (I), clica direito no item", Color("b5d8bd"), 11)
+			_draw_panel_text(Vector2(32, 519), "e escolhe a quantidade na confirmacao.", Color("b5d8bd"), 11)
 
 	if show_inventory:
 		_draw_rpg_panel(Rect2(495, 62, 447, 455), "MOCHILA E EQUIPAMENTOS", "I")
@@ -1888,7 +2627,26 @@ func _draw() -> void:
 		_draw_panel_text(Vector2(519, 236), "SUBCLASSE: " + (active_tool if active_tool != "" and active_tool != "<null>" else "Nenhuma"), Color("f3ce80"), 12)
 		if active_tool != "" and active_tool != "<null>":
 			inventory_click_targets.append({"rect":tool_rect,"item":active_tool,"action":"unequip_tool"})
-		_draw_panel_text(Vector2(511, 267), "MOCHILA (CORES = RARIDADE)", Color("f3ce80"), 12)
+		# MVP 1.0.6.9: five dedicated inventory tabs, without modifying server inventory.
+		var tab_labels: Array[String] = ["TODOS", "EQUIP.", "MATER.", "POCOES", "MISSAO"]
+		for tab_index in range(tab_labels.size()):
+			var tab_rect: Rect2 = Rect2(511 + tab_index * 84, 250, 81, 20)
+			var selected: bool = tab_index == inventory_category_index
+			draw_rect(tab_rect, Color("3a5862") if selected else Color("233d43"))
+			draw_rect(tab_rect, Color("90caff") if selected else Color("a98e58"), false, 1.0 if not selected else 2.0)
+			_draw_panel_text(tab_rect.position + Vector2(5, 14), tab_labels[tab_index], Color("d3f0ff") if selected else Color("f3ce80"), 10, 73.0)
+		for filter_rect in [Rect2(511, 273, 100, 20), Rect2(615, 273, 102, 20), Rect2(721, 273, 207, 20)]:
+			draw_rect(filter_rect, Color("233d43"))
+			draw_rect(filter_rect, Color("a98e58"), false, 1.0)
+		_draw_panel_text(Vector2(516, 287), "Rar.: " + INVENTORY_RARITIES[inventory_rarity_index], Color("f3ce80"), 10, 90.0)
+		_draw_panel_text(Vector2(620, 287), "Ord.: " + INVENTORY_SORTS[inventory_sort_index], Color("f3ce80"), 10, 94.0)
+		var search_label: String = "Busca: " + inventory_search
+		if inventory_search_active:
+			search_label += "_"
+		elif inventory_search == "":
+			search_label += "(clique para escrever)"
+		_draw_panel_text(Vector2(726, 287), search_label, Color("c5e7ec"), 10, 195.0)
+
 		var items: Dictionary = profile.get("inventory", {})
 		var index := 0
 		var inventory_entries: Array = []
@@ -1900,6 +2658,7 @@ func _draw() -> void:
 			if gear_value is Dictionary:
 				var gear: Dictionary = gear_value
 				inventory_entries.append({"name":str(gear.get("name", "")), "amount":1, "id":str(gear.get("id", "")), "level":int(gear.get("level",0)), "enchant":str(gear.get("enchant", ""))})
+		inventory_entries = _inventory_visible_entries(inventory_entries)
 		inventory_page = mini(inventory_page, maxi(0, int(ceili(float(inventory_entries.size()) / 8.0)) - 1))
 		for entry_value in inventory_entries.slice(inventory_page * 8, (inventory_page + 1) * 8):
 			var entry: Dictionary = entry_value
@@ -1908,7 +2667,7 @@ func _draw() -> void:
 				break
 			var col_index := index % 2
 			var row_index := int(index / 2.0)
-			var item_rect := Rect2(511 + col_index * 212, 275 + row_index * 47, 205, 43)
+			var item_rect := Rect2(511 + col_index * 212, 296 + row_index * 40, 205, 37)
 			var action := "equip" if str(entry["id"]) != "" else "use" if item in ["Pocao pequena", "Pocao media", "Pocao completa"] else "equip_tool" if item in ["Machado de lenhador", "Picareta de mineiro", "Kit de herbalista", "Machado de aco", "Picareta de aco", "Kit botanico"] else "inspect"
 			_draw_item_slot(item_rect, item, int(entry["amount"]), action)
 			if str(entry["id"]) != "":
@@ -1919,9 +2678,22 @@ func _draw() -> void:
 				inventory_click_targets[inventory_click_targets.size() - 1]["gear_id"] = str(entry["id"])
 			index += 1
 		if inventory_entries.is_empty():
-			_draw_panel_text(Vector2(511, 278), "Mochila vazia", Color("abb7b1"), 14)
+			_draw_panel_text(Vector2(511, 317), "Nenhum item corresponde aos filtros.", Color("abb7b1"), 13)
+		var set_names: Array[String] = ["Lamina do Sino Partido", "Escudo do Sino Partido", "Armadura do Sino Partido"]
+		var set_count: int = 0
+		for set_slot in slots:
+			if str(equipment.get(set_slot, "")) in set_names:
+				set_count += 1
+		var set_status: String = "CONJUNTO DO SINO: %d/3" % set_count
+		if set_count >= 3:
+			set_status += "  +8 DEF  +12 ATQ"
+		elif set_count >= 2:
+			set_status += "  +8 DEF"
+		else:
+			set_status += "  2 pecas: +8 DEF | 3: +12 ATQ"
+		_draw_panel_text(Vector2(511, 462), set_status, Color("90caff") if set_count >= 2 else Color("b8c6ca"), 11, 420.0)
 		_draw_panel_text(Vector2(511, 478), "Mochila %d/%d | Equipamentos por unidade" % [inventory_page + 1, maxi(1, int(ceili(float(inventory_entries.size()) / 8.0)))], Color("f3ce80"), 12)
-		_draw_panel_text(Vector2(511, 500), "Esquerdo: equipar | Direito: vender unidade | Roda: paginas", Color("b5d8bd"), 12)
+		_draw_panel_text(Vector2(511, 500), "Esquerdo: usar/equipar | Direito: vender | Roda / Setas: paginas | Abas acima", Color("b5d8bd"), 12)
 	if hover_item != "" and (show_inventory or show_shop):
 		if hover_gear_id != "" and show_inventory:
 			_draw_individual_gear_comparison(hover_gear_id)
@@ -1929,53 +2701,167 @@ func _draw() -> void:
 			var tip := Rect2(Vector2(495, 519), Vector2(447, 27))
 			draw_rect(tip, Color("18272a", 0.96))
 			_draw_panel_text(tip.position + Vector2(8, 18), _item_description(hover_item), Color("f3ce80"), 12)
+	if show_bank and not _bank_nearby():
+		show_bank = false
+	if show_bank:
+		_draw_rpg_panel(Rect2(180, 75, 620, 430), "ARMAZEM PESSOAL", "B")
+		var guardian_line: String = "Guardiã: Guarda um item e recebe 75 ouro e 2 pocoes."
+		if bool(profile.get("bank_intro_done", false)):
+			var supply: Dictionary = profile.get("bank_supply_progress", {})
+			guardian_line = "Reserva: Madeira %d/5 | Rocha %d/3. Premio: 180 ouro + 120 XP." % [int(supply.get("Fragmento de madeira", 0)), int(supply.get("Fragmento de rocha", 0))]
+			if bool(profile.get("bank_supply_done", false)):
+				guardian_line = "Guardiã: Reserva de Valedouro concluida. Obrigada!"
+		_draw_panel_text(Vector2(200, 123), guardian_line, Color("a9e1ff"), 11, 560.0)
+		_draw_panel_text(Vector2(200, 146), "MOCHILA  (clique para guardar 1)", Color("f3ce80"), 12)
+		_draw_panel_text(Vector2(500, 146), "BAU  (clique para retirar 1)", Color("90caff"), 12)
+		bank_click_targets.clear()
+		var bag_entries: Array = []
+		var bank_entries: Array = []
+		for item_key in profile.get("inventory", {}):
+			if str(item_key) != "Selo das Ruinas" and not EQUIPMENT_RARITY.has(str(item_key)):
+				bag_entries.append({"name":str(item_key), "amount":int(profile["inventory"][item_key]), "id":""})
+		for gear_value in profile.get("gear_bag", []):
+			if gear_value is Dictionary:
+				bag_entries.append({"name":str(gear_value.get("name","")), "amount":1, "id":str(gear_value.get("id",""))})
+		var stored: Dictionary = profile.get("bank_items", {})
+		for item_key in stored:
+			if not EQUIPMENT_RARITY.has(str(item_key)):
+				bank_entries.append({"name":str(item_key), "amount":int(stored[item_key]), "id":""})
+		for gear_value in profile.get("bank_gear", []):
+			if gear_value is Dictionary:
+				bank_entries.append({"name":str(gear_value.get("name","")), "amount":1, "id":str(gear_value.get("id",""))})
+		bag_entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return str(a["name"]) < str(b["name"]))
+		bank_entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return str(a["name"]) < str(b["name"]))
+		var max_pages: int = maxi(1, int(ceili(float(maxi(bag_entries.size(), bank_entries.size())) / 8.0)))
+		bank_page = mini(bank_page, max_pages - 1)
+		for side in range(2):
+			var entries: Array = bag_entries if side == 0 else bank_entries
+			for row_index in range(mini(8, maxi(0, entries.size() - bank_page * 8))):
+				var entry: Dictionary = entries[bank_page * 8 + row_index]
+				var cell: Rect2 = Rect2(198 + side * 300, 157 + row_index * 38, 283, 33)
+				draw_rect(cell, Color("2b4041"))
+				draw_rect(cell, Color("a98e58"), false, 1.0)
+				_draw_panel_text(cell.position + Vector2(6, 23), str(entry["name"]) + " x%d" % int(entry["amount"]), Color("e5e9df"), 11, 267.0)
+				bank_click_targets.append({"rect":cell, "item":str(entry["name"]), "gear_id":str(entry["id"]), "direction":"deposit" if side == 0 else "withdraw"})
+		_draw_panel_text(Vector2(201, 482), "Pagina %d/%d | Roda / Setas cima-baixo | B: fechar" % [bank_page + 1, max_pages], Color("b5d8bd"), 11)
 	if show_quests:
-		_draw_rpg_panel(Rect2(16, 62, 425, 345), "DIARIO DE MISSOES", "Q")
-		var quest := str(profile.get("quest", "not_started"))
-		_draw_panel_text(Vector2(32, 124), "A protecao de Valedouro", Color("f3ce80"), 16)
-		var detail := "Fala com Tessa para aceitar a missao."
-		if quest == "active":
-			detail = "Lobos derrotados: %s / 3" % str(profile.get("kills", 0))
-		elif quest == "completed":
-			detail = "Concluida! A vila esta segura."
-		_draw_panel_text(Vector2(32, 159), detail, Color.WHITE, 14)
-		_draw_panel_text(Vector2(32, 198), "Recompensa: 100 XP, 50 ouro e 2 pocoes", Color("b5d8bd"), 13)
-		var forest_stage := str(profile.get("forest_quest", "locked"))
-		if quest == "completed":
-			_draw_panel_text(Vector2(32, 223), "Exploracao da Floresta", Color("f3ce80"), 15)
-			var forest_detail := "Fala com Tessa para aceitar."
+		_draw_rpg_panel(Rect2(155, 55, 650, 465), "DIARIO DE MISSOES", "Q")
+		var missions: Array[Dictionary] = []
+		var quest_stage: String = str(profile.get("quest", "not_started"))
+		var wolves: int = mini(3, int(profile.get("kills", 0)))
+		var first_goal: String = "Fala com Tessa para iniciar."
+		if quest_stage == "active":
+			first_goal = "Derrota lobos nas proximidades: %d/3" % wolves
+		elif quest_stage == "completed":
+			first_goal = "A vila esta segura."
+		missions.append({"title":"A protecao de Valedouro", "state":quest_stage, "goal":first_goal, "reward":"100 XP | 50 ouro | 2 pocoes"})
+		var forest_stage: String = str(profile.get("forest_quest", "locked"))
+		if quest_stage == "completed":
+			var forest_goal: String = "Fala com Tessa para iniciar."
 			if forest_stage == "active":
-				forest_detail = "Baus diferentes: %d/2" % int(profile.get("forest_quest_chests", []).size())
+				forest_goal = "Explora baus diferentes: %d/2" % int(profile.get("forest_quest_chests", []).size())
 			elif forest_stage == "ready":
-				forest_detail = "Regressa a Tessa para receber a recompensa!"
+				forest_goal = "Regressa a Tessa para receber a recompensa."
 			elif forest_stage == "completed":
-				forest_detail = "Concluida! 200 XP, 150 ouro e 3 pocoes."
-			_draw_panel_text(Vector2(32, 247), forest_detail, Color("b5d8bd"), 12)
+				forest_goal = "Exploracao concluida."
+			missions.append({"title":"Exploracao da Floresta", "state":forest_stage, "goal":forest_goal, "reward":"200 XP | 150 ouro | 3 pocoes"})
 		if forest_stage == "completed":
-			_draw_panel_text(Vector2(32, 280), "O Selo das Ruinas", Color("f3ce80"), 15)
-			var guardian_stage := str(profile.get("guardian_quest", "locked"))
-			var guardian_detail := "Fala com Tessa para aceitar."
+			var guardian_stage: String = str(profile.get("guardian_quest", "locked"))
+			var guardian_goal: String = "Fala com Tessa para iniciar."
 			if guardian_stage == "active":
-				guardian_detail = "Guardiao: %d/1 | Selo: %d/1" % [mini(int(profile.get("guardian_quest_kills", 0)), 1), mini(int(profile.get("inventory", {}).get("Selo das Ruinas", 0)), 1)]
+				guardian_goal = "Guardiao: %d/1 | Selo: %d/1" % [mini(1, int(profile.get("guardian_quest_kills", 0))), mini(1, int(profile.get("inventory", {}).get("Selo das Ruinas", 0)))]
 			elif guardian_stage == "ready":
-				guardian_detail = "Regressa a Tessa com o Selo!"
+				guardian_goal = "Regressa a Tessa com o Selo."
 			elif guardian_stage == "completed":
-				guardian_detail = "Concluida! 450 XP, 500 ouro, 5 pocoes."
-			_draw_panel_text(Vector2(32, 306), guardian_detail, Color("b5d8bd"), 12)
+				guardian_goal = "O Selo foi entregue."
+			missions.append({"title":"O Selo das Ruinas", "state":guardian_stage, "goal":guardian_goal, "reward":"450 XP | 500 ouro | 5 pocoes"})
 		if str(profile.get("guardian_quest", "locked")) == "completed":
-			var crypt_stage := str(profile.get("crypt_quest", "locked"))
-			var crypt_detail := "Fala com Tessa para investigar a Cripta."
+			var crypt_stage: String = str(profile.get("crypt_quest", "locked"))
+			var crypt_goal: String = "Fala com Tessa para investigar a Cripta."
 			if crypt_stage == "active":
-				crypt_detail = "Vai ao portal a sudeste das ruinas e usa E."
+				crypt_goal = "Vai ao portal a sudeste das ruinas e usa E."
 			elif crypt_stage == "investigated":
-				crypt_detail = "Saqueadores: %d/3" % int(profile.get("crypt_raiders", 0))
+				crypt_goal = "Derrota saqueadores: %d/3" % int(profile.get("crypt_raiders", 0))
 			elif crypt_stage == "ready":
-				crypt_detail = "Regressa a Tessa para concluir!"
+				crypt_goal = "Regressa a Tessa para concluir."
 			elif crypt_stage == "completed":
-				crypt_detail = "Concluida! Pista do Sino Partido encontrada."
-			_draw_panel_text(Vector2(32, 332), "Ecos da Cripta do Sino Partido", Color("f3ce80"), 14)
-			_draw_panel_text(Vector2(32, 351), crypt_detail, Color("b5d8bd"), 12)
-		_draw_panel_text(Vector2(32, 385), "[E] Conversar com Tessa / investigar", Color("e5bda1"), 12)
+				crypt_goal = "Pista do Sino Partido encontrada."
+			missions.append({"title":"Ecos da Cripta do Sino Partido", "state":crypt_stage, "goal":crypt_goal, "reward":"Pista da historia do Sino Partido"})
+		var intro_done: bool = bool(profile.get("bank_intro_done", false))
+		missions.append({"title":"A Primeira Entrega", "state":"completed" if intro_done else "active", "goal":"Primeiro deposito no armazem realizado." if intro_done else "Guarda um item com a Guardiã do Armazem.", "reward":"75 ouro | 2 pocoes"})
+		if intro_done:
+			var reserve: Dictionary = profile.get("bank_supply_progress", {})
+			var reserve_done: bool = bool(profile.get("bank_supply_done", false))
+			var reserve_goal: String = "Deposita madeira %d/5 e rocha %d/3." % [int(reserve.get("Fragmento de madeira", 0)), int(reserve.get("Fragmento de rocha", 0))]
+			if reserve_done:
+				reserve_goal = "Reservas de Valedouro abastecidas."
+			missions.append({"title":"A Reserva de Valedouro", "state":"completed" if reserve_done else "active", "goal":reserve_goal, "reward":"180 ouro | 120 XP"})
+		if bool(profile.get("dungeon_claimed", false)) and str(profile.get("crypt_quest", "")) == "completed":
+			var echo_stage: String = str(profile.get("bell_echo_quest", "locked"))
+			var echo_goal: String = "Fala com Tessa para iniciar a investigacao."
+			if echo_stage == "active":
+				echo_goal = "Entrega a Tessa metal antigo: %d/3 na mochila." % mini(3, int(profile.get("inventory", {}).get("Fragmento de metal antigo", 0)))
+			elif echo_stage == "completed":
+				echo_goal = "As runas do Sino Partido foram decifradas."
+			missions.append({"title":"O Eco do Sino Partido", "state":echo_stage, "goal":echo_goal, "reward":"180 XP | 240 ouro | 2 pocoes"})
+		if str(profile.get("bell_echo_quest", "locked")) == "completed":
+			var rune_stage: String = str(profile.get("rune_ruins_quest", "locked"))
+			var rune_goal: String = "Fala com Tessa para iniciar."
+			if rune_stage == "active":
+				rune_goal = "Examina a pedra no portal das ruinas (E)."
+			elif rune_stage == "ready":
+				rune_goal = "Regressa a Tessa com a inscricao."
+			elif rune_stage == "completed":
+				rune_goal = "Inscricao runica entregue a Tessa."
+			missions.append({"title":"As Pedras que Cantam", "state":rune_stage, "goal":rune_goal, "reward":"250 XP | 300 ouro"})
+		if str(profile.get("rune_ruins_quest", "locked")) == "completed":
+			var watch_stage: String = str(profile.get("rune_watch_quest", "locked"))
+			var watch_goal: String = "Fala com Tessa para iniciar a vigilia."
+			if watch_stage == "active":
+				watch_goal = "Derrota saqueadores: %d/5." % mini(5, int(profile.get("rune_watch_kills", 0)))
+			elif watch_stage == "ready":
+				watch_goal = "Regressa a Tessa para receber a recompensa."
+			elif watch_stage == "completed":
+				watch_goal = "A inscricao runica foi protegida."
+			missions.append({"title":"Vigilia das Runas", "state":watch_stage, "goal":watch_goal, "reward":"300 XP | 350 ouro"})
+		# MVP 1.0.7.6: active objectives first, ready-to-turn-in next, completed last.
+		# Stable ordering within each state retains the original story progression.
+		var ordered_missions: Array[Dictionary] = []
+		for stage_group in [["active", "investigated"], ["ready"], ["locked", "not_started"], ["completed"]]:
+			for mission_entry in missions:
+				if str(mission_entry.get("state", "")) in stage_group:
+					ordered_missions.append(mission_entry)
+		missions = ordered_missions
+		var page_count: int = maxi(1, int(ceili(float(missions.size()) / 3.0)))
+		quest_page = clampi(quest_page, 0, page_count - 1)
+		var unfinished_count: int = 0
+		for mission_entry in missions:
+			if str(mission_entry.get("state", "")) != "completed":
+				unfinished_count += 1
+		_draw_panel_text(Vector2(176, 115), "OBJETIVOS | %d PENDENTES | %d CONCLUIDAS" % [unfinished_count, missions.size() - unfinished_count], Color("b5c8c0"), 12)
+
+		for card_index in range(3):
+			var mission_index: int = quest_page * 3 + card_index
+			if mission_index >= missions.size():
+				break
+			var mission: Dictionary = missions[mission_index]
+			var card: Rect2 = Rect2(174, 130 + card_index * 112, 612, 103)
+			var stage: String = str(mission["state"])
+			draw_rect(card, Color("29403d") if stage == "ready" else Color("20343a"))
+			draw_rect(card, Color("d6b66f") if stage == "ready" else Color("627d75"), false, 2.0 if stage == "ready" else 1.0)
+			var stage_label: String = "CONCLUIDA" if stage == "completed" else "PRONTA" if stage == "ready" else "EM CURSO" if stage in ["active", "investigated"] else "DISPONIVEL"
+			var stage_color: Color = Color("94d6a5") if stage == "completed" else Color("f5cf85")
+			_draw_panel_text(card.position + Vector2(12, 24), str(mission["title"]), Color("f5d997"), 15, 410.0)
+			_draw_panel_text(card.position + Vector2(482, 24), stage_label, stage_color, 12, 116.0)
+			_draw_panel_text(card.position + Vector2(12, 53), "Objetivo: " + str(mission["goal"]), Color("e8efeb"), 12, 575.0)
+			_draw_panel_text(card.position + Vector2(12, 81), "Recompensa: " + str(mission["reward"]), Color("a6dcb9"), 12, 575.0)
+		_draw_panel_text(Vector2(176, 496), "Pagina %d/%d  |  Roda / Setas cima-baixo" % [quest_page + 1, page_count], Color("cbd7d0"), 12)
+		for nav_data in [{"rect":Rect2(570, 479, 95, 29), "text":"ANTERIOR"}, {"rect":Rect2(670, 479, 115, 29), "text":"SEGUINTE"}]:
+			var nav_rect: Rect2 = nav_data["rect"]
+			draw_rect(nav_rect, Color("35504d"))
+			draw_rect(nav_rect, Color("b89b62"), false, 1.0)
+			_draw_panel_text(nav_rect.position + Vector2(9, 20), str(nav_data["text"]), Color("f5d997"), 12)
+
 	if show_dialog:
 		_draw_rpg_panel(Rect2(205, 382 if smith_dialog else 405, 550, 147 if smith_dialog else 124), dialog_speaker.to_upper(), "ESC")
 		_draw_dialog_wrapped(Vector2(225, 440 if smith_dialog else 465), dialog_text, 510.0, 14)
@@ -1994,10 +2880,19 @@ func _draw() -> void:
 # Keep NPC dialogue inside the panel; wrap by actual font metrics.
 	if sell_confirm_open:
 		draw_rect(Rect2(0, 44, 960, 496), Color(0, 0, 0, 0.65))
-		_draw_rpg_panel(Rect2(480, 208, 420, 190), "CONFIRMAR VENDA", "ESC")
-		_draw_panel_text(Vector2(500, 267), "Vender %dx %s?" % [pending_sale_quantity, pending_sale_item], Color("fff2cc"), 14, 375)
-		_draw_panel_text(Vector2(500, 301), "A venda nao pode ser desfeita.", Color("d3d9d3"), 12)
-		for button_data in [{"rect":Rect2(500, 332, 185, 43), "label":"CONFIRMAR"}, {"rect":Rect2(696, 332, 185, 43), "label":"CANCELAR"}]:
+		_draw_rpg_panel(Rect2(480, 181, 420, 231), "CONFIRMAR VENDA", "ESC")
+		var owned_count: int = int(profile.get("inventory", {}).get(pending_sale_item, 0))
+		_draw_panel_text(Vector2(500, 242), "Vender %dx %s?" % [pending_sale_quantity, pending_sale_item], Color("fff2cc"), 14, 375)
+		_draw_panel_text(Vector2(500, 271), "Disponivel: %d | Escolhe a quantidade:" % owned_count, Color("d3d9d3"), 12)
+		for qty_index in range(6):
+			var qty: int = [1, 5, 10, 20, 50, owned_count][qty_index]
+			var qty_rect := Rect2(500 + qty_index * 65, 292, 61, 32)
+			var enabled: bool = (pending_sale_gear_id == "" or qty == 1) and qty > 0 and qty <= owned_count
+			draw_rect(qty_rect, Color("64734b") if qty == pending_sale_quantity and enabled else Color("304b49") if enabled else Color("273337"))
+			draw_rect(qty_rect, Color("d5b46b"), false, 1.0)
+			_draw_panel_text(qty_rect.position + Vector2(8, 22), "TUDO" if qty_index == 5 else "%dx" % qty, Color("fff2cc") if enabled else Color("88918e"), 12)
+		_draw_panel_text(Vector2(500, 343), "A venda nao pode ser desfeita.", Color("d3d9d3"), 12)
+		for button_data in [{"rect":Rect2(500, 350, 185, 43), "label":"CONFIRMAR"}, {"rect":Rect2(696, 350, 185, 43), "label":"CANCELAR"}]:
 			var rr: Rect2 = button_data["rect"]
 			draw_rect(rr, Color("38534e"))
 			draw_rect(rr, Color("d5b46b"), false, 1.0)
@@ -2016,8 +2911,10 @@ func _draw_gather_markers() -> void:
 		draw_string(ThemeDB.fallback_font, pos + Vector2(-110, -49), label_text, HORIZONTAL_ALIGNMENT_CENTER, 220, 12, Color("f5e3aa") if kind != "herb" else Color("f0b7ff"))
 
 func _is_night() -> bool:
-	# Alternates one real-world hour of daylight with one hour of night.
-	return int(Time.get_unix_time_from_system() / 3600.0) % 2 == 1
+	# 3 real hours of daylight followed by 30 real minutes of night.
+	# 12,600-second shared cycle; deterministic after reconnecting.
+	var cycle_seconds: int = int(Time.get_unix_time_from_system()) % 12600
+	return cycle_seconds >= 10800
 
 func _draw_night_lighting() -> void:
 	if not _is_night():
@@ -2144,25 +3041,16 @@ func _draw_foliage() -> void:
 			draw_line(p, p + Vector2(0,5), Color("2a603f"), 1)
 
 func _draw_tree(base: Vector2) -> void:
-	# base is the collision center: only the trunk blocks movement.
-	draw_set_transform(base + Vector2(5, 3), 0.0, Vector2(1.0, 0.42))
-	draw_circle(Vector2.ZERO, 24, Color(0, 0, 0, 0.28))
-	draw_set_transform(Vector2.ZERO)
-	draw_rect(Rect2(base + Vector2(-6, -33), Vector2(12, 34)), Color("77533a"))
-	draw_rect(Rect2(base + Vector2(-2, -30), Vector2(3, 27)), Color("ad8051"))
-	for offset in [Vector2(-16,-44), Vector2(13,-47), Vector2(0,-61)]:
-		draw_circle(base + offset, 21, Color("254b38"))
-		draw_circle(base + offset + Vector2(-5,-5), 16, Color("427d53"))
-		draw_circle(base + offset + Vector2(-8,-10), 7, Color("60996a",0.65))
-	for leaf in [Vector2(-19,-54), Vector2(9,-65), Vector2(20,-39)]:
-		draw_circle(base + leaf, 2.3, Color("a4b76a", 0.72))
+	# Reference trees have true alpha; deterministic variants per world position.
+	var variant := absi(int(base.x * 7.0 + base.y * 3.0)) % 4
+	var tree: Texture2D = [visual_tree_oak, visual_tree_autumn, visual_tree_blossom, visual_tree_pine][variant]
+	_draw_visual_actor(tree, base + Vector2(0, 3), 82.0, 94.0)
 
 func _draw_rock(v: Vector3) -> void:
-	var p := Vector2(v.x,v.y)
+	var p := Vector2(v.x, v.y)
 	draw_ellipse_shadow(p, v.z)
-	draw_colored_polygon(PackedVector2Array([p+Vector2(-v.z,0),p+Vector2(-v.z*0.65,-v.z),p+Vector2(0,-v.z*1.4),p+Vector2(v.z*0.8,-v.z),p+Vector2(v.z,0),p+Vector2(0,v.z*0.3)]),Color("747b80"))
-	draw_line(p+Vector2(-v.z*0.65,-v.z),p+Vector2(0,-v.z*1.4),Color("b5bdba"),3)
-	draw_line(p + Vector2(-v.z * 0.35, -v.z * 0.55), p + Vector2(v.z * 0.3, -v.z * 0.85), Color("9da8a3"), 1.5)
+	# Source image: stone occupies the final ~57 pixels of a 295x75 strip.
+	draw_texture_rect_region(visual_decor_reference, Rect2(p + Vector2(-v.z * 1.45, -v.z * 2.2), Vector2(v.z * 2.9, v.z * 2.5)), Rect2(232, 0, 63, 75))
 
 func draw_ellipse_shadow(p: Vector2, r: float) -> void:
 	# A sombra usa a transformacao da camara e restaura-a ao terminar.
@@ -2172,11 +3060,12 @@ func draw_ellipse_shadow(p: Vector2, r: float) -> void:
 	draw_set_transform(-camera_offset)
 
 func _draw_bush(v: Vector3) -> void:
-	var p := Vector2(v.x,v.y)
-	draw_ellipse_shadow(p,v.z)
-	for o in [Vector2(-8,-10),Vector2(7,-9),Vector2(0,-18)]:
-		draw_circle(p+o,v.z*0.8,Color("295a3d"))
-		draw_circle(p+o+Vector2(-3,-4),v.z*0.4,Color("569663"))
+	var p := Vector2(v.x, v.y)
+	draw_ellipse_shadow(p, v.z)
+	var variant: int = absi(int(v.x * 3.0 + v.y)) % 4
+	var start_x: float = [0.0, 63.0, 121.0, 179.0][variant]
+	var width_px: float = [63.0, 58.0, 58.0, 53.0][variant]
+	draw_texture_rect_region(visual_decor_reference, Rect2(p + Vector2(-v.z * 1.5, -v.z * 2.2), Vector2(v.z * 3.0, v.z * 2.5)), Rect2(start_x, 0, width_px, 75))
 
 func _draw_barrel(v: Vector3) -> void:
 	var p := Vector2(v.x,v.y)
@@ -2193,41 +3082,12 @@ func _draw_fence(r: Rect2) -> void:
 		draw_rect(Rect2(Vector2(x,r.position.y-21),Vector2(8,31)),Color("b08755"))
 
 func _draw_house(rect: Rect2) -> void:
-	var p := rect.position
-	var w := rect.size.x
-	var h := rect.size.y
-	draw_rect(Rect2(p + Vector2(8,14), rect.size), Color(0,0,0,0.23))
-	draw_rect(rect, Color("a89474"))
-	draw_rect(Rect2(p + Vector2(9,14), Vector2(w-18,h-20)),Color("d5bd93"))
-	# Tall pitched roof, timber framing, and projecting eaves.
-	var roof := PackedVector2Array([p + Vector2(-13,31),p + Vector2(w*0.48,-38),p + Vector2(w+13,31),p + Vector2(w+2,47),p + Vector2(w*0.48,-19),p + Vector2(-13,47)])
-	draw_colored_polygon(roof,Color("743f3c"))
-	draw_line(roof[0],roof[1],Color("d49365"),4)
-	draw_line(roof[1],roof[2],Color("d49365"),4)
-	for j in range(1,5):
-		var x := p.x + float(j)*w/5.0
-		draw_line(Vector2(x,p.y+48),Vector2(x,p.y+h-8),Color("826345"),3)
-	draw_rect(Rect2(p + Vector2(w*0.5-13,h-46),Vector2(26,46)),Color("513e35"))
-	draw_circle(p + Vector2(w*0.5+7,h-23),2,Color("dfc67c"))
-	draw_rect(Rect2(p + Vector2(19,h-66),Vector2(27,25)),Color("4a7580"))
-	draw_rect(Rect2(p + Vector2(31,h-66),Vector2(3,25)),Color("e5d6aa"))
-	draw_rect(Rect2(p + Vector2(19,h-55),Vector2(27,3)),Color("e5d6aa"))
-	# Roof shingles, door step, stone foundation and warm window light.
-	for i in range(5):
-		var sx := p.x + 11.0 + float(i) * (w - 22.0) / 5.0
-		var sy := p.y + 26.0 - 19.0 * (1.0 - absf(sx - (p.x + w * 0.48)) / (w * 0.5))
-		draw_line(Vector2(sx, sy), Vector2(sx + 12, sy), Color("a65d4a", 0.7), 2.0)
-	draw_rect(Rect2(p + Vector2(8, h - 9), Vector2(w - 16, 6)), Color("8b826d"))
-	for i in range(int(w / 24.0)):
-		var bx := p.x + 10.0 + float(i) * 24.0
-		draw_line(Vector2(bx, p.y + h - 9), Vector2(bx, p.y + h - 3), Color("b6ab8e"), 1.0)
-	draw_rect(Rect2(p + Vector2(w * 0.5 - 19, h), Vector2(38, 5)), Color("a6a08a"))
-	draw_rect(Rect2(p + Vector2(21, h - 64), Vector2(23, 20)), Color("5e8b8c", 0.34))
-	# Wall lanterns attached to each facade.
-	var lantern := p + Vector2(w * 0.5 + 24, h - 44)
-	draw_line(lantern + Vector2(0, -11), lantern + Vector2(0, -2), Color("4d4439"), 2.0)
-	draw_rect(Rect2(lantern + Vector2(-4, -3), Vector2(8, 11)), Color("493e35"))
-	draw_rect(Rect2(lantern + Vector2(-2, -1), Vector2(4, 7)), Color("efc778"))
+	# Keep the original collision rectangles; artwork is visual only.
+	var variant := absi(int(rect.position.x * 3.0 + rect.position.y)) % 4
+	var house: Texture2D = [visual_house_cottage, visual_house_workshop, visual_house_guild, visual_house_townhall][variant]
+	var art_width := maxf(118.0, rect.size.x + 26.0)
+	var art_height := maxf(105.0, rect.size.y + 52.0)
+	_draw_visual_actor(house, rect.position + Vector2(rect.size.x * 0.5, rect.size.y), art_width, art_height)
 
 func _draw_professions_panel() -> void:
 	_draw_rpg_panel(Rect2(530, 68, 395, 318), "PROFISSOES", "P")
@@ -2309,6 +3169,27 @@ func _draw_skill_tree_panel() -> void:
 		draw_string(font, Vector2(rect.position.x + 12, rect.position.y + 37), state_text, HORIZONTAL_ALIGNMENT_LEFT, 335, 11, Color("b9d8c6"))
 	draw_string(font, Vector2(284, 507), "B / ESC: fechar | Cada classe tem a sua arvore.", HORIZONTAL_ALIGNMENT_LEFT, 400, 12, Color("e5d6ba"))
 
+func _draw_attributes_panel() -> void:
+	var font: Font = ThemeDB.fallback_font
+	var panel: Rect2 = Rect2(265, 90, 430, 435)
+	draw_rect(panel, Color("13252d", 0.98))
+	draw_rect(panel, Color("d8ae6c"), false, 2.0)
+	draw_string(font, Vector2(284, 123), "ATRIBUTOS DO CAMPEAO", HORIZONTAL_ALIGNMENT_LEFT, 395, 19, Color("f2d69c"))
+	var remaining: int = int(profile.get("attribute_points", 0))
+	draw_string(font, Vector2(284, 148), "Pontos disponiveis: %d" % remaining, HORIZONTAL_ALIGNMENT_LEFT, 380, 15, Color("a8ebc0"))
+	var attrs: Dictionary = profile.get("attributes", {})
+	var keys: Array[String] = ["forca", "vitalidade", "destreza", "inteligencia", "agilidade"]
+	var labels: Array[String] = ["FORCA", "VITALIDADE", "DESTREZA", "INTELIGENCIA", "AGILIDADE"]
+	var descriptions: Array[String] = ["Guerreiro: ATQ + 10% protecao", "+3 HP por ponto; +1 DEF a cada 2", "Arqueiro: ATQ + critico", "Mago: ATQ + 2 MP por ataque", "+1% esquiva / 5 pontos (max 20%)"]
+	for i in range(5):
+		var y: float = 167.0 + float(i) * 58.0
+		draw_rect(Rect2(280, y, 399, 48), Color("243b41"))
+		draw_string(font, Vector2(292, y + 20), "%s: %d" % [labels[i], int(attrs.get(keys[i], 5))], HORIZONTAL_ALIGNMENT_LEFT, 225, 15, Color("f0e0b9"))
+		draw_string(font, Vector2(292, y + 37), descriptions[i], HORIZONTAL_ALIGNMENT_LEFT, 320, 11, Color("abc7c7"))
+		draw_rect(Rect2(640, y, 38, 32), Color("426c58") if remaining > 0 else Color("3b454b"))
+		draw_string(font, Vector2(650, y + 23), "+", HORIZONTAL_ALIGNMENT_LEFT, 25, 22, Color.WHITE)
+	draw_string(font, Vector2(284, 501), "O / ESC: fechar | + distribui 1 ponto.", HORIZONTAL_ALIGNMENT_LEFT, 395, 12, Color("e5d6ba"))
+
 func _draw_classes_panel() -> void:
 	var font: Font = ThemeDB.fallback_font
 	var area: Rect2 = Rect2(265, 95, 430, 285)
@@ -2324,14 +3205,14 @@ func _draw_classes_panel() -> void:
 	draw_string(font, Vector2(284, 200), "GUERREIRO    +8 ATQ / +7 DEF | Arcano 165%", HORIZONTAL_ALIGNMENT_LEFT, 390, 14, Color("ffdcaa"))
 	draw_string(font, Vector2(284, 238), "MAGO             +3 ATQ / +1 DEF | Arcano 210%", HORIZONTAL_ALIGNMENT_LEFT, 390, 14, Color("cbaaff"))
 	draw_string(font, Vector2(284, 276), "ARQUEIRO       +6 ATQ / +3 DEF | Arcano 185%", HORIZONTAL_ALIGNMENT_LEFT, 390, 14, Color("a7e5c6"))
-	draw_string(font, Vector2(284, 328), "C / ESC: fechar | Clica na classe para selecionar", HORIZONTAL_ALIGNMENT_LEFT, 395, 13, Color("e5d6ba"))
-	draw_string(font, Vector2(284, 354), "Teste MVP: podes mudar de classe sem custos.", HORIZONTAL_ALIGNMENT_LEFT, 395, 12, Color("c1d2d3"))
+	draw_string(font, Vector2(284, 328), "C / ESC: fechar | Classe definitiva", HORIZONTAL_ALIGNMENT_LEFT, 395, 13, Color("e5d6ba"))
+	draw_string(font, Vector2(284, 354), "A classe foi escolhida ao criar o personagem." , HORIZONTAL_ALIGNMENT_LEFT, 395, 12, Color("c1d2d3"))
 
 func _draw_hud() -> void:
 	var font := ThemeDB.fallback_font
 	draw_rect(Rect2(0, 0, 960, 45), Color("172329", 0.96))
 	draw_line(Vector2(0, 44), Vector2(960, 44), Color("c69a5c"), 2)
-	draw_string(font, Vector2(16, 29), "CRONICAS DO TRONO FRAGMENTADO   |   VALEDOURO", HORIZONTAL_ALIGNMENT_LEFT, 928, 17, Color("f1d5a0"))
+	draw_string(font, Vector2(16, 29), "CRONICAS DO TRONO FRAGMENTADO   |   VALEDOURO - REINOS EM ASCENSAO", HORIZONTAL_ALIGNMENT_LEFT, 928, 17, Color("f1d5a0"))
 	# Painel fixo: indicadores, atalhos e mensagens ocupam linhas independentes.
 	# O mundo continua clicavel apenas acima de y=538; nao alterar limites de input.
 	draw_rect(Rect2(0, 538, 960, 102), Color("172329", 0.98))
@@ -2347,7 +3228,7 @@ func _draw_hud() -> void:
 	_bar(Rect2(15, 587, 220, 13), xp / xp_next, Color("679cce"), "XP %d / %d" % [int(xp), int(xp_next)])
 	draw_string(font, Vector2(252, 558), "NIVEL %s   %s   OURO %s   LOBOS %s/3" % [str(profile.get("level", 1)), str(profile.get("combat_class", "Guerreiro")), str(profile.get("gold", 0)), str(profile.get("kills", 0))], HORIZONTAL_ALIGNMENT_LEFT, 476, 14, Color("e9d49f"))
 	draw_string(font, Vector2(252, 577), "WASD mover | Clique atacar | 1 Arcano | 2 Classe | H Vida | J Mana | K Cripta", HORIZONTAL_ALIGNMENT_LEFT, 688, 11, Color("d6e2dc"))
-	draw_string(font, Vector2(252, 594), "T Auto | C Classes | B Talentos | E Falar | I Mochila | M Loja | Q Missoes | P Profissoes", HORIZONTAL_ALIGNMENT_LEFT, 688, 11, Color("d6e2dc"))
+	draw_string(font, Vector2(252, 594), "T Auto | C Classes | L Talentos | B Armazem | E Falar | I Mochila | M Loja | Q Missoes | P Profissoes", HORIZONTAL_ALIGNMENT_LEFT, 688, 11, Color("d6e2dc"))
 	if auto_combat:
 		draw_string(font, Vector2(760, 558), "AUTO: ON", HORIZONTAL_ALIGNMENT_LEFT, 180, 12, Color("ffbd70"))
 	# Separador impede que o texto verde invada a barra de XP.
@@ -2383,10 +3264,19 @@ func _draw_sprite(texture: Texture2D, pos: Vector2, direction: int, walking: boo
 	if hurt_alpha > 0.0:
 		draw_rect(Rect2(pos + Vector2(-25, -62), Vector2(50, 56)), Color(1.0, 0.28, 0.18, 0.18 * hurt_alpha))
 
+func _draw_bank_keeper() -> void:
+	var pos: Vector2 = BANK_KEEPER
+	draw_ellipse_shadow(pos, 13.0)
+	# The dedicated NPC sprite is a complete character; no geometric
+	# armor rectangles are drawn over the face or torso.
+	_draw_visual_actor(visual_npc_ferreiro_detail, pos, 54.0, 70.0)
+	draw_circle(pos + Vector2(0, -77), 10.0, Color("284d68", 0.90))
+	draw_string(ThemeDB.fallback_font, pos + Vector2(-5, -72), "B", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("f6d585"))
+
 func _draw_blacksmith() -> void:
 	var pos := BLACKSMITH
 	draw_ellipse_shadow(pos, 13.0)
-	_draw_sprite(hero_unarmed_sprite, pos, 0, false, "npc:ferreiro")
+	_draw_visual_actor(visual_npc_ferreiro_detail, pos, 59.0, 75.0)
 	# Avental de couro e martelo para distinguir o ferreiro de Tessa.
 	draw_colored_polygon(PackedVector2Array([
 		pos + Vector2(-12, -37), pos + Vector2(12, -37),
@@ -2477,6 +3367,32 @@ func _draw_basic_impacts() -> void:
 				draw_arc(at, radius, -2.5, 0.5, 20, Color(1.0, 0.82, 0.42, alpha), 4.0)
 				draw_line(at + Vector2(-radius * 0.5, -radius * 0.5), at + Vector2(radius * 0.5, radius * 0.5), Color(1.0, 0.95, 0.73, alpha), 2.0)
 
+# Desenha um frame do atlas 8x4 sem alterar o estado do servidor.
+# A animacao de ataque e temporizada pelos eventos de combate existentes.
+func _draw_character_atlas(kind: String, pos: Vector2, facing: String, moving: bool, attack_left: float, width: float, height: float) -> bool:
+	if not character_animation_atlases.has(kind):
+		return false
+	var atlas: Dictionary = character_animation_atlases[kind]
+	var attacking: bool = attack_left > 0.0
+	var texture: Texture2D = atlas["attack"] if attacking else atlas["move"]
+	var direction: int = 0
+	match facing:
+		"up": direction = 1
+		"left": direction = 2
+		"right": direction = 3
+	var frame: int = 0
+	if attacking:
+		frame = clampi(int((1.0 - attack_left / 0.42) * 8.0), 0, 7)
+	elif moving:
+		frame = int(animation_time * 8.0) % 8
+	# Os sprites do Sino Partido usam 8x4 células de 128x140; outros atlases, 160x160.
+	var cell_width: float = float(texture.get_width()) / 8.0 if kind == "guardiao_sino_partido" else 160.0
+	var cell_height: float = float(texture.get_height()) / 4.0 if kind == "guardiao_sino_partido" else 160.0
+	var source := Rect2(frame * cell_width, direction * cell_height, cell_width, cell_height)
+	var destination := Rect2(pos + Vector2(-width * 0.5, -height), Vector2(width, height))
+	draw_texture_rect_region(texture, destination, source)
+	return true
+
 func _draw_character(pos: Vector2, facing: String, walking: bool, label: String, npc: bool) -> void:
 	draw_ellipse_shadow(pos, 13.0)
 	var actor_key := "npc:tessa" if npc else ("p:" + player_id if label == "Tu" else "")
@@ -2484,28 +3400,34 @@ func _draw_character(pos: Vector2, facing: String, walking: bool, label: String,
 	var effective_facing := str(motion.get("facing", facing))
 	var moving := bool(motion.get("moving", walking))
 	var equipped_weapon := str(profile.get("equipment", {}).get("weapon", ""))
-	var character_sprite: Texture2D = tessa_sprite if npc else (hero_sprite if equipped_weapon in ["Espada de cavaleiro", "Espada de aco do Guardiao", "Lamina real de Valedouro", "Espada de ferro", "Lamina de presas", "Espada ancestral", "Espada do saqueador"] else hero_unarmed_sprite)
-	_draw_sprite(character_sprite, pos, _sprite_direction(effective_facing), moving, actor_key)
+	var equipment_now: Dictionary = profile.get("equipment", {})
+	var has_weapon: bool = str(equipment_now.get("weapon", "")) != ""
+	var has_armor: bool = str(equipment_now.get("armor", "")) != ""
+	# The detailed class atlases already include weapon and robes. Never use
+	# them for an empty slot: otherwise unequipping cannot change appearance.
+	var use_full_class_atlas: bool = false
+	var character_sprite: Texture2D = tessa_sprite if npc else (class_hero_sprites.get(str(profile.get("combat_class", "Guerreiro")), hero_unarmed_sprite) if use_full_class_atlas else hero_unarmed_sprite)
+	var class_kind: String = str(profile.get("combat_class", "Guerreiro")).to_lower()
+	var drew_new_atlas: bool = false
 	if not npc and label == "Tu":
+		if has_weapon:
+			drew_new_atlas = _draw_character_atlas(class_kind, pos, effective_facing, moving, attack_anim_left, 62.0, 74.0)
+	if not drew_new_atlas:
+		_draw_sprite(character_sprite, pos, _sprite_direction(effective_facing), moving, actor_key)
+	if not npc and label == "Tu":
+		# Sprites de classe sao completos: armadura, armas e silhueta ja
+		# fazem parte do atlas. Sobreposicoes antigas deformavam o corpo.
+		# Preservamos apenas efeitos de encantamento e armas lendarias,
+		# sem redesenhar o torso, os membros ou a armadura por cima.
 		var equipment: Dictionary = profile.get("equipment", {})
-		var bob := sin(animation_time * 14.0) * 2.0 if walking else 0.0
-		if str(profile.get("combat_class", "Guerreiro")) == "Guerreiro" and equipment.get("weapon") in ["Espada de cavaleiro", "Espada de aco do Guardiao", "Lamina real de Valedouro", "Espada de ferro", "Lamina de presas", "Espada ancestral", "Espada do saqueador"]:
-			var swing := 1.0 - attack_anim_left / 0.30 if attack_anim_left > 0.0 else 0.0
-			var blade_tip := pos + Vector2(28,-43+bob)
-			if attack_anim_left > 0.0:
-				var angle := -1.4 + swing * 2.6
-				blade_tip = pos + Vector2(18, -23) + Vector2(cos(angle), sin(angle)) * 38.0
-				draw_arc(pos + Vector2(18,-23), 38.0, -1.4, -1.4 + swing * 2.6, 18, Color(1.0,0.88,0.52,0.9), 3.0)
-			draw_line(pos + Vector2(18,-18+bob), blade_tip, Color("dce8f0"), 5)
-			draw_line(pos + Vector2(12,-23+bob), pos + Vector2(25,-18+bob), Color("d5ad59"), 4)
-		if equipment.get("offhand") in ["Escudo de madeira", "Escudo reforcado", "Escudo do saqueador", "Escudo de ferro", "Escudo reforcado de aco", "Escudo da muralha"]:
-			draw_colored_polygon(PackedVector2Array([pos+Vector2(-24,-24+bob),pos+Vector2(-12,-22+bob),pos+Vector2(-12,-5+bob),pos+Vector2(-18,0+bob),pos+Vector2(-25,-7+bob)]),Color("8c6240") if equipment.get("offhand") == "Escudo de madeira" else Color("8494a0"))
-			draw_line(pos+Vector2(-19,-21+bob),pos+Vector2(-19,-3+bob),Color("d9b55e"),2)
-		# Equipamento visivel: cada categoria tem silhueta, material e detalhes proprios.
-		_draw_equipment_appearance(pos, equipment, bob)
+		var bob: float = sin(animation_time * 14.0) * 2.0 if walking else 0.0
+		if not drew_new_atlas:
+			_draw_equipment_appearance(pos, equipment, bob)
+			_draw_class_weapon_if_equipped(pos, equipment, bob)
 		_draw_enchantment_fx(pos, bob)
-		if str(profile.get("combat_class", "Guerreiro")) == "Guerreiro":
+		if has_weapon and str(profile.get("combat_class", "Guerreiro")) == "Guerreiro":
 			_draw_legendary_weapon_fx(pos, bob, equipment)
+
 	if npc:
 		draw_circle(pos + Vector2(0,-65), 9, Color("e6c46b"))
 		draw_string(ThemeDB.fallback_font,pos + Vector2(-3,-60),"!",HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color("463821"))
@@ -2569,48 +3491,125 @@ func _draw_legendary_weapon_fx(pos: Vector2, bob: float, equipment: Dictionary) 
 		if is_royal:
 			draw_arc(pos + Vector2(18.0, -23.0), 45.0, -1.4, -1.4 + swing_progress * 2.6, 22, slash_color, 1.5)
 
+func _draw_class_weapon_if_equipped(pos: Vector2, equipment: Dictionary, bob: float) -> void:
+	var weapon: String = str(equipment.get("weapon", ""))
+	if weapon == "":
+		return
+	var hero_class: String = str(profile.get("combat_class", "Guerreiro"))
+	if hero_class == "Arqueiro":
+		var center: Vector2 = pos + Vector2(21, -28 + bob)
+		draw_arc(center, 22.0, -PI * 0.65, PI * 0.65, 24, Color("bd8b4f"), 3.0)
+		draw_line(center + Vector2(22.0 * cos(-PI * 0.65), 22.0 * sin(-PI * 0.65)), center + Vector2(22.0 * cos(PI * 0.65), 22.0 * sin(PI * 0.65)), Color("eee1b9"), 1.5)
+	elif hero_class == "Mago":
+		var base: Vector2 = pos + Vector2(19, -13 + bob)
+		var tip: Vector2 = pos + Vector2(19, -63 + bob)
+		draw_line(base, tip, Color("b8945d"), 4.0)
+		draw_circle(tip, 6.0, Color("71c9ff"))
+		draw_circle(tip + Vector2(-2, -2), 2.0, Color("e7f9ff"))
+
+
 func _draw_equipment_appearance(pos: Vector2, equipment: Dictionary, bob: float) -> void:
 	var weapon: String = str(equipment.get("weapon", ""))
 	var shield: String = str(equipment.get("offhand", ""))
 	var armor: String = str(equipment.get("armor", ""))
 	var royal: bool = armor in ["Armadura de placas reais", "Armadura do trono"]
-	var metal: bool = armor in ["Armadura de ferro", "Armadura de pedra"] or royal
+	var metal: bool = armor in ["Armadura de ferro", "Armadura de pedra", "Armadura do Sino Partido", "Colete do Sino Partido", "Manto do Sino Partido"] or royal
+	if armor in ["Couraca da Guarda", "Colete do Batedor", "Manto do Eco", "Armadura do Bastião", "Colete da Sombra Verde", "Manto das Estrelas"]:
+		var outfit_color: Color = Color("d8b67d") if armor == "Armadura do Bastião" else Color("377b68") if armor == "Colete da Sombra Verde" else Color("7864ca") if armor == "Manto das Estrelas" else Color("879fb5") if armor == "Couraca da Guarda" else Color("608e6e") if armor == "Colete do Batedor" else Color("7969ad")
+		draw_colored_polygon(PackedVector2Array([pos+Vector2(-13,-37+bob),pos+Vector2(13,-37+bob),pos+Vector2(15,-17+bob),pos+Vector2(-15,-17+bob)]),outfit_color)
+		draw_line(pos+Vector2(-10,-31+bob),pos+Vector2(10,-23+bob),Color("c3e9ff") if armor == "Manto do Eco" else Color("e3d49a"),2.0)
 	if metal:
-		var plate_color: Color = Color("778b9b") if armor == "Armadura de ferro" else Color("788078") if armor == "Armadura de pedra" else Color("a9aebb") if armor == "Armadura de placas reais" else Color("d5ad58")
+		var plate_color: Color = Color("477e9f") if armor == "Armadura do Sino Partido" else Color("778b9b") if armor == "Armadura de ferro" else Color("788078") if armor == "Armadura de pedra" else Color("a9aebb") if armor == "Armadura de placas reais" else Color("d5ad58")
 		draw_colored_polygon(PackedVector2Array([pos + Vector2(-12,-37+bob),pos + Vector2(12,-37+bob),pos + Vector2(15,-18+bob),pos + Vector2(-15,-18+bob)]),plate_color)
 		draw_line(pos + Vector2(0,-35+bob),pos + Vector2(0,-20+bob),plate_color.darkened(0.35),2.0)
 		draw_rect(Rect2(pos + Vector2(-18,-36+bob),Vector2(6,10)),plate_color.lightened(0.2))
 		draw_rect(Rect2(pos + Vector2(12,-36+bob),Vector2(6,10)),plate_color.lightened(0.2))
+		if armor == "Armadura do Sino Partido":
+			draw_line(pos + Vector2(-11,-34+bob), pos + Vector2(11,-21+bob), Color("91e8ff"), 2.0)
+			draw_line(pos + Vector2(11,-34+bob), pos + Vector2(-11,-21+bob), Color("91e8ff"), 2.0)
+			draw_circle(pos + Vector2(0,-27+bob), 4.0, Color("ffe3a0"))
 		if royal:
 			draw_circle(pos + Vector2(0,-30+bob),3.0,Color("f7d576"))
 			draw_line(pos + Vector2(-12,-37+bob),pos + Vector2(12,-37+bob),Color("e8d9a5"),2.0)
-	if shield != "":
-		var shield_color: Color = Color("805839") if shield == "Escudo de madeira" else Color("777e88") if shield == "Escudo do saqueador" else Color("829aa8") if shield in ["Escudo de ferro","Escudo reforcado"] else Color("b0bec6") if shield == "Escudo reforcado de aco" else Color("c8a251")
+	if shield != "" and str(profile.get("combat_class", "Guerreiro")) == "Guerreiro" and shield.begins_with("Escudo"):
+		var shield_color: Color = Color("805839") if shield == "Escudo de madeira" else Color("777e88") if shield == "Escudo do saqueador" else Color("829aa8") if shield in ["Escudo de ferro","Escudo reforcado"] else Color("b0bec6") if shield == "Escudo reforcado de aco" else Color("568bad") if shield in ["Escudo do Sino Partido", "Aljava do Sino Partido", "Orbe do Sino Partido"] else Color("c8a251")
 		var shield_size: float = 20.0 if shield == "Escudo da muralha" else 16.0
 		var shield_center: Vector2 = pos + Vector2(-19,-13+bob)
 		draw_colored_polygon(PackedVector2Array([shield_center+Vector2(-9,-shield_size),shield_center+Vector2(9,-shield_size),shield_center+Vector2(9,3),shield_center+Vector2(0,11),shield_center+Vector2(-9,3)]),shield_color)
 		draw_line(shield_center+Vector2(0,-shield_size+3),shield_center+Vector2(0,7),Color("f0d28c"),2.0)
-		if shield in ["Escudo reforcado de aco","Escudo da muralha"]:
+		if shield in ["Escudo reforcado de aco","Escudo da muralha","Escudo do Sino Partido"]:
 			draw_arc(shield_center+Vector2(0,-4),7,0.0,TAU,12,Color("f3d47d"),1.5)
-	if weapon != "" and str(profile.get("combat_class", "Guerreiro")) == "Guerreiro":
+	if weapon != "" and weapon not in ["Lamina da Vigilia Runica", "Espada da Guarda de Valedouro"] and str(profile.get("combat_class", "Guerreiro")) == "Guerreiro":
 		var tip: Vector2 = pos + Vector2(28,-43+bob)
 		var grip: Vector2 = pos + Vector2(18,-18+bob)
-		var blade_color: Color = Color("b3bdc7") if weapon in ["Espada de ferro","Lamina de presas"] else Color("d5e7f2") if weapon in ["Espada de cavaleiro","Espada de aco do Guardiao"] else Color("e6c66b") if weapon == "Lamina real de Valedouro" else Color("b8d5cc")
-		var blade_width: float = 7.0 if weapon in ["Espada de aco do Guardiao","Lamina real de Valedouro","Espada ancestral"] else 4.0
+		var blade_color: Color = Color("b3bdc7") if weapon in ["Espada de ferro","Lamina de presas"] else Color("d5e7f2") if weapon in ["Espada de cavaleiro","Espada de aco do Guardiao"] else Color("e6c66b") if weapon == "Lamina real de Valedouro" else Color("78d8f5") if weapon == "Lamina do Sino Partido" else Color("b8d5cc")
+		var blade_width: float = 7.0 if weapon in ["Espada de aco do Guardiao","Lamina real de Valedouro","Espada ancestral","Lamina do Sino Partido","Lamina da Vigilia Runica"] else 4.0
 		draw_line(grip,tip,blade_color,blade_width)
 		draw_line(pos+Vector2(11,-24+bob),pos+Vector2(25,-19+bob),Color("e1b35c"),4.0)
-		if weapon in ["Espada de aco do Guardiao","Lamina real de Valedouro","Espada ancestral"]:
+		if weapon in ["Espada de aco do Guardiao","Lamina real de Valedouro","Espada ancestral","Lamina do Sino Partido","Lamina da Vigilia Runica"]:
 			draw_circle(tip,3.0,Color("81dfff") if weapon == "Espada de aco do Guardiao" else Color("ffe08a"))
+
+# Draw the rare blade even for Arqueiro/Mago, whose base weapon renderer
+# normally omits swords. This is visual only and does not change class range.
+# A arma rúnica mantém identidade própria em todas as classes.
+# O efeito é estritamente visual: não altera o dano ou a distância de ataque.
+func _draw_rune_blade_overlay(pos: Vector2, bob: float) -> void:
+	var base: Vector2 = pos + Vector2(18.0, -17.0 + bob)
+	var tip: Vector2 = pos + Vector2(30.0, -51.0 + bob)
+	var phase: float = animation_time * 3.0
+	var glow: float = 0.65 + 0.25 * sin(phase)
+	draw_line(base, tip, Color(0.25, 0.8, 1.0, 0.25 + glow * 0.3), 10.0)
+	draw_line(base, tip, Color("82dfff"), 5.0)
+	draw_line(base + Vector2(-8, -6), base + Vector2(8, 0), Color("e5bb73"), 3.0)
+	draw_circle(tip, 3.5, Color("d7f9ff"))
+	draw_arc(base + Vector2(6, -19), 20.0, 0.0, TAU, 24, Color(0.3, 0.8, 1.0, 0.22 + glow * 0.2), 2.0)
+	for spark in range(3):
+		var angle: float = phase + float(spark) * TAU / 3.0
+		var at: Vector2 = base + Vector2(6, -19) + Vector2(cos(angle), sin(angle)) * 18.0
+		draw_circle(at, 1.6, Color("a8edff"))
+
+func _draw_class_weapon_overlay(pos: Vector2, bob: float, weapon: String) -> void:
+	var hand: Vector2 = pos + Vector2(19, -19+bob)
+	if weapon in ["Lamina da Aurora de Valedouro", "Arco da Bruma Antiga", "Arco do Sino Partido", "Cajado do Firmamento", "Cajado do Sino Partido"]:
+		draw_arc(hand+Vector2(6,-20), 25.0, 0.0, TAU, 24, Color("f8d48a",0.65) if weapon == "Lamina da Aurora de Valedouro" else Color("79f1c6",0.65) if weapon == "Arco da Bruma Antiga" else Color("a9a0ff",0.65), 2.5)
+	if weapon in ["Espada da Guarda de Valedouro", "Lamina da Aurora de Valedouro"]:
+		draw_line(hand, hand+Vector2(13,-36), Color("cde3ef"), 6.0)
+		draw_line(hand+Vector2(-7,-7), hand+Vector2(8,-3), Color("f0ca75"), 4.0)
+	elif weapon in ["Arco do Vigia Runico", "Arco da Bruma Antiga"]:
+		draw_arc(hand+Vector2(6,-14), 21.0, -PI/2, PI/2, 20, Color("a0dfc1"), 4.0)
+		draw_line(hand+Vector2(6,-35),hand+Vector2(6,7),Color("f1e3bb"),1.5)
+		draw_circle(hand+Vector2(26,-14),3.0,Color("78e7ff"))
+	else:
+		draw_line(hand, hand+Vector2(8,-39), Color("9473bb"), 5.0)
+		draw_circle(hand+Vector2(8,-42), 7.0, Color("78dcff"))
+		draw_arc(hand+Vector2(8,-42), 11.0, 0, TAU, 24, Color("b7edff",0.7), 2.0)
+
+func _draw_crypt_blade_overlay(pos: Vector2, bob: float) -> void:
+	var start: Vector2 = pos + Vector2(17.0, -18.0 + bob)
+	var tip: Vector2 = pos + Vector2(31.0, -49.0 + bob)
+	draw_line(start, tip, Color("78d8f5"), 6.0)
+	draw_line(start + Vector2(-8.0, -6.0), start + Vector2(8.0, 1.0), Color("e9c878"), 3.0)
+	draw_circle(tip, 3.5, Color("e0faff"))
+	draw_arc(start + Vector2(7.0, -18.0), 18.0, 0.0, TAU, 20, Color(0.35, 0.85, 1.0, 0.3), 1.5)
 
 func _set_monsters(data: Array) -> void:
 	monsters.clear()
 	for m in data:
 		monsters[str(m.get("id", ""))] = m
 
+func _draw_visual_actor(texture: Texture2D, feet: Vector2, width: float, height: float, bounce: float = 0.0) -> void:
+	# A single full-body sprite, never split into 96x112 animation cells.
+	if texture == null:
+		return
+	var rect := Rect2(feet + Vector2(-width * 0.5, -height + bounce), Vector2(width, height))
+	draw_texture_rect(texture, rect, false)
+
 func _draw_monster(m: Dictionary) -> void:
 	var pos := Vector2(float(m.get("x", 0)), float(m.get("y", 0)))
 	var is_wolf := str(m.get("kind", "")) == "lobo"
-	var is_guardian := str(m.get("kind", "")) == "guardiao"
+	var is_storm_boss := str(m.get("kind", "")) == "guardiao_tempestade"
+	var is_guardian := str(m.get("kind", "")) in ["guardiao", "guardiao_tempestade"]
+	var is_rune_sentinel := str(m.get("kind", "")) == "sentinela_runica"
 	draw_ellipse_shadow(pos, 18.0)
 	# The server currently does not transmit monster facing/animation state.
 	# Use a subtle idle cycle until monster movement data is expanded.
@@ -2629,8 +3628,8 @@ func _draw_monster(m: Dictionary) -> void:
 	var actor_key := "m:" + str(m.get("id", ""))
 	var motion: Dictionary = actor_motion.get(actor_key, {})
 	if is_guardian:
-		draw_circle(pos + Vector2(0, -32), 45.0, Color(0.55, 0.21, 0.64, 0.16))
-		draw_arc(pos + Vector2(0, -32), 45.0, 0.0, TAU, 32, Color("dca5ef"), 2.0)
+		draw_circle(pos + Vector2(0, -32), 45.0, Color(0.16, 0.70, 0.91, 0.24) if is_storm_boss else Color(0.55, 0.21, 0.64, 0.16))
+		draw_arc(pos + Vector2(0, -32), 45.0, 0.0, TAU, 32, Color("65e6ff") if is_storm_boss else Color("dca5ef"), 2.0)
 	var attack_left := float(monster_attack_anim.get(actor_key, 0.0))
 	var attack_progress := 1.0 - attack_left / MONSTER_ATTACK_DURATION
 	var attack_lunge := Vector2.ZERO
@@ -2644,22 +3643,47 @@ func _draw_monster(m: Dictionary) -> void:
 		elif facing == "right":
 			attack_direction = Vector2(1, 0)
 		attack_lunge = attack_direction * sin(attack_progress * PI) * (16.0 if is_guardian else 10.0)
-	_draw_sprite(wolf_sprite if is_wolf else raider_sprite, pos + attack_lunge, _sprite_direction(str(motion.get("facing", "down"))), bool(motion.get("moving", false)), actor_key, 1.45 if is_guardian else (1.0 if is_wolf else 1.04))
+	var visual_texture: Texture2D = visual_wolf_detail if is_wolf else (visual_boss_storm_detail if is_storm_boss else (visual_boss_bell_detail if is_guardian else visual_raider_detail))
+	var visual_width := 105.0 if is_guardian else (65.0 if is_wolf else 57.0)
+	var visual_height := 111.0 if is_guardian else (53.0 if is_wolf else 77.0)
+	var is_moving: bool = bool(motion.get("moving", false))
+	var visual_bob := sin(animation_time * 7.0) * 1.3 if is_moving else 0.0
+	var walk_texture: Texture2D = visual_wolf_real if is_wolf else (visual_boss_storm_walk if is_storm_boss else (visual_raider_shaman_real if is_guardian else (visual_raider_hooded_real if is_rune_sentinel else visual_raider_fighter_real)))
+	var total_frames: int = 10 if is_wolf else (4 if is_storm_boss else 15)
+	var frame_index: int = 0
+	if is_moving:
+		frame_index = (1 + int(animation_time * 7.0)) % (7 if is_wolf else (4 if is_storm_boss else 6))
+	if attack_left > 0.0:
+		frame_index = (3 + int(attack_progress * 4.0)) % 10 if is_wolf else (7 + int(attack_progress * 7.0)) % total_frames
+	var frame_width: float = float(walk_texture.get_width()) / float(total_frames)
+	var frame_height: float = float(walk_texture.get_height())
+	var target_rect := Rect2(pos + attack_lunge + Vector2(-visual_width * 0.5, -visual_height + visual_bob), Vector2(visual_width, visual_height))
+	var monster_kind: String = "lobo" if is_wolf else ("guardiao_tempestade" if is_storm_boss else ("sentinela_runica" if is_rune_sentinel else "saqueador"))
+	var drew_new_monster: bool = false
+	# Guardiao do Sino Partido: reutiliza o boss e os eventos de ataque existentes.
+	if is_guardian and not is_storm_boss:
+		monster_kind = "guardiao_sino_partido"
+	drew_new_monster = _draw_character_atlas(monster_kind, pos + attack_lunge, str(motion.get("facing", "down")), is_moving, attack_left, visual_width, visual_height)
+	if not drew_new_monster:
+		draw_texture_rect_region(walk_texture, target_rect, Rect2(float(frame_index) * frame_width, 0, frame_width, frame_height))
+	if is_rune_sentinel:
+		draw_arc(pos + Vector2(0, -30) + attack_lunge, 27.0, 0.0, TAU, 28, Color("65d8ff"), 2.0)
+
 	if attack_left > 0.0:
 		var effect_center := pos + Vector2(0, -29) + attack_lunge
 		var effect_radius := 36.0 if is_guardian else 22.0
 		var effect_color := Color("d6a2f7") if is_guardian else (Color("ffcc85") if is_wolf else Color("f3a58d"))
 		draw_arc(effect_center, effect_radius, -1.1 + attack_progress * 1.5, 0.8 + attack_progress * 1.5, 14, effect_color, 3.0)
 		draw_line(effect_center + Vector2(-effect_radius * 0.45, -7), effect_center + Vector2(effect_radius * 0.5, 7), effect_color, 2.0)
-	if is_guardian:
-		draw_line(pos + Vector2(-27, -18), pos + Vector2(-38, -58), Color("c49ce8"), 7.0)
-		draw_circle(pos + Vector2(-38, -60), 9.0, Color("a96ad0"))
-	var bar_width := 90.0 if is_guardian else 40.0
-	var bar_y := -100.0 if is_guardian else -65.0
+	# The boss artwork includes its own weapon; avoid double-drawing a staff.
+	var bar_width := 90.0 if is_guardian else (64.0 if is_rune_sentinel else 40.0)
+	var bar_y := -100.0 if is_guardian else (-79.0 if is_rune_sentinel else -65.0)
 	draw_rect(Rect2(pos + Vector2(-bar_width / 2.0, bar_y), Vector2(bar_width, 6)), Color("4b1c1c"))
-	draw_rect(Rect2(pos + Vector2(-bar_width / 2.0, bar_y), Vector2(bar_width * float(m.get("hp",0)) / maxf(1.0,float(m.get("max_hp",1))), 6)), Color("b47bda") if is_guardian else Color("70d47b"))
+	draw_rect(Rect2(pos + Vector2(-bar_width / 2.0, bar_y), Vector2(bar_width * float(m.get("hp",0)) / maxf(1.0,float(m.get("max_hp",1))), 6)), (Color("4bdcff") if is_storm_boss else Color("b47bda")) if is_guardian else Color("70d47b"))
+	if is_storm_boss:
+		draw_string(ThemeDB.fallback_font, pos + Vector2(-95, bar_y - 10), "GUARDIAO DA TEMPESTADE", HORIZONTAL_ALIGNMENT_CENTER, 190, 13, Color("a1f0ff"))
 	if not is_guardian:
-		draw_string(ThemeDB.fallback_font, pos + Vector2(-33, bar_y - 7), "Lobo" if is_wolf else "Saqueador", HORIZONTAL_ALIGNMENT_CENTER, 66, 12, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, pos + Vector2(-60 if is_rune_sentinel else -33, bar_y - 7), "Lobo" if is_wolf else ("Sentinela Runica" if is_rune_sentinel else "Saqueador"), HORIZONTAL_ALIGNMENT_CENTER, 120 if is_rune_sentinel else 66, 12, Color.WHITE)
 
 # MVP 1.0.2: primeira instancia narrativa, com encontros validados pelo servidor.
 # MVP 1.0.3: mapa tatico exploravel, movimento por grelha e colisoes no servidor.
@@ -2783,22 +3807,29 @@ func _draw_crypt_dungeon() -> void:
 		var warning_alpha: float = 0.35 + 0.25 * sin(animation_time * 18.0)
 		draw_arc(enemy_center, 24.0, 0.0, TAU, 32, Color(1.0, 0.32, 0.24, warning_alpha + 0.4), 3.0)
 		draw_line(enemy_center + Vector2(-8.0, -31.0), enemy_center + Vector2(8.0, -31.0), Color(1.0, 0.4, 0.27), 3.0)
+	var boss_vector: Vector2 = dungeon_hero_visual - dungeon_enemy_visual
+	if absf(boss_vector.x) > absf(boss_vector.y):
+		dungeon_boss_facing = "right" if boss_vector.x > 0.0 else "left"
+	elif absf(boss_vector.y) > 0.01:
+		dungeon_boss_facing = "down" if boss_vector.y > 0.0 else "up"
 	var hero_class := str(profile.get("combat_class", "Guerreiro"))
-	var hero_color := Color("68b8dd") if hero_class == "Guerreiro" else (Color("b08ce4") if hero_class == "Mago" else Color("83c49a"))
+	# Usa exatamente o atlas da classe do herói utilizado no mapa exterior.
+	# A posição da grelha é convertida para a âncora dos pés do personagem.
 	_draw_crypt_shadow(hero_center + Vector2(0, 12), 14.0, 5.0, Color(0, 0, 0, 0.5))
-	draw_rect(Rect2(hero_center + Vector2(-9, -6), Vector2(18, 22)), hero_color)
-	draw_circle(hero_center + Vector2(0, -12), 8.0, Color("e3c4a5"))
-	if hero_class == "Guerreiro":
-		draw_line(hero_center + Vector2(11, -6), hero_center + Vector2(17, 10), Color("e8d3a0"), 3.0)
-	elif hero_class == "Mago":
-		draw_circle(hero_center + Vector2(12, -4), 4.0, Color("cba7ff"))
-	else:
-		draw_arc(hero_center + Vector2(13, 1), 9.0, -1.3, 1.3, 14, Color("dfb77d"), 2.0)
+	var hero_kind: String = hero_class.to_lower()
+	var hero_moving: bool = dungeon_hero_visual.distance_to(Vector2(dungeon_pos)) > 0.06
+	if not _draw_character_atlas(hero_kind, hero_center + Vector2(0, 19), dungeon_hero_facing, hero_moving, dungeon_attack_flash, 39.0, 48.0):
+		# Fallback para classes sem atlas; evita personagem invisível.
+		draw_texture_rect(hero_unarmed_sprite, Rect2(hero_center + Vector2(-19, -29), Vector2(38, 48)), false)
 	_draw_crypt_shadow(enemy_center + Vector2(0, 12), 15.0, 5.0, Color(0, 0, 0, 0.5))
-	draw_rect(Rect2(enemy_center + Vector2(-10, -5), Vector2(20, 22)), Color("a64b59") if stage < 3 else Color("8f64b2"))
-	draw_circle(enemy_center + Vector2(0, -12), 9.0, Color("e2c4b4") if stage < 3 else Color("d5b0e5"))
-	draw_circle(enemy_center + Vector2(-3, -13), 1.8, Color("581d27"))
-	draw_circle(enemy_center + Vector2(3, -13), 1.8, Color("581d27"))
+	if stage == 3:
+		# Velkran é exclusivo da última sala; inimigos anteriores não mudam.
+		var boss_attacking: bool = dungeon_enemy_attack_in > 0.0 and dungeon_enemy_attack_in < 0.42 and crypt_gap <= 2
+		_draw_character_atlas("velkran", enemy_center + Vector2(0, 19), dungeon_boss_facing, not boss_attacking, dungeon_enemy_attack_in if boss_attacking else 0.0, 76.0, 83.0)
+	else:
+		# Soldados da cripta usam exatamente o atlas direcional do Saqueador.
+		var crypt_attacking: bool = dungeon_enemy_attack_in > 0.0 and dungeon_enemy_attack_in < 0.42 and crypt_gap <= 2
+		_draw_character_atlas("saqueador", enemy_center + Vector2(0, 19), dungeon_boss_facing, not crypt_attacking, dungeon_enemy_attack_in if crypt_attacking else 0.0, 42.0, 54.0)
 	if dungeon_hit_flash > 0.0:
 		draw_arc(enemy_center, 19.0 + (0.25 - dungeon_hit_flash) * 25.0, 0.0, TAU, 28, Color(1.0, 0.8, 0.35, dungeon_hit_flash * 3.0), 3.0)
 	# Class-specific dungeon attack feedback, aligned with the target.
@@ -2841,3 +3872,20 @@ func _draw_crypt_dungeon() -> void:
 	var crypt_help: String = "PERIGO! Sai das celulas vermelhas! %.1f s" % dungeon_special_in if not dungeon_special_cells.is_empty() else "Azul: alcance | Verde: clique | Dourado: AUTO (T) | WASD interrompe."
 	draw_string(font, Vector2(125, 503), crypt_help, HORIZONTAL_ALIGNMENT_LEFT, 720, 13, Color("bac4c4"))
 	draw_string(font, Vector2(125, 533), "Ao vencer, avancas automaticamente para a sala seguinte | [3] sair", HORIZONTAL_ALIGNMENT_LEFT, 720, 12, Color("bac4c4"))
+
+
+# MVP 1.0.5.8: presentation-only victory panel; never awards inventory locally.
+func _draw_crypt_victory() -> void:
+	var font: Font = ThemeDB.fallback_font
+	var panel: Rect2 = Rect2(178.0, 162.0, 604.0, 240.0)
+	draw_rect(panel, Color(0.055, 0.075, 0.105, 0.97))
+	draw_rect(panel, Color("d4b46d"), false, 3.0)
+	draw_rect(Rect2(190.0, 174.0, 580.0, 216.0), Color("766039", 0.26), false, 1.0)
+	draw_string(font, Vector2(247.0, 220.0), "CRIPTA DO SINO PARTIDO", HORIZONTAL_ALIGNMENT_LEFT, 490, 25, Color("f5d994"))
+	draw_string(font, Vector2(330.0, 260.0), "VITORIA!", HORIZONTAL_ALIGNMENT_LEFT, 320, 30, Color("d2f3bc"))
+	if crypt_victory_first:
+		draw_string(font, Vector2(235.0, 303.0), "+700 XP    +600 OURO    +3 FRAGMENTOS ANTIGOS", HORIZONTAL_ALIGNMENT_LEFT, 540, 17, Color("f6e5bd"))
+	else:
+		draw_string(font, Vector2(257.0, 303.0), "+80 OURO   +60 XP   |   20% FRAGMENTO RARO", HORIZONTAL_ALIGNMENT_LEFT, 510, 17, Color("f6e5bd"))
+		draw_string(font, Vector2(235.0, 330.0), "Premio unico nao se repete. Confere o aviso para ver o drop.", HORIZONTAL_ALIGNMENT_LEFT, 540, 15, Color("c5cbd0"))
+	draw_string(font, Vector2(340.0, 367.0), "Regressa a Valedouro", HORIZONTAL_ALIGNMENT_LEFT, 330, 16, Color("b9c5cc"))

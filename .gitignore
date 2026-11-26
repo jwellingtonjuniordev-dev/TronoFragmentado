@@ -30,3 +30,34 @@ data/
 Thumbs.db
 # Generated archives
 *.zip
+
+# Godot
+.godot/
+.import/
+
+# Bases de dados e saves
+*.sqlite3
+*.sqlite
+*.db
+*.db-wal
+*.db-shm
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Arquivos locais e credenciais
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets.json
+
+# Backups e arquivos compactados
+backup_mvp_*/
+*.zip
+
+# Python
+__pycache__/
+.venv/
+venv/
+*.pyc

@@ -1,0 +1,286 @@
+{
+  "Espada de ferro": {
+    "id_normalizado": "espada_de_ferro",
+    "icon": "res://assets/icones/itens/espadas/espada_de_ferro.png"
+  },
+  "Escudo de madeira": {
+    "id_normalizado": "escudo_de_madeira",
+    "icon": "res://assets/icones/itens/escudos/escudo_de_madeira.png"
+  },
+  "Arco do Vigia Runico": {
+    "id_normalizado": "arco_do_vigia_runico",
+    "icon": "res://assets/icones/itens/arcos/arco_do_vigia_runico.png"
+  },
+  "Aljava do Sino Partido": {
+    "id_normalizado": "aljava_do_sino_partido",
+    "icon": "res://assets/icones/itens/aljavas/aljava_do_sino_partido.png"
+  },
+  "Cajado do Firmamento": {
+    "id_normalizado": "cajado_do_firmamento",
+    "icon": "res://assets/icones/itens/cajados/cajado_do_firmamento.png"
+  },
+  "Orbe do Sino Partido": {
+    "id_normalizado": "orbe_do_sino_partido",
+    "icon": "res://assets/icones/itens/orbes_grimorios/orbe_do_sino_partido.png"
+  },
+  "Manto das Estrelas": {
+    "id_normalizado": "manto_das_estrelas",
+    "icon": "res://assets/icones/itens/tunicas/manto_das_estrelas.png"
+  },
+  "Colete da Sombra Verde": {
+    "id_normalizado": "colete_da_sombra_verde",
+    "icon": "res://assets/icones/itens/vestimentas_arqueiro/colete_da_sombra_verde.png"
+  },
+  "Armadura do trono": {
+    "id_normalizado": "armadura_do_trono",
+    "icon": "res://assets/icones/itens/armaduras/armadura_do_trono.png"
+  },
+  "Picareta de aco": {
+    "id_normalizado": "picareta_de_aco",
+    "icon": "res://assets/icones/itens/ferramentas/picareta_de_aco.png"
+  },
+  "Pocao pequena": {
+    "id_normalizado": "pocao_pequena",
+    "icon": "res://assets/icones/itens/consumiveis/pocao_pequena.png"
+  },
+  "Presa de lobo": {
+    "id_normalizado": "presa_de_lobo",
+    "icon": "res://assets/icones/itens/materiais/presa_de_lobo.png"
+  },
+  "Marca da Tempestade": {
+    "id_normalizado": "marca_da_tempestade",
+    "icon": "res://assets/icones/itens/itens_especiais/marca_da_tempestade.png"
+  },
+  "Espada de cavaleiro": {
+    "id_normalizado": "espada_de_cavaleiro",
+    "icon": "res://assets/icones/itens/espadas/espada_de_cavaleiro.png"
+  },
+  "Lamina de presas": {
+    "id_normalizado": "lamina_de_presas",
+    "icon": "res://assets/icones/itens/espadas/lamina_de_presas.png"
+  },
+  "Espada ancestral": {
+    "id_normalizado": "espada_ancestral",
+    "icon": "res://assets/icones/itens/espadas/espada_ancestral.png"
+  },
+  "Espada do saqueador": {
+    "id_normalizado": "espada_do_saqueador",
+    "icon": "res://assets/icones/itens/espadas/espada_do_saqueador.png"
+  },
+  "Lamina da Vigilia Runica": {
+    "id_normalizado": "lamina_da_vigilia_runica",
+    "icon": "res://assets/icones/itens/espadas/lamina_da_vigilia_runica.png"
+  },
+  "Espada de aco do Guardiao": {
+    "id_normalizado": "espada_de_aco_do_guardiao",
+    "icon": "res://assets/icones/itens/espadas/espada_de_aco_do_guardiao.png"
+  },
+  "Espada da Guarda de Valedouro": {
+    "id_normalizado": "espada_da_guarda_de_valedouro",
+    "icon": "res://assets/icones/itens/espadas/espada_da_guarda_de_valedouro.png"
+  },
+  "Lamina real de Valedouro": {
+    "id_normalizado": "lamina_real_de_valedouro",
+    "icon": "res://assets/icones/itens/espadas/lamina_real_de_valedouro.png"
+  },
+  "Lamina do Sino Partido": {
+    "id_normalizado": "lamina_do_sino_partido",
+    "icon": "res://assets/icones/itens/espadas/lamina_do_sino_partido.png"
+  },
+  "Lamina da Aurora de Valedouro": {
+    "id_normalizado": "lamina_da_aurora_de_valedouro",
+    "icon": "res://assets/icones/itens/espadas/lamina_da_aurora_de_valedouro.png"
+  },
+  "Escudo reforcado": {
+    "id_normalizado": "escudo_reforcado",
+    "icon": "res://assets/icones/itens/escudos/escudo_reforcado.png"
+  },
+  "Escudo de ferro": {
+    "id_normalizado": "escudo_de_ferro",
+    "icon": "res://assets/icones/itens/escudos/escudo_de_ferro.png"
+  },
+  "Escudo do saqueador": {
+    "id_normalizado": "escudo_do_saqueador",
+    "icon": "res://assets/icones/itens/escudos/escudo_do_saqueador.png"
+  },
+  "Escudo reforcado de aco": {
+    "id_normalizado": "escudo_reforcado_de_aco",
+    "icon": "res://assets/icones/itens/escudos/escudo_reforcado_de_aco.png"
+  },
+  "Escudo da muralha": {
+    "id_normalizado": "escudo_da_muralha",
+    "icon": "res://assets/icones/itens/escudos/escudo_da_muralha.png"
+  },
+  "Escudo do Sino Partido": {
+    "id_normalizado": "escudo_do_sino_partido",
+    "icon": "res://assets/icones/itens/escudos/escudo_do_sino_partido.png"
+  },
+  "Arco do Aprendiz": {
+    "id_normalizado": "arco_do_aprendiz",
+    "icon": "res://assets/icones/itens/arcos/arco_do_aprendiz.png"
+  },
+  "Arco do Sino Partido": {
+    "id_normalizado": "arco_do_sino_partido",
+    "icon": "res://assets/icones/itens/arcos/arco_do_sino_partido.png"
+  },
+  "Arco da Bruma Antiga": {
+    "id_normalizado": "arco_da_bruma_antiga",
+    "icon": "res://assets/icones/itens/arcos/arco_da_bruma_antiga.png"
+  },
+  "Cajado do Aprendiz": {
+    "id_normalizado": "cajado_do_aprendiz",
+    "icon": "res://assets/icones/itens/cajados/cajado_do_aprendiz.png"
+  },
+  "Cajado do Eco Runico": {
+    "id_normalizado": "cajado_do_eco_runico",
+    "icon": "res://assets/icones/itens/cajados/cajado_do_eco_runico.png"
+  },
+  "Cajado do Sino Partido": {
+    "id_normalizado": "cajado_do_sino_partido",
+    "icon": "res://assets/icones/itens/cajados/cajado_do_sino_partido.png"
+  },
+  "Veste do Aprendiz": {
+    "id_normalizado": "veste_do_aprendiz",
+    "icon": "res://assets/icones/itens/tunicas/veste_do_aprendiz.png"
+  },
+  "Manto do Eco": {
+    "id_normalizado": "manto_do_eco",
+    "icon": "res://assets/icones/itens/tunicas/manto_do_eco.png"
+  },
+  "Manto do Sino Partido": {
+    "id_normalizado": "manto_do_sino_partido",
+    "icon": "res://assets/icones/itens/tunicas/manto_do_sino_partido.png"
+  },
+  "Colete do Explorador": {
+    "id_normalizado": "colete_do_explorador",
+    "icon": "res://assets/icones/itens/vestimentas_arqueiro/colete_do_explorador.png"
+  },
+  "Colete do Batedor": {
+    "id_normalizado": "colete_do_batedor",
+    "icon": "res://assets/icones/itens/vestimentas_arqueiro/colete_do_batedor.png"
+  },
+  "Colete do Sino Partido": {
+    "id_normalizado": "colete_do_sino_partido",
+    "icon": "res://assets/icones/itens/vestimentas_arqueiro/colete_do_sino_partido.png"
+  },
+  "Armadura de couro": {
+    "id_normalizado": "armadura_de_couro",
+    "icon": "res://assets/icones/itens/armaduras/armadura_de_couro.png"
+  },
+  "Armadura de pedra": {
+    "id_normalizado": "armadura_de_pedra",
+    "icon": "res://assets/icones/itens/armaduras/armadura_de_pedra.png"
+  },
+  "Armadura de ferro": {
+    "id_normalizado": "armadura_de_ferro",
+    "icon": "res://assets/icones/itens/armaduras/armadura_de_ferro.png"
+  },
+  "Couraca da Guarda": {
+    "id_normalizado": "couraca_da_guarda",
+    "icon": "res://assets/icones/itens/armaduras/couraca_da_guarda.png"
+  },
+  "Armadura de placas reais": {
+    "id_normalizado": "armadura_de_placas_reais",
+    "icon": "res://assets/icones/itens/armaduras/armadura_de_placas_reais.png"
+  },
+  "Armadura do Sino Partido": {
+    "id_normalizado": "armadura_do_sino_partido",
+    "icon": "res://assets/icones/itens/armaduras/armadura_do_sino_partido.png"
+  },
+  "Armadura do Bastião": {
+    "id_normalizado": "armadura_do_bastiao",
+    "icon": "res://assets/icones/itens/armaduras/armadura_do_bastiao.png"
+  },
+  "Machado de lenhador": {
+    "id_normalizado": "machado_de_lenhador",
+    "icon": "res://assets/icones/itens/ferramentas/machado_de_lenhador.png"
+  },
+  "Machado de aco": {
+    "id_normalizado": "machado_de_aco",
+    "icon": "res://assets/icones/itens/ferramentas/machado_de_aco.png"
+  },
+  "Picareta de mineiro": {
+    "id_normalizado": "picareta_de_mineiro",
+    "icon": "res://assets/icones/itens/ferramentas/picareta_de_mineiro.png"
+  },
+  "Kit de herbalista": {
+    "id_normalizado": "kit_de_herbalista",
+    "icon": "res://assets/icones/itens/ferramentas/kit_de_herbalista.png"
+  },
+  "Kit botanico": {
+    "id_normalizado": "kit_botanico",
+    "icon": "res://assets/icones/itens/ferramentas/kit_botanico.png"
+  },
+  "Pocao media": {
+    "id_normalizado": "pocao_media",
+    "icon": "res://assets/icones/itens/consumiveis/pocao_media.png"
+  },
+  "Pocao completa": {
+    "id_normalizado": "pocao_completa",
+    "icon": "res://assets/icones/itens/consumiveis/pocao_completa.png"
+  },
+  "Pocao de mana": {
+    "id_normalizado": "pocao_de_mana",
+    "icon": "res://assets/icones/itens/consumiveis/pocao_de_mana.png"
+  },
+  "Pele de lobo": {
+    "id_normalizado": "pele_de_lobo",
+    "icon": "res://assets/icones/itens/materiais/pele_de_lobo.png"
+  },
+  "Retalho de tecido": {
+    "id_normalizado": "retalho_de_tecido",
+    "icon": "res://assets/icones/itens/materiais/retalho_de_tecido.png"
+  },
+  "Adaga enferrujada": {
+    "id_normalizado": "adaga_enferrujada",
+    "icon": "res://assets/icones/itens/materiais/adaga_enferrujada.png"
+  },
+  "Fragmento de metal antigo": {
+    "id_normalizado": "fragmento_de_metal_antigo",
+    "icon": "res://assets/icones/itens/materiais/fragmento_de_metal_antigo.png"
+  },
+  "Minerio de ferro": {
+    "id_normalizado": "minerio_de_ferro",
+    "icon": "res://assets/icones/itens/materiais/minerio_de_ferro.png"
+  },
+  "Barra de ferro": {
+    "id_normalizado": "barra_de_ferro",
+    "icon": "res://assets/icones/itens/materiais/barra_de_ferro.png"
+  },
+  "Madeira": {
+    "id_normalizado": "madeira",
+    "icon": "res://assets/icones/itens/materiais/madeira.png"
+  },
+  "Fragmento de madeira": {
+    "id_normalizado": "fragmento_de_madeira",
+    "icon": "res://assets/icones/itens/materiais/fragmento_de_madeira.png"
+  },
+  "Fragmento de rocha": {
+    "id_normalizado": "fragmento_de_rocha",
+    "icon": "res://assets/icones/itens/materiais/fragmento_de_rocha.png"
+  },
+  "Tabua de madeira": {
+    "id_normalizado": "tabua_de_madeira",
+    "icon": "res://assets/icones/itens/materiais/tabua_de_madeira.png"
+  },
+  "Bloco de pedra": {
+    "id_normalizado": "bloco_de_pedra",
+    "icon": "res://assets/icones/itens/materiais/bloco_de_pedra.png"
+  },
+  "Erva rara": {
+    "id_normalizado": "erva_rara",
+    "icon": "res://assets/icones/itens/materiais/erva_rara.png"
+  },
+  "Lasca de runa": {
+    "id_normalizado": "lasca_de_runa",
+    "icon": "res://assets/icones/itens/materiais/lasca_de_runa.png"
+  },
+  "Nucleo runico": {
+    "id_normalizado": "nucleo_runico",
+    "icon": "res://assets/icones/itens/materiais/nucleo_runico.png"
+  },
+  "Selo das Ruinas": {
+    "id_normalizado": "selo_das_ruinas",
+    "icon": "res://assets/icones/itens/itens_especiais/selo_das_ruinas.png"
+  }
+}

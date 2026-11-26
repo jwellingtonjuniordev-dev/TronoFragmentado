@@ -25,25 +25,43 @@ TREE_TRUNKS += [(1070.0, 760.0), (1225.0, 860.0), (1435.0, 830.0), (1580.0, 835.
 TREE_RADIUS = 13.
 TESSA = (350., 300.)
 BLACKSMITH = (550., 310.)
-SMITH_STOCK = {'Espada de ferro', 'Escudo de ferro', 'Armadura de placas reais', 'Escudo reforcado de aco', 'Escudo de madeira', 'Lamina real de Valedouro', 'Espada de cavaleiro', 'Armadura de couro', 'Armadura do trono', 'Escudo da muralha', 'Armadura de ferro', 'Espada de aco do Guardiao'}
+BANK_KEEPER = (665., 310.)
+BANK_RANGE = 85.0
+SMITH_STOCK = {'Arco do Aprendiz', 'Colete do Explorador', 'Cajado do Aprendiz', 'Veste do Aprendiz', 'Espada de ferro', 'Escudo de ferro', 'Armadura de placas reais', 'Escudo reforcado de aco', 'Escudo de madeira', 'Lamina real de Valedouro', 'Espada de cavaleiro', 'Armadura de couro', 'Armadura do trono', 'Escudo da muralha', 'Armadura de ferro', 'Espada de aco do Guardiao'}
 SPAWNS = [(570., 210., 'lobo'), (755., 270., 'lobo'), (590., 395., 'lobo'), (375., 460., 'lobo'), (820., 385., 'saqueador')]
 SPAWNS += [(1220., 345., 'lobo'), (1620., 345., 'lobo'),
            (420., 925., 'lobo'), (900., 1060., 'saqueador'),
            (1380., 965., 'lobo'), (1770., 1030., 'saqueador')]
 SPAWNS += [(1180., 850., 'lobo'), (1450., 860., 'lobo'), (1710., 1080., 'lobo'), (1520., 1190., 'saqueador')]
+# Extra distributed farming spots; safe_spawn relocates blocked points.
+SPAWNS += [(235., 655., 'lobo'), (710., 690., 'lobo'), (1080., 620., 'saqueador'),
+           (1240., 180., 'lobo'), (1540., 215., 'saqueador'), (1790., 640., 'lobo'),
+           (260., 1070., 'lobo'), (710., 1150., 'saqueador'), (1160., 1120., 'lobo'),
+           (1690., 740., 'saqueador')]
+# Eastern Rune Outpost: additional patrols, using existing combat and loot rules.
+# Spawn points are validated against world obstacles by safe_spawn.
+SPAWNS += [(1690., 385., 'saqueador'), (1820., 495., 'saqueador'),
+           (1740., 555., 'saqueador'), (1825., 305., 'lobo')]
 SPAWNS += [(1560., 1050., 'guardiao')]
+SPAWNS += [(1730., 455., 'sentinela_runica'), (1800., 420., 'sentinela_runica')]
+# Novo chefe de mundo: Planalto da Tempestade, a leste de Valedouro.
+SPAWNS += [(1840., 860., 'guardiao_tempestade')]
 # World resource geometry is shared and authoritative; harvested objects disappear
 # entirely (visual and collision) for 40 seconds, then respawn at safe new sites.
 CHEST_POSITIONS = [(1735.,1060.), (1170.,1010.), (1030.,665.)]
 RESOURCE_WORLD = {}  # id -> {x,y,kind,ready_at,radius}
 RESOURCE_VERSION = 0
 
-def safe_resource(x, y, radius=22., exclude=None):
+def safe_resource(x, y, radius=22., exclude=None, resource_gap=30.):
+    # Apenas a floresta a sudeste; nao criar recursos nas vias de passagem.
+    if x < 960. + radius or y < 640. + radius: return False
+    # Corredor diagonal da estrada florestal (margem de seguranca).
+    if abs(x - (y + 400.)) < radius + 100.: return False
     if not (65+radius < x < WIDTH-65-radius and 85+radius < y < HEIGHT-65-radius): return False
     if any(rx-radius-28 < x < rx+rw+radius+28 and ry-radius-28 < y < ry+rh+radius+28 for rx,ry,rw,rh in OBSTACLES): return False
     if 1390-radius < x < 1700+radius and 950-radius < y < 1215+radius: return False
     if any(math.hypot(x-cx,y-cy)<radius+85 for cx,cy in CHEST_POSITIONS): return False
-    if any(math.hypot(x-nx,y-ny)<radius+50 for nx,ny in (TESSA,BLACKSMITH)): return False
+    if any(math.hypot(x-nx,y-ny)<radius+50 for nx,ny in (TESSA,BLACKSMITH,BANK_KEEPER)): return False
     # Keep main roads, forest gate and market stalls free.
     if (260-radius < y < 375+radius and x < 950) or (435-radius < x < 530+radius and y < 635): return False
     if any(math.hypot(x-bx,y-by)<radius+br+14 for bx,by,br in BARRELS): return False
@@ -51,26 +69,36 @@ def safe_resource(x, y, radius=22., exclude=None):
     if any(math.hypot(x-p['x'], y-p['y']) < radius+35 for p in players.values()): return False
     if any(m['alive'] and math.hypot(x-m['x'], y-m['y']) < radius+35 for m in monsters.values()): return False
     for node_id, other in RESOURCE_WORLD.items():
-        if node_id != exclude and other['ready_at'] <= time.time() and math.hypot(x-other['x'],y-other['y']) < radius+other['radius']+30: return False
+        if node_id != exclude and other['ready_at'] <= time.time() and math.hypot(x-other['x'],y-other['y']) < radius+other['radius']+resource_gap: return False
     return True
 
 def random_resource_position(radius=22., exclude=None, previous=None):
-    for _ in range(900):
-        x = random.uniform(85+radius, WIDTH-85-radius)
-        y = random.uniform(95+radius, HEIGHT-80-radius)
-        if previous and math.hypot(x-previous[0], y-previous[1]) < 150: continue
-        if safe_resource(x,y,radius,exclude): return round(x,1),round(y,1)
-    raise RuntimeError('Sem posicao segura para recurso: mapa cheio')
+    # Procura primeiro posições aleatórias e depois uma grelha determinística.
+    # Reduz apenas o espaçamento entre recursos; nunca permite recursos na estrada.
+    for gap in (30., 15., 0.):
+        for _ in range(900):
+            x = random.uniform(960.+radius, WIDTH-85-radius)
+            y = random.uniform(640.+radius, HEIGHT-80-radius)
+            if previous and math.hypot(x-previous[0], y-previous[1]) < 150: continue
+            if safe_resource(x, y, radius, exclude, gap): return round(x,1),round(y,1)
+        for y in range(670, int(HEIGHT-80-radius), 18):
+            for x in range(990, int(WIDTH-85-radius), 18):
+                if previous and math.hypot(x-previous[0], y-previous[1]) < 150: continue
+                if safe_resource(x, y, radius, exclude, gap): return float(x),float(y)
+    return None
 
 def init_resources():
     RESOURCE_WORLD.clear()
-    # All trees plus additional random mineral rocks.
     kinds = [('wood',13.,[(x,y) for x,y in TREE_TRUNKS]),
              ('ore',21.,[(x,y) for x,y,_ in ROCKS]+[None]*14),
              ('herb',13.,[(x,y) for x,y,_ in BUSHES]+[None]*5)]
     for kind, radius, seeds in kinds:
         for i, seed in enumerate(seeds):
-            x,y = seed if seed and safe_resource(*seed,radius) else random_resource_position(radius)
+            pos = seed if seed and safe_resource(*seed,radius) else random_resource_position(radius)
+            if pos is None:
+                print('[Trono] Aviso: sem espaço na floresta para', kind, i)
+                continue
+            x,y = pos
             RESOURCE_WORLD[f'{kind}_{i}']={'x':x,'y':y,'kind':kind,'radius':radius,'ready_at':0.}
 
 def available_nodes(p=None):
@@ -95,6 +123,17 @@ def load_world():
             if isinstance(saved,dict) and saved and all(isinstance(v,dict) for v in saved.values()):
                 RESOURCE_WORLD.clear()
                 RESOURCE_WORLD.update(saved)
+                # Reposiciona recursos antigos que ficaram sobre a estrada.
+                for node_id, node in list(RESOURCE_WORLD.items()):
+                    if not safe_resource(node['x'], node['y'], node.get('radius', 13.), exclude=node_id):
+                        pos = random_resource_position(node.get('radius', 13.), exclude=node_id)
+                        if pos is None:
+                            # Não abortar o arranque; guardar os outros recursos e personagens.
+                            print('[Trono] Aviso: recurso sem posição segura:', node_id)
+                            del RESOURCE_WORLD[node_id]
+                            continue
+                        node['x'], node['y'] = pos
+                save_world()
                 return
         except (ValueError,TypeError,KeyError): pass
     init_resources()
@@ -103,6 +142,21 @@ def load_world():
 COMBAT_CLASSES = {'Guerreiro': {'attack': 8, 'defense': 7, 'skill_mult': 1.65}, 'Mago': {'attack': 3, 'defense': 1, 'skill_mult': 2.10}, 'Arqueiro': {'attack': 6, 'defense': 3, 'skill_mult': 1.85}}
 
 SUBCLASS_TOOLS = {'Machado de lenhador':'lenhador','Picareta de mineiro':'mineiro','Kit de herbalista':'herbalista', 'Machado de aco':'lenhador', 'Picareta de aco':'mineiro', 'Kit botanico':'herbalista'}
+
+CLASS_EQUIPMENT_RECIPES = {
+    'aurora_blade': ({'Barra de ferro': 10, 'Lasca de runa': 12, 'Fragmento de metal antigo': 5}, 'Lamina da Aurora de Valedouro', 0.55),
+    'mist_bow': ({'Tabua de madeira': 12, 'Lasca de runa': 12, 'Nucleo runico': 2}, 'Arco da Bruma Antiga', 0.55),
+    'sky_staff': ({'Fragmento de madeira': 20, 'Lasca de runa': 12, 'Nucleo runico': 3}, 'Cajado do Firmamento', 0.50),
+    'bastion_armor': ({'Barra de ferro': 18, 'Fragmento de metal antigo': 10, 'Nucleo runico': 3}, 'Armadura do Bastião', 0.40),
+    'shadow_vest': ({'Pele de lobo': 20, 'Retalho de tecido': 18, 'Nucleo runico': 3}, 'Colete da Sombra Verde', 0.45),
+    'star_mantle': ({'Retalho de tecido': 24, 'Erva rara': 10, 'Nucleo runico': 4}, 'Manto das Estrelas', 0.40),
+    'guard_sword': ({'Barra de ferro': 5, 'Lasca de runa': 4}, 'Espada da Guarda de Valedouro', 0.7),
+    'ranger_bow': ({'Tabua de madeira': 5, 'Lasca de runa': 5}, 'Arco do Vigia Runico', 0.7),
+    'mage_staff': ({'Fragmento de madeira': 12, 'Lasca de runa': 5, 'Nucleo runico': 1}, 'Cajado do Eco Runico', 0.65),
+    'guard_armor': ({'Barra de ferro': 6, 'Pele de lobo': 4}, 'Couraca da Guarda', 0.7),
+    'ranger_armor': ({'Pele de lobo': 8, 'Retalho de tecido': 5}, 'Colete do Batedor', 0.75),
+    'mage_armor': ({'Retalho de tecido': 10, 'Erva rara': 2}, 'Manto do Eco', 0.75),
+}
 
 CRAFT_RECIPES = {
     'iron_bar': ({'Minerio de ferro':3}, 'Barra de ferro', 0.80),
@@ -122,10 +176,13 @@ CRAFT_RECIPES = {
     'steel_pick': ({'Fragmento de rocha':24,'Barra de ferro':6,'Minerio de ferro':5}, 'Picareta de aco', 0.50),
     'botanical_kit': ({'Erva rara':5,'Tabua de madeira':4,'Fragmento de metal antigo':1}, 'Kit botanico', 0.45),
     'ancient_blade': ({'Fragmento de metal antigo':5, 'Barra de ferro':6, 'Presa de lobo':8, 'Fragmento de madeira':12}, 'Espada ancestral', 0.03),
+    'rune_blade': ({'Lasca de runa':8, 'Nucleo runico':1, 'Barra de ferro':4}, 'Lamina da Vigilia Runica', 0.65),
 }
 # Common materials, shop equipment, and these four crafted items can be sold.
-# Other protected rare drops remain unsellable.
-SELL_PRICES = {'Pele de lobo':5,'Retalho de tecido':8,'Madeira':3,
+# Other protected rare drops remain unsellable; rusty daggers are tradeable crafting drops.
+CRAFT_RECIPES.update(CLASS_EQUIPMENT_RECIPES)
+
+SELL_PRICES = {'Adaga enferrujada':18, 'Pele de lobo':5,'Retalho de tecido':8,'Madeira':3,
                'Fragmento de madeira':2,'Fragmento de rocha':2,'Minerio de ferro':12,
                'Barra de ferro':25,'Bloco de pedra':14,'Tabua de madeira':14,
                'Espada de ferro':32,'Escudo de madeira':22,'Armadura de couro':45,
@@ -162,8 +219,132 @@ def prepare_storage():
                 source.backup(destination)
         print(f'[Trono] Base antiga migrada para: {DB_PATH}')
     print(f'[Trono] Base de dados ativa: {DB_PATH}')
-ITEMS = {'Espada de ferro': {'slot':'weapon','attack':8,'price':65}, 'Escudo de madeira': {'slot':'offhand','defense':3,'price':45}, 'Armadura de couro': {'slot':'armor','defense':5,'price':90}, 'Lamina de presas': {'slot':'weapon','attack':14,'price':0}, 'Espada ancestral': {'slot':'weapon','attack':38,'price':0}, 'Escudo reforcado': {'slot':'offhand','defense':6,'price':0}, 'Armadura de pedra': {'slot':'armor','defense':10,'price':0}, 'Escudo do saqueador': {'slot':'offhand','defense':13,'price':0}, 'Espada do saqueador': {'slot':'weapon','attack':25,'price':0}, 'Armadura de ferro': {'slot':'armor','defense':16,'price':650}, 'Escudo reforcado de aco': {'slot':'offhand','defense':19,'price':850}, 'Espada de aco do Guardiao': {'slot':'weapon','attack':32,'price':1250}, 'Espada de cavaleiro': {'slot':'weapon','attack':18,'price':520}, 'Lamina real de Valedouro': {'slot':'weapon','attack':46,'price':2800}, 'Escudo de ferro': {'slot':'offhand','defense':11,'price':480}, 'Escudo da muralha': {'slot':'offhand','defense':29,'price':1950}, 'Armadura de placas reais': {'slot':'armor','defense':25,'price':1600}, 'Armadura do trono': {'slot':'armor','defense':37,'price':3400}}
+CLASS_EXCLUSIVE_ITEMS = {
+    'Lamina da Aurora de Valedouro': 'Guerreiro',
+    'Arco da Bruma Antiga': 'Arqueiro',
+    'Cajado do Firmamento': 'Mago',
+    'Armadura do Bastião': 'Guerreiro',
+    'Colete da Sombra Verde': 'Arqueiro',
+    'Manto das Estrelas': 'Mago',
+    'Arco do Aprendiz': 'Arqueiro',
+    'Colete do Explorador': 'Arqueiro',
+    'Cajado do Aprendiz': 'Mago',
+    'Veste do Aprendiz': 'Mago',
+    'Espada da Guarda de Valedouro': 'Guerreiro',
+    'Arco do Vigia Runico': 'Arqueiro',
+    'Cajado do Eco Runico': 'Mago',
+    'Couraca da Guarda': 'Guerreiro',
+    'Colete do Batedor': 'Arqueiro',
+    'Manto do Eco': 'Mago',
+}
+# Politica universal: armas de espada, escudos e armaduras de placas pertencem ao Guerreiro.
+# Apenas a armadura de couro basica e partilhada pelas tres classes.
+CLASS_EXCLUSIVE_ITEMS.update({
+    name: ('Arqueiro' if ('Arco' in name or 'Colete' in name or 'Aljava' in name)
+           else 'Mago' if ('Cajado' in name or 'Manto' in name or 'Veste' in name or 'Orbe' in name)
+           else 'Guerreiro')
+    for name in (
+        'Espada de ferro', 'Escudo de madeira', 'Lamina de presas', 'Espada ancestral',
+        'Escudo reforcado', 'Armadura de pedra', 'Escudo do saqueador',
+        'Espada do saqueador', 'Lamina da Vigilia Runica', 'Armadura de ferro',
+        'Escudo reforcado de aco', 'Espada de aco do Guardiao', 'Espada de cavaleiro',
+        'Lamina real de Valedouro', 'Escudo de ferro', 'Escudo da muralha',
+        'Armadura de placas reais', 'Armadura do trono',
+        'Lamina do Sino Partido', 'Escudo do Sino Partido', 'Armadura do Sino Partido',
+        'Arco do Sino Partido', 'Aljava do Sino Partido', 'Colete do Sino Partido',
+        'Cajado do Sino Partido', 'Orbe do Sino Partido', 'Manto do Sino Partido',
+    )
+})
+EQUIPMENT_LEVEL_REQUIREMENTS = {'Lamina da Aurora de Valedouro': 40, 'Arco da Bruma Antiga': 40, 'Cajado do Firmamento': 40, 'Armadura do Bastião': 60, 'Colete da Sombra Verde': 60, 'Manto das Estrelas': 60, 'Arco do Aprendiz': 1, 'Colete do Explorador': 1, 'Cajado do Aprendiz': 1, 'Veste do Aprendiz': 1, 'Espada da Guarda de Valedouro': 20, 'Arco do Vigia Runico': 20, 'Cajado do Eco Runico': 20, 'Couraca da Guarda': 20, 'Colete do Batedor': 20, 'Manto do Eco': 20}
+
+ITEMS = {'Espada de ferro': {'slot':'weapon','attack':8,'price':65}, 'Escudo de madeira': {'slot':'offhand','defense':3,'price':45}, 'Armadura de couro': {'slot':'armor','defense':5,'price':90}, 'Lamina de presas': {'slot':'weapon','attack':14,'price':0}, 'Espada ancestral': {'slot':'weapon','attack':38,'price':0}, 'Escudo reforcado': {'slot':'offhand','defense':6,'price':0}, 'Armadura de pedra': {'slot':'armor','defense':10,'price':0}, 'Escudo do saqueador': {'slot':'offhand','defense':13,'price':0}, 'Espada do saqueador': {'slot':'weapon','attack':25,'price':0}, 'Lamina da Vigilia Runica': {'slot':'weapon','attack':30,'price':0}, 'Armadura de ferro': {'slot':'armor','defense':16,'price':650}, 'Escudo reforcado de aco': {'slot':'offhand','defense':19,'price':850}, 'Espada de aco do Guardiao': {'slot':'weapon','attack':32,'price':1250}, 'Espada de cavaleiro': {'slot':'weapon','attack':18,'price':520}, 'Lamina real de Valedouro': {'slot':'weapon','attack':46,'price':2800}, 'Escudo de ferro': {'slot':'offhand','defense':11,'price':480}, 'Escudo da muralha': {'slot':'offhand','defense':29,'price':1950}, 'Armadura de placas reais': {'slot':'armor','defense':25,'price':1600}, 'Armadura do trono': {'slot':'armor','defense':37,'price':3400}, 'Lamina do Sino Partido': {'slot':'weapon','attack':35,'price':0}, 'Escudo do Sino Partido': {'slot':'offhand','defense':20,'price':0}, 'Armadura do Sino Partido': {'slot':'armor','defense':30,'price':0}}
+ITEMS.update({
+    'Lamina da Aurora de Valedouro': {'slot':'weapon','attack':44,'defense':0,'price':0},
+    'Arco da Bruma Antiga': {'slot':'weapon','attack':42,'defense':0,'price':0},
+    'Cajado do Firmamento': {'slot':'weapon','attack':41,'defense':0,'price':0},
+    'Armadura do Bastião': {'slot':'armor','attack':0,'defense':40,'price':0},
+    'Colete da Sombra Verde': {'slot':'armor','attack':0,'defense':30,'price':0},
+    'Manto das Estrelas': {'slot':'armor','attack':0,'defense':25,'price':0},
+    'Arco do Aprendiz': {'slot':'weapon', 'attack':11, 'defense':0, 'price':180},
+    'Colete do Explorador': {'slot':'armor', 'attack':0, 'defense':9, 'price':210},
+    'Cajado do Aprendiz': {'slot':'weapon', 'attack':12, 'defense':0, 'price':180},
+    'Veste do Aprendiz': {'slot':'armor', 'attack':0, 'defense':8, 'price':210},
+    'Espada da Guarda de Valedouro': {'slot':'weapon', 'attack':29, 'defense':0, 'price':0},
+    'Arco do Vigia Runico': {'slot':'weapon', 'attack':27, 'defense':0, 'price':0},
+    'Cajado do Eco Runico': {'slot':'weapon', 'attack':26, 'defense':0, 'price':0},
+    'Couraca da Guarda': {'slot':'armor', 'attack':0, 'defense':24, 'price':0},
+    'Colete do Batedor': {'slot':'armor', 'attack':0, 'defense':17, 'price':0},
+    'Manto do Eco': {'slot':'armor', 'attack':0, 'defense':13, 'price':0},
+})
+
+
+ITEMS.update({
+    'Arco do Sino Partido': {'slot':'weapon', 'attack':35, 'defense':0, 'price':0},
+    'Aljava do Sino Partido': {'slot':'offhand', 'attack':0, 'defense':20, 'price':0},
+    'Colete do Sino Partido': {'slot':'armor', 'attack':0, 'defense':30, 'price':0},
+    'Cajado do Sino Partido': {'slot':'weapon', 'attack':35, 'defense':0, 'price':0},
+    'Orbe do Sino Partido': {'slot':'offhand', 'attack':0, 'defense':20, 'price':0},
+    'Manto do Sino Partido': {'slot':'armor', 'attack':0, 'defense':30, 'price':0},
+})
+
 SELL_PRICES.update({name: ITEMS[name]['price']//2 for name in SMITH_STOCK if name not in SELL_PRICES})
+
+# MVP 1.0.6.1: explicit tradeable loot/materials, consumables and craft gear.
+# Quest-only Selo das Ruinas is deliberately excluded.
+SELL_PRICES.update({
+    'Lamina do Sino Partido': 490,
+    'Escudo do Sino Partido': 360,
+    'Armadura do Sino Partido': 580,
+    'Presa de lobo': 12,
+    'Pocao de mana': 10,
+    'Pocao media': 20,
+    'Pocao completa': 55,
+    'Erva rara': 22,
+    'Fragmento de metal antigo': 45,
+    'Lasca de runa': 35,
+    'Nucleo runico': 180,
+    'Lamina da Vigilia Runica': 420,
+    'Espada ancestral': 750,
+    'Espada do saqueador': 320,
+})
+# Shop equipment is tradeable even if it was added after the original price list.
+SELL_PRICES.update({
+    name: max(1, int(ITEMS[name]['price']) // 2)
+    for name in SMITH_STOCK
+    if name in ITEMS and name not in SELL_PRICES and int(ITEMS[name].get('price', 0)) > 0
+})
+# MVP 1.0.8.8.1: class-exclusive crafted gear has a valid resale value.
+# Keep sale prices server-side and independent from the item's shop price,
+# because crafted equipment intentionally has price=0 in ITEMS.
+SELL_PRICES.update({
+    'Espada da Guarda de Valedouro': 340,
+    'Arco do Vigia Runico': 320,
+    'Cajado do Eco Runico': 320,
+    'Couraca da Guarda': 300,
+    'Colete do Batedor': 240,
+    'Manto do Eco': 220,
+})
+
+SELL_PRICES.update({
+    'Lamina da Aurora de Valedouro': 780,
+    'Arco da Bruma Antiga': 760,
+    'Cajado do Firmamento': 760,
+    'Armadura do Bastião': 1150,
+    'Colete da Sombra Verde': 1000,
+    'Manto das Estrelas': 980,
+})
+
+SELL_PRICES.update({
+    'Arco do Sino Partido': 490,
+    'Aljava do Sino Partido': 360,
+    'Colete do Sino Partido': 580,
+    'Cajado do Sino Partido': 490,
+    'Orbe do Sino Partido': 360,
+    'Manto do Sino Partido': 580,
+})
+
+# Explicit quest safeguard (do not sell the Guardian's quest proof).
+SELL_PRICES.pop('Selo das Ruinas', None)
 PROFESSIONS = {'wood': 'lenhador', 'ore': 'mineiro', 'herb': 'herbalista'}
 PROFESSION_XP = {'wood': 12, 'ore': 16, 'herb': 20}
 
@@ -234,15 +415,124 @@ def init_db():
 
 def save_character(p):
     sync_level_mana(p)
-    fields = ('hp','max_hp','level','xp','gold','inventory','quest','kills','equipment','name','opened_chests','chest_cooldowns','forest_quest','forest_quest_chests','guardian_quest','guardian_quest_kills','crypt_quest','crypt_raiders','dungeon_stage','dungeon_claimed','gather_cooldowns','gather_positions','professions','subclass_tool','upgrade_levels','gear_bag','gear_equipped','gear_migrated','combat_class','mana','max_mana','mana_potion_starter','skill_mastery','skill_tree')
+    sync_attribute_vitality(p)
+    fields = ('hp','max_hp','level','xp','gold','inventory','quest','kills','equipment','name','opened_chests','chest_cooldowns','forest_quest','forest_quest_chests','guardian_quest','guardian_quest_kills','crypt_quest','crypt_raiders','dungeon_stage','dungeon_claimed','gather_cooldowns','gather_positions','professions','subclass_tool','upgrade_levels','gear_bag','gear_equipped','gear_migrated','bank_items','bank_gear','bank_intro_done','bank_supply_progress','bank_supply_done','bell_echo_quest','rune_ruins_quest','rune_watch_quest','rune_watch_kills','combat_class','mana','max_mana','mana_potion_starter','skill_mastery','skill_tree','attributes','attribute_hp_bonus','crypt_dry_streak','crypt_repeat_clears')
     data = {k:p[k] for k in fields}
     with sqlite3.connect(DB_PATH) as db:
         db.execute('INSERT INTO characters(name,data) VALUES(?,?) ON CONFLICT(name) DO UPDATE SET data=excluded.data', (p['name'],json.dumps(data)))
 
+def character_name_exists(name):
+    # Unicidade sem diferenciar maiusculas/minusculas.
+    with sqlite3.connect(DB_PATH) as db:
+        return db.execute('SELECT 1 FROM characters WHERE name=? COLLATE NOCASE LIMIT 1', (name,)).fetchone() is not None
+
+def list_saved_heroes():
+    # Consulta apenas nomes e classes, sem expor inventario ou progresso completo.
+    with sqlite3.connect(DB_PATH) as db:
+        rows = db.execute('SELECT name, data FROM characters ORDER BY name COLLATE NOCASE').fetchall()
+    result = []
+    for name, raw in rows:
+        try:
+            hero_class = json.loads(raw).get('combat_class', 'Guerreiro')
+        except (ValueError, TypeError):
+            hero_class = 'Guerreiro'
+        result.append({'name': name, 'class': hero_class})
+    return result
+
 def load_character(name):
     with sqlite3.connect(DB_PATH) as db:
-        row = db.execute('SELECT data FROM characters WHERE name=?',(name,)).fetchone()
+        row = db.execute('SELECT data FROM characters WHERE name=? COLLATE NOCASE',(name,)).fetchone()
     return json.loads(row[0]) if row else None
+
+ATTRIBUTES = ('forca', 'vitalidade', 'destreza', 'inteligencia', 'agilidade')
+ATTRIBUTE_BASE = 5
+
+def ensure_attributes(p):
+    raw = p.get('attributes', {})
+    if not isinstance(raw, dict):
+        raw = {}
+    # Atributos sao individuais do personagem e nao dependem da classe ativa.
+    clean = {key: max(ATTRIBUTE_BASE, min(1000, int(raw.get(key, ATTRIBUTE_BASE)))) for key in ATTRIBUTES}
+    earned = max(0, int(p.get('level', 1)) - 1) * 5
+    spent = sum(value - ATTRIBUTE_BASE for value in clean.values())
+    if spent > earned:
+        # Conserva a integridade de um save inconsistente sem atribuir pontos extras.
+        remaining = earned
+        for key in ATTRIBUTES:
+            allocation = min(remaining, clean[key] - ATTRIBUTE_BASE)
+            clean[key] = ATTRIBUTE_BASE + allocation
+            remaining -= allocation
+    p['attributes'] = clean
+    return max(0, earned - sum(value - ATTRIBUTE_BASE for value in clean.values()))
+
+def sync_attribute_vitality(p):
+    """Apply vitality as a delta; preserves existing HP and prior level bonuses."""
+    ensure_attributes(p)
+    target = max(0, int(p['attributes']['vitalidade']) - ATTRIBUTE_BASE) * 3
+    previous = max(0, int(p.get('attribute_hp_bonus', 0)))
+    delta = target - previous
+    if delta:
+        p['max_hp'] = max(1, int(p.get('max_hp', 100)) + delta)
+        p['hp'] = min(p['max_hp'], max(0, int(p.get('hp', p['max_hp'])) + delta))
+    p['attribute_hp_bonus'] = target
+
+
+def attribute_evasion(p):
+    """1% dodge per 5 invested agility, capped at 20%."""
+    ensure_attributes(p)
+    return min(0.20, max(0, int(p['attributes']['agilidade']) - ATTRIBUTE_BASE) // 5 * 0.01)
+
+def class_combat_traits(p):
+    """Server-authoritative combat identity; no client-provided stat values."""
+    ensure_attributes(p)
+    attributes = p['attributes']
+    cls = p.get('combat_class', 'Guerreiro')
+    return {
+        'warrior_reduction': 0.10 if cls == 'Guerreiro' else 0.0,
+        'archer_critical': min(0.15, max(0, attributes['destreza'] - ATTRIBUTE_BASE) // 10 * 0.01) if cls == 'Arqueiro' else 0.0,
+        'mage_mana_on_hit': 2 if cls == 'Mago' else 0,
+    }
+
+
+CRYPT_CLASS_SETS = {
+    'Guerreiro': ['Lamina do Sino Partido', 'Escudo do Sino Partido', 'Armadura do Sino Partido'],
+    'Arqueiro': ['Arco do Sino Partido', 'Aljava do Sino Partido', 'Colete do Sino Partido'],
+    'Mago': ['Cajado do Sino Partido', 'Orbe do Sino Partido', 'Manto do Sino Partido'],
+}
+
+def crypt_missing_class_items(p):
+    """Class-only set pieces absent from inventory, equipment, and bank."""
+    owned = set()
+    for item in CRYPT_CLASS_SETS.get(p.get('combat_class', 'Guerreiro'), ()):
+        if (p.get('inventory', {}).get(item, 0) > 0
+                or item in p.get('equipment', {}).values()
+                or p.get('bank_items', {}).get(item, 0) > 0):
+            owned.add(item)
+    return [item for item in CRYPT_CLASS_SETS.get(p.get('combat_class', 'Guerreiro'), ()) if item not in owned]
+
+
+def award_crypt_gear(p, item):
+    """Server-only award, one persistent unique gear instance."""
+    p['inventory'][item] = p['inventory'].get(item, 0) + 1
+    p.setdefault('gear_bag', []).append(new_gear(item))
+
+
+def reconcile_class_equipment(p):
+    """Idempotent, server-authoritative migration; never discards unique gear IDs."""
+    character_class = p.get('combat_class', 'Guerreiro')
+    removed = []
+    for slot, item in list(p.get('equipment', {}).items()):
+        if not item or CLASS_EXCLUSIVE_ITEMS.get(item, character_class) == character_class:
+            continue
+        p['equipment'][slot] = None
+        p['inventory'][item] = p['inventory'].get(item, 0) + 1
+        gear = p.get('gear_equipped', {}).pop(slot, None)
+        if gear is None:
+            gear = new_gear(item, p.get('upgrade_levels', {}).get(item, 0))
+        gear_put(p, gear)
+        removed.append(item)
+    return removed
+
 
 def bonuses(p):
     attack = 0; defense = 0
@@ -258,6 +548,15 @@ def bonuses(p):
             enchant = ENCHANTS.get(p.get('gear_equipped',{}).get(slot,{}).get('enchant',''), {})
             attack += enchant.get('attack',0)
             defense += enchant.get('defense',0)
+    # Set bonus: count only currently equipped distinct pieces, never bag contents.
+    crypt_set = set(CRYPT_CLASS_SETS.get(p.get('combat_class', 'Guerreiro'), ()))
+    equipped_crypt = len(crypt_set.intersection(set(p.get('equipment', {}).values())))
+    if equipped_crypt >= 2:
+        defense += 8
+    if equipped_crypt == 3:
+        attack += 12
+    ensure_attributes(p)
+    a = p['attributes']
     class_name = p.get('combat_class', 'Guerreiro')
     class_bonus = COMBAT_CLASSES.get(class_name, {})
     nodes = p.get('skill_tree', {}).get(class_name, [])
@@ -266,7 +565,10 @@ def bonuses(p):
     tree_defense = 5 if 'guard' in nodes else 0
     tree_attack += 7 if 'mastery' in nodes else 0
     tree_defense += 7 if 'resilience' in nodes else 0
-    return attack + class_bonus.get('attack', 0) + tree_attack, defense + class_bonus.get('defense', 0) + tree_defense
+    # Atributos melhoram o combate; especializacao depende da classe ativa.
+    physical = (a['forca'] - 5) if class_name == 'Guerreiro' else (a['destreza'] - 5) if class_name == 'Arqueiro' else (a['inteligencia'] - 5)
+    protection = (a['vitalidade'] - 5) // 2
+    return attack + class_bonus.get('attack', 0) + tree_attack + physical, defense + class_bonus.get('defense', 0) + tree_defense + protection
 
 
 def distance(a, b):
@@ -297,6 +599,8 @@ def blocked(x, y, radius=RADIUS, ignore_id=None, include_entities=True):
         if ignore_id != 'npc:tessa' and (x-TESSA[0])**2 + (y-TESSA[1])**2 < (radius+12.)**2:
             return True
         if ignore_id != 'npc:ferreiro' and (x-BLACKSMITH[0])**2 + (y-BLACKSMITH[1])**2 < (radius+12.)**2:
+            return True
+        if ignore_id != 'npc:armazem' and (x-BANK_KEEPER[0])**2 + (y-BANK_KEEPER[1])**2 < (radius+12.)**2:
             return True
         for pid, other in players.items():
             if pid != ignore_id and (x-other['x'])**2 + (y-other['y'])**2 < (radius+RADIUS)**2:
@@ -387,7 +691,7 @@ def move_monster(m, target, step):
 RUINS_VISUAL = (1410., 1010., 1625., 1180.)
 
 def spawn_is_safe(x, y, kind, ignore_id=None):
-    radius = 23. if kind == 'guardiao' else 14.
+    radius = 23. if kind in ('guardiao', 'guardiao_tempestade') else 14.
     if blocked(x, y, radius=radius, ignore_id=ignore_id):
         return False
     # Prevent creatures appearing inside the stone gateway/ruins graphics.
@@ -398,7 +702,7 @@ def spawn_is_safe(x, y, kind, ignore_id=None):
 
 def safe_spawn(center_x, center_y, kind, ignore_id=None):
     # The guardian patrols a clear area north of the ruins; never starts inside them.
-    if kind == 'guardiao':
+    if kind in ('guardiao', 'guardiao_tempestade'):
         center_x, center_y = 1540., 965.
         spread = 58.
     else:
@@ -422,7 +726,7 @@ def safe_spawn(center_x, center_y, kind, ignore_id=None):
     raise RuntimeError(f'Nao foi encontrado spawn livre para {kind} perto de {(center_x, center_y)}')
 
 def new_monster(i, kind, x, y):
-    hp = 420 if kind == 'guardiao' else (45 if kind == 'lobo' else 75)
+    hp = (680 if kind == 'guardiao_tempestade' else 420) if kind in ('guardiao', 'guardiao_tempestade') else (155 if kind == 'sentinela_runica' else (45 if kind == 'lobo' else 75))
     x, y = safe_spawn(x, y, kind)
     return {'id': str(i), 'kind': kind, 'x': x, 'y': y, 'home_x': x, 'home_y': y,
             'hp': hp, 'max_hp': hp, 'alive': True, 'respawn_at': 0., 'last_hit': 0., 'last_special': time.monotonic(), 'effects': {}, 'boss_phase': 1, 'pulse_warning': None}
@@ -458,11 +762,13 @@ async def status(pid):
     p = players.get(pid)
     if p:
         sync_level_mana(p)
+        attribute_points = ensure_attributes(p)
+        sync_attribute_vitality(p)
         await send(pid, {'type': 'profile', 'hp': p['hp'], 'max_hp': p['max_hp'],
-                         'level': p['level'], 'xp': p['xp'], 'xp_next': p['level']*100,
+                         'level': p['level'], 'xp': p['xp'], 'xp_next': p['level']*100, 'attributes': p['attributes'], 'attribute_points': attribute_points, 'attribute_evasion': int(attribute_evasion(p)*100), 'class_traits': class_combat_traits(p),
                          'gold': p['gold'], 'mana':p.get('mana',100), 'max_mana':p.get('max_mana',100), 'inventory': p['inventory'],
                          'quest': p['quest'], 'kills': p['kills'], 'equipment':p['equipment'],
-                         'name':p['name'], 'combat_class':p.get('combat_class','Guerreiro'), 'skill_mastery':p.get('skill_mastery',{}), 'skill_tree':p.get('skill_tree',{}), 'opened_chests':p.get('opened_chests', []), 'chest_cooldowns':p.get('chest_cooldowns', {}), 'forest_quest':p.get('forest_quest', 'locked'), 'forest_quest_chests':p.get('forest_quest_chests', []), 'guardian_quest':p.get('guardian_quest','locked'), 'guardian_quest_kills':p.get('guardian_quest_kills',0), 'crypt_quest':p.get('crypt_quest','locked'), 'crypt_raiders':p.get('crypt_raiders',0), 'dungeon_stage':p.get('dungeon_run_stage',p.get('dungeon_stage',0)) if p.get('dungeon_active') else p.get('dungeon_stage',0), 'dungeon_claimed':p.get('dungeon_claimed',False), 'dungeon_active':p.get('dungeon_active',False), 'dungeon_enemy_hp':p.get('dungeon_enemy_hp',0), 'dungeon_boss_phase':(3 if int(p.get('dungeon_enemy_hp',260)) <= 85 else (2 if int(p.get('dungeon_enemy_hp',260)) <= 170 else 1)) if int(p.get('dungeon_run_stage',p.get('dungeon_stage',0))) == 3 else 0, 'dungeon_enemy_attack_in':max(0.0, float(p.get('dungeon_enemy_next_hit',0.0))-time.monotonic()), 'dungeon_special_cells':p.get('dungeon_special_cells',[]), 'dungeon_special_in':max(0.0,float(p.get('dungeon_special_fire_at',0.0))-time.monotonic()) if p.get('dungeon_special_cells') else 0.0, 'dungeon_pos':p.get('dungeon_pos',[1,2]), 'dungeon_enemy_pos':p.get('dungeon_enemy_pos',[8,2]), 'dungeon_enemy_name':CRYPT_NAMES[min(3,max(0,int(p.get('dungeon_run_stage',p.get('dungeon_stage',0)))))], 'gather_cooldowns':p.get('gather_cooldowns', {}), 'subclass_tool':p.get('subclass_tool'), 'upgrade_levels':p.get('upgrade_levels',{}), 'gear_equipped':p.get('gear_equipped',{}), 'gear_bag':p.get('gear_bag',[]), 'professions':{k:profession_progress(int(p.get('professions', {}).get(k, 0))) for k in ('lenhador','mineiro','herbalista')}, 'resource_nodes':available_nodes(p), 'server_time':time.time(), 'attack':17+p['level']*3+bonuses(p)[0], 'defense':bonuses(p)[1]})
+                         'name':p['name'], 'combat_class':p.get('combat_class','Guerreiro'), 'skill_mastery':p.get('skill_mastery',{}), 'skill_tree':p.get('skill_tree',{}), 'opened_chests':p.get('opened_chests', []), 'chest_cooldowns':p.get('chest_cooldowns', {}), 'forest_quest':p.get('forest_quest', 'locked'), 'forest_quest_chests':p.get('forest_quest_chests', []), 'guardian_quest':p.get('guardian_quest','locked'), 'guardian_quest_kills':p.get('guardian_quest_kills',0), 'crypt_quest':p.get('crypt_quest','locked'), 'crypt_raiders':p.get('crypt_raiders',0), 'dungeon_stage':p.get('dungeon_run_stage',p.get('dungeon_stage',0)) if p.get('dungeon_active') else p.get('dungeon_stage',0), 'dungeon_claimed':p.get('dungeon_claimed',False), 'dungeon_active':p.get('dungeon_active',False), 'dungeon_enemy_hp':p.get('dungeon_enemy_hp',0), 'dungeon_boss_phase':(3 if int(p.get('dungeon_enemy_hp',260)) <= 85 else (2 if int(p.get('dungeon_enemy_hp',260)) <= 170 else 1)) if int(p.get('dungeon_run_stage',p.get('dungeon_stage',0))) == 3 else 0, 'dungeon_enemy_attack_in':max(0.0, float(p.get('dungeon_enemy_next_hit',0.0))-time.monotonic()), 'dungeon_special_cells':p.get('dungeon_special_cells',[]), 'dungeon_special_in':max(0.0,float(p.get('dungeon_special_fire_at',0.0))-time.monotonic()) if p.get('dungeon_special_cells') else 0.0, 'dungeon_pos':p.get('dungeon_pos',[1,2]), 'dungeon_enemy_pos':p.get('dungeon_enemy_pos',[8,2]), 'dungeon_enemy_name':CRYPT_NAMES[min(3,max(0,int(p.get('dungeon_run_stage',p.get('dungeon_stage',0)))))], 'gather_cooldowns':p.get('gather_cooldowns', {}), 'subclass_tool':p.get('subclass_tool'), 'upgrade_levels':p.get('upgrade_levels',{}), 'gear_equipped':p.get('gear_equipped',{}), 'gear_bag':p.get('gear_bag',[]), 'bank_items':p.get('bank_items',{}), 'bank_gear':p.get('bank_gear',[]), 'bank_intro_done':p.get('bank_intro_done',False), 'bank_supply_progress':p.get('bank_supply_progress',{}), 'bank_supply_done':p.get('bank_supply_done',False), 'bell_echo_quest':p.get('bell_echo_quest','locked'), 'rune_ruins_quest':p.get('rune_ruins_quest','locked'), 'rune_watch_quest':p.get('rune_watch_quest','locked'), 'rune_watch_kills':p.get('rune_watch_kills',0), 'professions':{k:profession_progress(int(p.get('professions', {}).get(k, 0))) for k in ('lenhador','mineiro','herbalista')}, 'resource_nodes':available_nodes(p), 'server_time':time.time(), 'attack':17+p['level']*3+bonuses(p)[0], 'defense':bonuses(p)[1]})
 
 # MVP 0.9.7: vantagens e resistencias calculadas exclusivamente no servidor.
 # Multiplicadores aplicam-se apenas as habilidades exclusivas de classe.
@@ -470,6 +776,7 @@ CLASS_DAMAGE_AFFINITY = {
     'lobo': {'Guerreiro': 1.0, 'Mago': 1.15, 'Arqueiro': 1.0},
     'saqueador': {'Guerreiro': 1.10, 'Mago': 1.0, 'Arqueiro': 1.0},
     'guardiao': {'Guerreiro': 0.85, 'Mago': 0.75, 'Arqueiro': 0.90},
+    'guardiao_tempestade': {'Guerreiro': 0.90, 'Mago': 0.85, 'Arqueiro': 1.05},
 }
 
 def class_affinity(kind, combat_class):
@@ -478,15 +785,32 @@ def class_affinity(kind, combat_class):
 
 async def award_monster_kill(pid, p, m):
     """Award a confirmed kill once, whether from direct damage or burn."""
-    earned_xp = 350 if m['kind']=='guardiao' else (30 if m['kind']=='lobo' else 50)
+    earned_xp = 550 if m['kind']=='guardiao_tempestade' else (350 if m['kind']=='guardiao' else (95 if m['kind']=='sentinela_runica' else (30 if m['kind']=='lobo' else 50)))
     p['xp']+=earned_xp
-    gold=250 if m['kind']=='guardiao' else (random.randint(3,8) if m['kind']=='lobo' else random.randint(8,15))
+    gold=420 if m['kind']=='guardiao_tempestade' else (250 if m['kind']=='guardiao' else (random.randint(18,32) if m['kind']=='sentinela_runica' else (random.randint(3,8) if m['kind']=='lobo' else random.randint(8,15))))
     p['gold']+=gold
-    item='Selo das Ruinas' if m['kind']=='guardiao' else ('Pele de lobo' if m['kind']=='lobo' else 'Retalho de tecido')
+    item='Marca da Tempestade' if m['kind']=='guardiao_tempestade' else ('Selo das Ruinas' if m['kind']=='guardiao' else ('Lasca de runa' if m['kind']=='sentinela_runica' else ('Pele de lobo' if m['kind']=='lobo' else 'Retalho de tecido')))
     p['inventory'][item]=p['inventory'].get(item,0)+1
     if random.random() < 0.15:
         p['inventory']['Pocao de mana'] = p['inventory'].get('Pocao de mana', 0) + 1
         await send(pid, {'type':'item_float','x':m['x'],'y':m['y']-18,'text':'+1 Pocao de mana'})
+    if m['kind'] == 'sentinela_runica' and random.random() < 0.12:
+        p['inventory']['Nucleo runico'] = p['inventory'].get('Nucleo runico', 0) + 1
+        await send(pid, {'type':'notice','text':'Loot epico (12%): Nucleo runico!'})
+        await send(pid, {'type':'item_float','x':m['x'],'y':m['y']-18,'text':'+1 Nucleo runico'})
+    if m['kind'] == 'guardiao_tempestade':
+        storm_rewards = {
+            'Guerreiro': ('Lamina da Aurora de Valedouro', 'Armadura do Bastião'),
+            'Arqueiro': ('Arco da Bruma Antiga', 'Colete da Sombra Verde'),
+            'Mago': ('Cajado do Firmamento', 'Manto das Estrelas'),
+        }
+        # The real item names are resolved from ITEMS, avoiding invalid loot.
+        choices = storm_rewards.get(p.get('combat_class', 'Guerreiro'), storm_rewards['Guerreiro'])
+        for reward, chance in zip(choices, (0.15, 0.07)):
+            if reward in ITEMS and random.random() < chance:
+                award_crypt_gear(p, reward)
+                await send(pid, {'type':'notice','text':f'TEMPESTADE: equipamento raro {reward}! (classe exclusiva)'})
+                await send(pid, {'type':'item_float','x':m['x'],'y':m['y']-25,'text':'+' + reward})
     # Quest progress is awarded only by a confirmed guardian kill.
     if m['kind'] == 'guardiao' and p.get('guardian_quest') == 'active':
         p['guardian_quest_kills'] = max(1, int(p.get('guardian_quest_kills', 0)))
@@ -505,6 +829,11 @@ async def award_monster_kill(pid, p, m):
         if p['crypt_raiders'] >= 3:
             p['crypt_quest'] = 'ready'
             await send(pid, {'type':'notice', 'text':'Ecos da Cripta: 3 saqueadores derrotados. Regressa a Tessa!'})
+    if m['kind'] == 'saqueador' and p.get('rune_watch_quest') == 'active':
+        p['rune_watch_kills'] = min(5, int(p.get('rune_watch_kills', 0)) + 1)
+        if p['rune_watch_kills'] >= 5:
+            p['rune_watch_quest'] = 'ready'
+            await send(pid, {'type':'notice','text':'Vigilia das Runas: 5 saqueadores derrotados. Regressa a Tessa!'})
     if m['kind']=='lobo' and p['quest']=='active': p['kills']+=1
     while p['xp']>=p['level']*100:
         p['xp']-=p['level']*100; p['level']+=1; p['max_hp']+=10; p['hp']=p['max_hp']
@@ -519,7 +848,7 @@ async def award_monster_kill(pid, p, m):
 # MVP 1.0.4: IA tática da Cripta, simulada pelo servidor.
 CRYPT_BLOCKS = {(4, 1), (4, 3), (7, 1), (7, 3)}
 CRYPT_MAX_HP = (90, 140, 190, 260)
-CRYPT_NAMES = ('Esqueleto Errante', 'Sentinela Ossuda', 'Eco Corrompido', 'Guardiao do Sino')
+CRYPT_NAMES = ('Esqueleto Errante', 'Sentinela Ossuda', 'Eco Corrompido', 'Velkran O Guardião da Cripta')
 
 def crypt_valid(cell):
     return 0 <= cell[0] < 10 and 0 <= cell[1] < 5 and tuple(cell) not in CRYPT_BLOCKS
@@ -554,7 +883,11 @@ async def simulation():
             if resource['ready_at'] and resource['ready_at'] <= time.time():
                 old=(resource['x'],resource['y'])
                 try:
-                    nx,ny=random_resource_position(resource['radius'],previous=old)
+                    pos = random_resource_position(resource['radius'],previous=old)
+                    if pos is None:
+                        resource['ready_at'] = time.time() + 5.0
+                        continue
+                    nx,ny = pos
                 except RuntimeError:
                     # Try again later instead of stopping monster respawns.
                     resource['ready_at'] = time.time() + 5.0
@@ -642,11 +975,11 @@ async def simulation():
                         continue
                     m.update(x=x, y=y, hp=m['max_hp'], alive=True, route=[], next_route_at=0., last_special=now, effects={}, boss_phase=1, pulse_warning=None)
                     changed = True
-                    if m['kind'] == 'guardiao':
-                        await broadcast({'type':'guardian_spawned', 'text':'O GUARDIAO DAS RUINAS DESPERTOU!'})
+                    if m['kind'] in ('guardiao', 'guardiao_tempestade'):
+                        await broadcast({'type':'guardian_spawned', 'text':('O GUARDIAO DA TEMPESTADE DESPERTOU!' if m['kind']=='guardiao_tempestade' else 'O GUARDIAO DO SINO PARTIDO DESPERTOU!')})
                 continue
             # Boss phases: transitions are server-owned and reset on respawn.
-            if m['kind'] == 'guardiao':
+            if m['kind'] in ('guardiao', 'guardiao_tempestade'):
                 health_ratio = m['hp'] / max(1, m['max_hp'])
                 new_phase = 3 if health_ratio <= 0.25 else (2 if health_ratio <= 0.60 else 1)
                 if new_phase > m.get('boss_phase', 1):
@@ -674,7 +1007,7 @@ async def simulation():
                         # Burn kills share the exact same rewards as direct attacks.
                         owner_pid = str(effect.get('owner_pid', ''))
                         m['alive'] = False
-                        m['respawn_at'] = now + (180 if m['kind']=='guardiao' else 9)
+                        m['respawn_at'] = now + (300 if m['kind']=='guardiao_tempestade' else (180 if m['kind']=='guardiao' else 9))
                         m['effects'] = {}
                         if owner_pid in players and players[owner_pid].get('hp', 0) > 0:
                             await award_monster_kill(owner_pid, players[owner_pid], m)
@@ -684,7 +1017,7 @@ async def simulation():
                 continue
             # Server-authoritative telegraphed guardian pulse: the boss stays in place
             # while charging, and every living hero may dodge the marked area.
-            if m['kind'] == 'guardiao' and m.get('pulse_warning') is not None:
+            if m['kind'] in ('guardiao', 'guardiao_tempestade') and m.get('pulse_warning') is not None:
                 warning = m['pulse_warning']
                 if now >= warning['expires']:
                     m['pulse_warning'] = None
@@ -695,7 +1028,7 @@ async def simulation():
                             continue
                         if math.hypot(victim['x'] - warning['x'], victim['y'] - warning['y']) > warning['radius']:
                             continue
-                        dealt = max(1, warning['damage'] - bonuses(victim)[1])
+                        dealt = max(0, warning['damage'] - bonuses(victim)[1])
                         victim['hp'] = max(0, victim['hp'] - dealt)
                         hits.append({'target_id': victim['id'], 'target_x': victim['x'], 'target_y': victim['y'], 'damage': dealt})
                         if victim['hp'] == 0:
@@ -714,23 +1047,28 @@ async def simulation():
                 continue
             dist = distance(nearest, m)
             if 24 < dist < (200 if m['kind']=='guardiao' else 145):
-                step = min(4., dist-24) * (1.35 if m['kind'] == 'guardiao' and m.get('boss_phase', 1) == 3 else 1.0) * ((0.70 if m['kind'] == 'guardiao' else 0.45) if 'slow' in m.get('effects', {}) else 1.0)
+                step = min(4., dist-24) * (1.35 if m['kind'] in ('guardiao','guardiao_tempestade') and m.get('boss_phase', 1) == 3 else 1.0) * ((0.70 if m['kind'] in ('guardiao','guardiao_tempestade') else 0.45) if 'slow' in m.get('effects', {}) else 1.0)
                 changed = move_monster(m, nearest, step) or changed
             # Guardian: 3 phases; pulse frequency, radius and damage escalate.
             phase = m.get('boss_phase', 1) if m['kind'] == 'guardiao' else 1
             pulse_cooldown = {1: 9.0, 2: 7.0, 3: 5.0}[phase]
             pulse_radius = {1: 92.0, 2: 115.0, 3: 135.0}[phase]
-            if m['kind'] == 'guardiao' and dist <= pulse_radius and now-m.get('last_special', now) >= pulse_cooldown:
+            if m['kind'] in ('guardiao', 'guardiao_tempestade') and dist <= pulse_radius and now-m.get('last_special', now) >= pulse_cooldown:
                 charge_seconds = 1.65 if phase == 1 else (1.35 if phase == 2 else 1.10)
                 m['pulse_warning'] = {'x': m['x'], 'y': m['y'], 'radius': pulse_radius,
-                                      'damage': {1: 28, 2: 35, 3: 43}[phase],
+                                      'damage': ({1: 34, 2: 44, 3: 54}[phase] if m['kind']=='guardiao_tempestade' else {1: 28, 2: 35, 3: 43}[phase]),
                                       'phase': phase, 'expires': now + charge_seconds}
                 await broadcast({'type': 'guardian_pulse_warning', 'x': m['x'], 'y': m['y'],
                                  'radius': pulse_radius, 'duration': charge_seconds, 'phase': phase})
                 continue
-            if dist < (58 if m['kind']=='guardiao' else 31) and now-m['last_hit'] >= (({1: 2.3, 2: 1.9, 3: 1.5}[m.get('boss_phase', 1)]) if m['kind']=='guardiao' else 1.7):
+            if dist < (58 if m['kind'] in ('guardiao', 'guardiao_tempestade') else 31) and now-m['last_hit'] >= (({1: 2.3, 2: 1.9, 3: 1.5}[m.get('boss_phase', 1)]) if m['kind'] in ('guardiao', 'guardiao_tempestade') else 1.7):
                 m['last_hit'] = now
-                dealt = max(1, (7 if m['kind']=='lobo' else (22 if m['kind']=='guardiao' else 11))-bonuses(nearest)[1])
+                dealt = max(0, (7 if m['kind']=='lobo' else ((28 if m['kind']=='guardiao_tempestade' else 22) if m['kind'] in ('guardiao','guardiao_tempestade') else (17 if m['kind']=='sentinela_runica' else 11)))-bonuses(nearest)[1])
+                if random.random() < attribute_evasion(nearest):
+                    await broadcast({'type':'monster_attack','attacker_id':m['id'], 'target_id':nearest['id'], 'kind':m['kind'], 'x':nearest['x'], 'y':nearest['y'], 'damage':0, 'miss':True, 'attacker_x':m['x'], 'attacker_y':m['y']})
+                    continue
+                if class_combat_traits(nearest)['warrior_reduction']:
+                    dealt = max(0, round(dealt * 0.90))
                 nearest['hp'] = max(0, nearest['hp'] - dealt)
                 await broadcast({'type':'monster_attack','attacker_id':m['id'],
                                  'target_id':nearest['id'], 'kind':m['kind'],
@@ -771,7 +1109,7 @@ async def socket(ws: WebSocket):
     p = {'id':pid, 'x':480., 'y':360., 'hp':100, 'max_hp':100, 'level':1, 'xp':0,
          'gold':0, 'inventory':{}, 'quest':'not_started', 'kills':0,
          'facing':'down', 'walking':False, 'last_attack':0.,
-         'name':'', 'equipment':dict(DEFAULT_EQUIPMENT), 'opened_chests':[], 'chest_cooldowns':{}, 'forest_quest':'locked', 'forest_quest_chests':[], 'guardian_quest':'locked', 'guardian_quest_kills':0, 'crypt_quest':'locked', 'crypt_raiders':0, 'dungeon_stage':0, 'dungeon_claimed':False, 'gather_cooldowns':{}, 'gather_positions':{}, 'professions':{'lenhador':0,'mineiro':0,'herbalista':0}, 'subclass_tool':None, 'upgrade_levels':{}, 'gear_bag':[], 'gear_equipped':{}, 'gear_migrated':False, 'combat_class':'Guerreiro', 'mana':100, 'max_mana':100, 'mana_potion_starter':False, 'skill_mastery':{}, 'skill_tree':{}}
+         'name':'', 'attribute_hp_bonus':0, 'attributes':{key:5 for key in ATTRIBUTES}, 'equipment':dict(DEFAULT_EQUIPMENT), 'opened_chests':[], 'chest_cooldowns':{}, 'forest_quest':'locked', 'forest_quest_chests':[], 'guardian_quest':'locked', 'guardian_quest_kills':0, 'crypt_quest':'locked', 'crypt_raiders':0, 'dungeon_stage':0, 'dungeon_claimed':False, 'crypt_dry_streak':0, 'crypt_repeat_clears':0, 'gather_cooldowns':{}, 'gather_positions':{}, 'professions':{'lenhador':0,'mineiro':0,'herbalista':0}, 'subclass_tool':None, 'upgrade_levels':{}, 'gear_bag':[], 'gear_equipped':{}, 'gear_migrated':False, 'bank_items':{}, 'bank_gear':[], 'bank_intro_done':False, 'bank_supply_progress':{}, 'bank_supply_done':False, 'bell_echo_quest':'locked', 'rune_ruins_quest':'locked', 'rune_watch_quest':'locked', 'rune_watch_kills':0, 'combat_class':'Guerreiro', 'mana':100, 'max_mana':100, 'mana_potion_starter':False, 'skill_mastery':{}, 'skill_tree':{}}
     for candidate in [(480.,360.), (480.,395.), (440.,395.), (520.,395.), (480.,430.), (440.,430.)]:
         if not blocked(*candidate, ignore_id=pid):
             p['x'],p['y'] = candidate
@@ -780,7 +1118,7 @@ async def socket(ws: WebSocket):
     connections[pid], players[pid] = ws, p
     await send(pid, {'type':'welcome','id':pid,'players':[public_player(v) for v in players.values()],
                      'monsters':public_monsters()})
-    await send(pid, {'type':'notice','text':'Escreve o nome do heroi (N) para carregar/guardar. M abre a oficina do ferreiro.'})
+    await send(pid, {'type':'notice','text':'Pressiona Z para escolher um heroi existente, ou N para criar um novo.'})
     await status(pid)
     await broadcast({'type':'join','player':public_player(p)})
     try:
@@ -789,27 +1127,67 @@ async def socket(ws: WebSocket):
             if not isinstance(msg, dict):
                 continue
             kind = msg.get('type')
-            if kind == 'name':
+            if kind == 'list_heroes':
+                await send(pid, {'type': 'hero_list', 'heroes': list_saved_heroes()})
+                continue
+            if kind == 'check_hero_name':
+                # Verificacao no servidor: a interface nao decide se um nome e unico.
+                candidate = str(msg.get('name','')).strip()
+                valid = 3 <= len(candidate) <= 20 and candidate.replace('_','').isalnum()
+                occupied = (character_name_exists(candidate) or any(
+                    other.get('name','').casefold() == candidate.casefold()
+                    for other in players.values() if other['id'] != pid)) if valid else True
+                await send(pid, {'type':'hero_name_check', 'name':candidate, 'exists':occupied})
+                continue
+            if kind in ('name', 'select_hero'):
                 name = str(msg.get('name','')).strip()
                 if not (3 <= len(name) <= 20 and name.replace('_','').isalnum()):
                     await send(pid,{'type':'notice','text':'Nome: 3-20 letras/numeros/underscore.'}); continue
                 if any(other['name']==name for other in players.values() if other['id']!=pid):
                     await send(pid,{'type':'notice','text':'Esse heroi ja esta ligado.'}); continue
-                # Trocar de nome nunca deve herdar atributos do heroi anterior.
+                # Selecionar nunca cria um heroi e nunca herda dados do anterior.
+                data = load_character(name)
+                if kind == 'select_hero' and data is None:
+                    await send(pid, {'type':'notice','text':'Heroi nao encontrado. Pressiona Z e escolhe novamente.'})
+                    continue
                 if p.get('name') and p['name'] != name:
                     save_character(p)
+                if msg.get('create_only', False) and (character_name_exists(name) or any(
+                        other.get('name','').casefold() == name.casefold()
+                        for other in players.values() if other['id'] != pid)):
+                    await send(pid, {'type':'notice','text':'Nome ja utilizado. Escolhe outro.'})
+                    continue
                 p.clear()
                 p.update(copy.deepcopy(fresh_hero_template))
-                data = load_character(name)
+                requested_class = str(msg.get('class', ''))
+                if not data and requested_class not in COMBAT_CLASSES:
+                    await send(pid, {'type':'notice','text':'Escolhe Guerreiro, Mago ou Arqueiro antes de criar o heroi.'})
+                    continue
                 if data:
-                    p.update({k:v for k,v in data.items() if k in ('hp','max_hp','level','xp','gold','inventory','quest','kills','equipment','name','opened_chests','chest_cooldowns','forest_quest','forest_quest_chests','guardian_quest','guardian_quest_kills','crypt_quest','crypt_raiders','dungeon_stage','dungeon_claimed','gather_cooldowns','gather_positions','professions','subclass_tool','upgrade_levels','gear_bag','gear_equipped','gear_migrated','combat_class','mana','max_mana','mana_potion_starter','skill_mastery','skill_tree')})
+                    p.update({k:v for k,v in data.items() if k in ('hp','max_hp','level','xp','gold','inventory','quest','kills','equipment','name','opened_chests','chest_cooldowns','forest_quest','forest_quest_chests','guardian_quest','guardian_quest_kills','crypt_quest','crypt_raiders','dungeon_stage','dungeon_claimed','gather_cooldowns','gather_positions','professions','subclass_tool','upgrade_levels','gear_bag','gear_equipped','gear_migrated','bank_items','bank_gear','bank_intro_done','bank_supply_progress','bank_supply_done','bell_echo_quest','rune_ruins_quest','rune_watch_quest','rune_watch_kills','combat_class','mana','max_mana','mana_potion_starter','skill_mastery','skill_tree','attributes','attribute_hp_bonus','crypt_dry_streak','crypt_repeat_clears')})
                     p['equipment']={**DEFAULT_EQUIPMENT,**p.get('equipment',{})}
                 else:
                     p['name']=name
+                    p['combat_class']=requested_class
+                    p['class_locked']=True
                     p['inventory']['Pocao pequena']=2
                     p['gold']=100
+                # Migracao: herois anteriores conservam a classe que ja tinham.
+                # A partir desta versao, a classe passa a ser definitiva.
+                p['class_locked'] = True
+                p.setdefault('bank_items', {})
+                p.setdefault('bank_gear', [])
+                p.setdefault('bank_intro_done', False)
+                p.setdefault('bank_supply_progress', {})
+                p.setdefault('bank_supply_done', False)
+                p.setdefault('bell_echo_quest', 'locked')
+                p.setdefault('rune_ruins_quest', 'locked')
+                p.setdefault('rune_watch_quest', 'locked')
+                p.setdefault('rune_watch_kills', 0)
                 p.setdefault('skill_mastery', {})
                 p.setdefault('skill_tree', {})
+                p['crypt_dry_streak'] = max(0, min(7, int(p.get('crypt_dry_streak', 0))))
+                p['crypt_repeat_clears'] = max(0, int(p.get('crypt_repeat_clears', 0)))
                 p.setdefault('max_mana', 100)
                 p.setdefault('mana', p['max_mana'])
                 if not p.get('mana_potion_starter', False):
@@ -817,8 +1195,12 @@ async def socket(ws: WebSocket):
                     p['mana_potion_starter'] = True
                 sync_level_mana(p)
                 migrate_gear(p)
+                removed_incompatible = reconcile_class_equipment(p)
+                if removed_incompatible:
+                    await send(pid, {'type':'notice','text':'Equipamento de outra classe movido para a mochila: ' + ', '.join(removed_incompatible)})
                 save_character(p)
                 await send(pid,{'type':'notice','text':f'Heroi {name} carregado e guardado.'})
+                await send(pid, {'type':'hero_selected','name':p['name']})
                 await status(pid)
                 await broadcast({'type':'state','player':public_player(p)})
                 continue
@@ -860,18 +1242,111 @@ async def socket(ws: WebSocket):
                     await status(pid)
                     await send(pid, {'type':'notice','text':f'Talento {node} desbloqueado para {cls}!'})
                 continue
+            if kind == 'allocate_attribute':
+                if not p.get('name'):
+                    await send(pid, {'type':'notice','text':'Carrega primeiro o personagem.'})
+                    continue
+                attribute = str(msg.get('attribute', ''))
+                available = ensure_attributes(p)
+                if attribute not in ATTRIBUTES or available < 1:
+                    await send(pid, {'type':'notice','text':'Atributo invalido ou pontos insuficientes.'})
+                    await status(pid)
+                    continue
+                p['attributes'][attribute] += 1
+                save_character(p)
+                await status(pid)
+                await send(pid, {'type':'notice','text':f'{attribute.capitalize()} aumentado! Restam {available-1} pontos.'})
+                continue
             if kind == 'choose_class':
                 if not p['name']:
                     await send(pid,{'type':'notice','text':'Carrega primeiro o teu heroi com N.'})
+                    continue
+                if p.get('class_locked', False):
+                    await send(pid,{'type':'notice','text':'A classe deste personagem e definitiva e nao pode ser alterada.'})
                     continue
                 chosen = str(msg.get('class',''))
                 if chosen not in COMBAT_CLASSES:
                     await send(pid,{'type':'notice','text':'Classe invalida.'})
                     continue
+                # Itens exclusivos nunca ficam ativos numa classe incompatível.
+                # Retira-os para a mochila, preservando ID, melhoria e encantamento.
+                for equipped_slot, equipped_name in list(p['equipment'].items()):
+                    if equipped_name and CLASS_EXCLUSIVE_ITEMS.get(equipped_name) not in (None, chosen):
+                        p['equipment'][equipped_slot] = None
+                        p['inventory'][equipped_name] = p['inventory'].get(equipped_name, 0) + 1
+                        gear_put(p, p['gear_equipped'].pop(equipped_slot, None))
                 p['combat_class'] = chosen
+                await broadcast({'type':'state','player':public_player(p)})
                 save_character(p)
                 await status(pid)
                 await send(pid,{'type':'notice','text':f'Classe ativa: {chosen}. Os atributos foram atualizados.'})
+                continue
+            if kind == 'bank_transfer':
+                if p.get('name') and distance(p, {'x':BANK_KEEPER[0], 'y':BANK_KEEPER[1]}) > BANK_RANGE:
+                    await send(pid, {'type':'notice','text':'Aproxima-te da Guardiã do Armazém para transferir itens.'})
+                    continue
+                if not p.get('name'):
+                    await send(pid, {'type':'notice','text':'Carrega primeiro o heroi (N).'})
+                    continue
+                direction = str(msg.get('direction',''))
+                item = str(msg.get('item',''))
+                gear_id = str(msg.get('gear_id',''))
+                if direction not in ('deposit','withdraw') or not item or len(item) > 100:
+                    await send(pid, {'type':'notice','text':'Pedido de armazem invalido.'})
+                    continue
+                bank_items = p.setdefault('bank_items', {})
+                bank_gear = p.setdefault('bank_gear', [])
+                source = p['inventory'] if direction == 'deposit' else bank_items
+                target = bank_items if direction == 'deposit' else p['inventory']
+                source_gear = p['gear_bag'] if direction == 'deposit' else bank_gear
+                target_gear = bank_gear if direction == 'deposit' else p['gear_bag']
+                if item == 'Selo das Ruinas':
+                    await send(pid, {'type':'notice','text':'Itens de missao nao podem ser armazenados.'})
+                    continue
+                if int(source.get(item,0)) < 1:
+                    await send(pid, {'type':'notice','text':'Item indisponivel no compartimento de origem.'})
+                    continue
+                if item in ITEMS:
+                    gear = next((entry for entry in source_gear if entry.get('id') == gear_id and entry.get('name') == item), None)
+                    if not gear:
+                        await send(pid, {'type':'notice','text':'Equipamento individual nao encontrado.'})
+                        continue
+                    source_gear.remove(gear)
+                    target_gear.append(gear)
+                elif gear_id:
+                    await send(pid, {'type':'notice','text':'Identificador inesperado.'})
+                    continue
+                source[item] -= 1
+                if source[item] == 0:
+                    del source[item]
+                target[item] = int(target.get(item,0)) + 1
+                # Recompensa unica por personagem na primeira entrega ao armazem.
+                first_deposit = direction == 'deposit' and not p.get('bank_intro_done', False)
+                if first_deposit:
+                    p['bank_intro_done'] = True
+                    p['gold'] += 75
+                    p['inventory']['Pocao pequena'] = int(p['inventory'].get('Pocao pequena', 0)) + 2
+                # Segunda missao: deposito cumulativo de recursos, por personagem.
+                # A contagem e feita apenas nos depositos validos pelo servidor.
+                supply_completed_now = False
+                if direction == 'deposit' and p.get('bank_intro_done', False) and not p.get('bank_supply_done', False):
+                    goals = {'Fragmento de madeira': 5, 'Fragmento de rocha': 3}
+                    if item in goals:
+                        progress = p.setdefault('bank_supply_progress', {})
+                        progress[item] = min(goals[item], int(progress.get(item, 0)) + 1)
+                        if all(int(progress.get(resource, 0)) >= needed for resource, needed in goals.items()):
+                            p['bank_supply_done'] = True
+                            p['gold'] += 180
+                            p['xp'] += 120
+                            supply_completed_now = True
+                save_character(p)
+                await status(pid)
+                if supply_completed_now:
+                    await send(pid, {'type':'notice','text':'Guardiã: Reserva de Valedouro concluida! +180 ouro e +120 XP.'})
+                elif first_deposit:
+                    await send(pid, {'type':'notice','text':'Guardiã: Excelente! Missao A primeira entrega concluida! +75 ouro e +2 Pocoes pequenas.'})
+                else:
+                    await send(pid, {'type':'notice','text':('Guardado' if direction == 'deposit' else 'Retirado') + ': ' + item})
                 continue
             if kind in ('buy','equip','unequip','use','sell','equip_tool','unequip_tool'):
                 if not p['name']:
@@ -897,6 +1372,14 @@ async def socket(ws: WebSocket):
                         await send(pid,{'type':'notice','text':f'Compraste {item} por {price} ouro.'})
                     else: await send(pid,{'type':'notice','text':'Ouro insuficiente.'})
                 elif kind=='equip' and item in ITEMS and p['inventory'].get(item,0)>0:
+                    required_class = CLASS_EXCLUSIVE_ITEMS.get(item)
+                    if required_class and p.get('combat_class', 'Guerreiro') != required_class:
+                        await send(pid, {'type':'notice','text':f'{item} exige a classe {required_class}. O equipamento foi preservado.'})
+                        continue
+                    required_level = EQUIPMENT_LEVEL_REQUIREMENTS.get(item, 1)
+                    if p['level'] < required_level:
+                        await send(pid, {'type':'notice','text':f'{item} exige nivel {required_level}. Nivel atual: {p["level"]}. O item continua na mochila.'})
+                        continue
                     gear_id = str(msg.get('gear_id','')) or None
                     chosen_gear = gear_take(p,item,gear_id)
                     if chosen_gear is None:
@@ -931,8 +1414,8 @@ async def socket(ws: WebSocket):
                 elif kind=='sell' and item in SELL_PRICES and distance(p,{'x':BLACKSMITH[0],'y':BLACKSMITH[1]})<=90:
                     try: quantity=int(msg.get('quantity',1))
                     except (ValueError,TypeError): quantity=0
-                    if quantity not in (1,5,10,20,50):
-                        await send(pid,{'type':'notice','text':'Lote invalido: escolhe 1, 5, 10, 20 ou 50.'})
+                    if quantity < 1 or quantity > 9999:
+                        await send(pid,{'type':'notice','text':'Quantidade invalida: escolhe entre 1 e 9999.'})
                     elif p['inventory'].get(item,0)<quantity:
                         await send(pid,{'type':'notice','text':f'So tens {p["inventory"].get(item,0)}x {item}; lote pedido: {quantity}.'})
                     else:
@@ -1172,7 +1655,43 @@ async def socket(ws: WebSocket):
                                 p['hp'] = p['max_hp']
                             await send(pid, {'type':'notice','text':'Sino Partido purificado! 700 XP, 600 ouro e 3 fragmentos antigos.'})
                         elif stage == 4:
-                            await send(pid, {'type':'notice','text':'Cripta purificada novamente! Sem duplicar o premio unico.'})
+                            # Repeatable reward, server-only. Unique first-clear reward remains untouched.
+                            repeat_gold = 80
+                            repeat_xp = 60
+                            p['gold'] += repeat_gold
+                            p['xp'] += repeat_xp
+                            found_fragment = random.random() < 0.20
+                            if found_fragment:
+                                p['inventory']['Fragmento de metal antigo'] = p['inventory'].get('Fragmento de metal antigo', 0) + 1
+                            while p['xp'] >= p['level'] * 100:
+                                p['xp'] -= p['level'] * 100
+                                p['level'] += 1
+                                p['max_hp'] += 10
+                                p['hp'] = p['max_hp']
+                            # Rare equipment is granted only by the server, with a unique gear id.
+                            class_rewards = CRYPT_CLASS_SETS.get(p.get('combat_class', 'Guerreiro'), CRYPT_CLASS_SETS['Guerreiro'])
+                            reward_suffix = ' + 1 fragmento antigo raro!' if found_fragment else ''
+                            p['crypt_repeat_clears'] = int(p.get('crypt_repeat_clears', 0)) + 1
+                            won_any_gear = False
+                            for item_name, chance in zip(class_rewards, (0.08, 0.06, 0.04)):
+                                if random.random() < chance:
+                                    award_crypt_gear(p, item_name)
+                                    won_any_gear = True
+                                    reward_suffix += ' + ' + item_name.upper() + ' (raro)!'
+                            if won_any_gear:
+                                p['crypt_dry_streak'] = 0
+                            else:
+                                p['crypt_dry_streak'] = int(p.get('crypt_dry_streak', 0)) + 1
+                                if p['crypt_dry_streak'] >= 8:
+                                    missing = crypt_missing_class_items(p)
+                                    # Prioritize uncollected pieces; if set is complete,
+                                    # award one random class piece, never another class's.
+                                    guaranteed = random.choice(missing if missing else class_rewards)
+                                    award_crypt_gear(p, guaranteed)
+                                    p['crypt_dry_streak'] = 0
+                                    reward_suffix += ' + RECOMPENSA GARANTIDA: ' + guaranteed.upper() + '!'
+                            progress = 8 - int(p['crypt_dry_streak'])
+                            await send(pid, {'type':'notice','text':f'Cripta purificada novamente! +{repeat_gold} ouro, +{repeat_xp} XP.{reward_suffix} Protecao de saque: {progress} repeticoes sem equipamento ate a garantia.'})
                         else:
                             await send(pid, {'type':'notice','text':f'Sala {stage}/4 concluida! A sala {stage+1}/4 foi aberta automaticamente.'})
                     else:
@@ -1182,7 +1701,14 @@ async def socket(ws: WebSocket):
             elif kind == 'interact':
                 # Primeiro capitulo da Cripta do Sino Partido: pista ambiental
                 # validada no servidor; nunca aceitar posicoes enviadas pelo cliente.
-                if p.get('crypt_quest') == 'completed' and math.hypot(p['x']-1500., p['y']-1040.) <= 175.:
+                if p.get('bell_echo_quest') == 'completed' and p.get('rune_ruins_quest','locked') == 'active' and math.hypot(p['x']-1500., p['y']-1040.) <= 175.:
+                    p['rune_ruins_quest'] = 'ready'
+                    if p['name']: save_character(p)
+                    await status(pid)
+                    await send(pid, {'type':'npc','name':'Pedra Runica','text':'As marcas da pedra respondem ao Eco do Sino. Uma inscricao aponta para as profundezas de Valedouro. Regressa a Tessa.'})
+                elif p.get('rune_ruins_quest') == 'ready' and math.hypot(p['x']-1500., p['y']-1040.) <= 175.:
+                    await send(pid, {'type':'npc','name':'Pedra Runica','text':'A inscricao foi copiada. Regressa a Tessa para concluir a investigacao.'})
+                elif p.get('crypt_quest') == 'completed' and math.hypot(p['x']-1500., p['y']-1040.) <= 175.:
                     await send(pid, {'type':'npc','name':'Portal da Cripta','text':'O selo foi quebrado. Pressiona K para entrar na Cripta do Sino Partido.'})
                 elif p.get('crypt_quest') == 'active' and math.hypot(p['x']-1500., p['y']-1040.) <= 175.:
                     p['crypt_quest'] = 'investigated'
@@ -1273,8 +1799,74 @@ async def socket(ws: WebSocket):
                     if p['name']: save_character(p)
                     await status(pid)
                     await send(pid, {'type':'npc','name':'Tessa','text':'O Sino Partido guarda um segredo. Recebeste 400 XP, 300 ouro e 2 fragmentos antigos. A Cripta sera a nossa proxima expedicao.'})
-                elif p.get('crypt_quest') == 'completed':
-                    await send(pid, {'type':'npc','name':'Tessa','text':'A primeira pista da Cripta foi descoberta. Prepara-te para a expedicao.'})
+                elif p.get('crypt_quest') == 'completed' and not p.get('dungeon_claimed', False):
+                    await send(pid, {'type':'npc','name':'Tessa','text':'A primeira pista da Cripta foi descoberta. Vence o Guardiao do Sino Partido e regressa para uma nova missao.'})
+                elif p.get('crypt_quest') == 'completed' and p.get('bell_echo_quest','locked') == 'locked':
+                    p['bell_echo_quest'] = 'active'
+                    save_character(p)
+                    await status(pid)
+                    await send(pid, {'type':'npc','name':'Tessa','text':'O Eco do Sino: traz-me 3 Fragmentos de metal antigo para estudar o som da reliquia. Regressa quando os tiveres na mochila.'})
+                elif p.get('bell_echo_quest') == 'active':
+                    have = int(p['inventory'].get('Fragmento de metal antigo', 0))
+                    if have >= 3:
+                        p['inventory']['Fragmento de metal antigo'] = have - 3
+                        if p['inventory']['Fragmento de metal antigo'] == 0:
+                            del p['inventory']['Fragmento de metal antigo']
+                        p['bell_echo_quest'] = 'completed'
+                        p['gold'] += 240
+                        p['xp'] += 180
+                        p['inventory']['Pocao pequena'] = p['inventory'].get('Pocao pequena', 0) + 2
+                        while p['xp'] >= p['level'] * 100:
+                            p['xp'] -= p['level'] * 100
+                            p['level'] += 1
+                            p['max_hp'] += 10
+                            p['hp'] = p['max_hp']
+                        save_character(p)
+                        await status(pid)
+                        await send(pid, {'type':'npc','name':'Tessa','text':'O Eco do Sino foi estudado! Recebeste 180 XP, 240 ouro e 2 pocoes. As runas revelam um novo misterio.'})
+                    else:
+                        await send(pid, {'type':'npc','name':'Tessa','text':f'O Eco do Sino: tens {have}/3 Fragmentos de metal antigo na mochila. Os guardados no armazem nao contam para a entrega.'})
+                elif p.get('bell_echo_quest') == 'completed' and p.get('rune_ruins_quest','locked') == 'locked':
+                    p['rune_ruins_quest'] = 'active'
+                    if p['name']: save_character(p)
+                    await status(pid)
+                    await send(pid, {'type':'npc','name':'Tessa','text':'As Pedras que Cantam: regressa ao portal das ruinas a sudeste, junto a Cripta. Aproxima-te e pressiona E para ler a inscricao.'})
+                elif p.get('rune_ruins_quest') == 'active':
+                    await send(pid, {'type':'npc','name':'Tessa','text':'Vai ate ao portal das ruinas, junto a Cripta, e usa E para examinar a Pedra Runica.'})
+                elif p.get('rune_ruins_quest') == 'ready':
+                    p['rune_ruins_quest'] = 'completed'
+                    p['gold'] += 300
+                    p['xp'] += 250
+                    while p['xp'] >= p['level'] * 100:
+                        p['xp'] -= p['level'] * 100
+                        p['level'] += 1
+                        p['max_hp'] += 10
+                        p['hp'] = p['max_hp']
+                    if p['name']: save_character(p)
+                    await status(pid)
+                    await send(pid, {'type':'npc','name':'Tessa','text':'As Pedras que Cantam concluida! Recebeste 250 XP e 300 ouro. A inscricao sera a chave da proxima expedicao.'})
+                elif p.get('rune_ruins_quest') == 'completed' and p.get('rune_watch_quest','locked') == 'locked':
+                    p['rune_watch_quest'] = 'active'
+                    p['rune_watch_kills'] = 0
+                    save_character(p)
+                    await status(pid)
+                    await send(pid, {'type':'npc','name':'Tessa','text':'Vigilia das Runas: os saqueadores querem roubar a inscricao. Derrota 5 saqueadores nas estradas e regressa a mim.'})
+                elif p.get('rune_watch_quest') == 'active':
+                    await send(pid, {'type':'npc','name':'Tessa','text':f'Vigilia das Runas: {int(p.get("rune_watch_kills",0))}/5 saqueadores derrotados. Continua a proteger Valedouro.'})
+                elif p.get('rune_watch_quest') == 'ready':
+                    p['rune_watch_quest'] = 'completed'
+                    p['gold'] += 350
+                    p['xp'] += 300
+                    while p['xp'] >= p['level'] * 100:
+                        p['xp'] -= p['level'] * 100
+                        p['level'] += 1
+                        p['max_hp'] += 10
+                        p['hp'] = p['max_hp']
+                    save_character(p)
+                    await status(pid)
+                    await send(pid, {'type':'npc','name':'Tessa','text':'Vigilia das Runas concluida! Recebeste 300 XP e 350 ouro. A inscricao esta protegida.'})
+                elif p.get('rune_watch_quest') == 'completed':
+                    await send(pid, {'type':'npc','name':'Tessa','text':'A inscricao esta segura. O proximo capitulo levar-nos-a mais longe.'})
                 elif p['quest']=='completed':
                     await send(pid,{'type':'npc','name':'Tessa','text':'Obrigada por protegeres a vila e explorares a floresta!'})
                 else:
@@ -1382,12 +1974,12 @@ async def socket(ws: WebSocket):
                 special = kind in ('skill', 'class_skill')
                 class_special = kind == 'class_skill'
                 class_name_selected = p.get('combat_class', 'Guerreiro')
-                class_specs = {'Guerreiro': ('Corte Heroico', 1.85, 80, 14.0), 'Mago': ('Explosao Arcana', 2.30, 115, 17.0), 'Arqueiro': ('Flecha Precisa', 2.00, 145, 15.0)}
+                class_specs = {'Guerreiro': ('Corte Heroico', 1.85, 80, 7.0), 'Mago': ('Explosao Arcana', 2.30, 115, 7.0), 'Arqueiro': ('Flecha Precisa', 2.00, 145, 7.0)}
                 class_label, class_mult, class_range, class_cd = class_specs.get(class_name_selected, class_specs['Guerreiro'])
                 if p['hp'] <= 0: continue
                 if special:
                     # Cooldown is authoritative, per connected character, and cannot be bypassed by the client.
-                    remaining = (class_cd - (now - p.get('last_class_skill', -1e9))) if class_special else (12.0 - (now - p.get('last_skill', -1e9)))
+                    remaining = (class_cd - (now - p.get('last_class_skill', -1e9))) if class_special else (9.0 - (now - p.get('last_skill', -1e9)))
                     if remaining > 0:
                         await send(pid, {'type':'notice','text':f'{class_label if class_special else "Golpe Arcano"} disponivel em {remaining:.1f}s.'})
                         continue
@@ -1425,6 +2017,15 @@ async def socket(ws: WebSocket):
                 else:
                     p['last_attack'] = now
                 damage=max(1, 17+p['level']*3+bonuses(p)[0])
+                traits = class_combat_traits(p)
+                critical_hit = (not special and traits['archer_critical'] > 0
+                                and random.random() < traits['archer_critical'])
+                if critical_hit:
+                    damage = max(1, round(damage * 1.5))
+                    await send(pid, {'type':'notice','text':'CRITICO! O Arqueiro causou +50% de dano.'})
+                if not special and traits['mage_mana_on_hit'] and p.get('mana', 0) < p.get('max_mana', 100):
+                    p['mana'] = min(p.get('max_mana', 100), p.get('mana', 0) + traits['mage_mana_on_hit'])
+                    await status(pid)
                 if special:
                     multiplier = class_mult if class_special else COMBAT_CLASSES.get(p.get('combat_class','Guerreiro'), COMBAT_CLASSES['Guerreiro'])['skill_mult']
                     # Maestria: +5% de dano por nivel (maximo 5).
@@ -1440,7 +2041,7 @@ async def socket(ws: WebSocket):
                             await send(pid, {'type':'notice','text':f'Maestria {mastery_key}: nivel {(hits + 1) // 8}! +{((hits + 1) // 8) * 5}% dano.'})
                     save_character(p)
                     await status(pid)
-                    await broadcast({'type':'skill_cast','x':m['x'],'y':m['y'],'source_x':p['x'],'source_y':p['y'],'attacker_id':pid,'damage':damage, 'class_skill':class_special, 'class_name':class_name_selected, 'label':class_label if class_special else 'GOLPE ARCANO', 'cooldown':class_cd if class_special else 12.0})
+                    await broadcast({'type':'skill_cast','x':m['x'],'y':m['y'],'source_x':p['x'],'source_y':p['y'],'attacker_id':pid,'damage':damage, 'class_skill':class_special, 'class_name':class_name_selected, 'label':class_label if class_special else 'GOLPE ARCANO', 'cooldown':class_cd if class_special else 9.0})
                 targets = [m]
                 if class_special and class_name_selected in ('Guerreiro', 'Mago'):
                     # Server-side area targeting; all enemies must be alive and within the cast range.
@@ -1481,9 +2082,9 @@ async def socket(ws: WebSocket):
                             m.setdefault('effects', {})['slow'] = {'until':now + (2.0 if m['kind'] == 'guardiao' else 4.0)}
                     m['hp']=max(0,m['hp']-target_damage)
                     await send(pid,{'type':'notice','text':f'{m["kind"].capitalize()}: -{target_damage} HP'})
-                    await broadcast({'type':'combat_hit','target_id':m['id'],'x':m['x'],'y':m['y'],'damage':target_damage,'attacker_id':pid})
+                    await broadcast({'type':'combat_hit','target_id':m['id'],'x':m['x'],'y':m['y'],'damage':target_damage,'attacker_id':pid,'critical':bool(critical_hit and target_index == 0)})
                     if m['hp']==0:
-                        m['alive']=False; m['respawn_at']=now+(180 if m['kind']=='guardiao' else 9)
+                        m['alive']=False; m['respawn_at']=now+(300 if m['kind']=='guardiao_tempestade' else (180 if m['kind']=='guardiao' else 9))
                         await award_monster_kill(pid, p, m)
                 if p['name']: save_character(p)
                 if technique_active: await status(pid)
