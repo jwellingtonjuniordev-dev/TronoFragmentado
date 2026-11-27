@@ -1,6 +1,7 @@
 """Testes de backup pre-autenticacao, usando somente SQLite temporario."""
 import json
 import sqlite3
+from contextlib import closing
 import sys
 import tempfile
 import unittest
@@ -14,7 +15,7 @@ class MigrationBackupTests(unittest.TestCase):
     def test_backup_preserves_legacy_characters_and_original(self):
         with tempfile.TemporaryDirectory() as tmp:
             db_path = Path(tmp) / "characters.sqlite3"
-            with sqlite3.connect(db_path) as db:
+            with closing(sqlite3.connect(db_path)) as db, db:
                 db.execute("CREATE TABLE characters (name TEXT PRIMARY KEY, data TEXT NOT NULL)")
                 db.execute("INSERT INTO characters VALUES (?,?)",
                            ("John", json.dumps({"level": 7, "combat_class": "Guerreiro"})))
@@ -25,7 +26,7 @@ class MigrationBackupTests(unittest.TestCase):
             self.assertEqual(report["characters"][0]["level"], 7)
             self.assertTrue(Path(report["backup"]).exists())
             self.assertTrue(Path(report["report"]).exists())
-            with sqlite3.connect(db_path) as db:
+            with closing(sqlite3.connect(db_path)) as db, db:
                 self.assertEqual(db.execute("SELECT COUNT(*) FROM characters").fetchone()[0], 1)
 
     def test_missing_database_does_not_create_database(self):
