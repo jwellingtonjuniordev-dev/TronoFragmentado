@@ -1131,7 +1131,7 @@ async def socket(ws: WebSocket):
         await status(pid)
         await broadcast({'type':'join','player':public_player(p)})
     if require_auth:
-        await send(pid, {'type':'auth_required', 'text':'Inicia sessao para entrar no mundo.'})
+        await ws.send_json({'type':'auth_required', 'text':'Inicia sessao para entrar no mundo.'})
     else:
         await enter_world()
     try:
@@ -1143,24 +1143,24 @@ async def socket(ws: WebSocket):
             if kind == 'auth_login':
                 username, password = msg.get('username'), msg.get('password')
                 if not isinstance(username, str) or not isinstance(password, str) or len(username) > 32 or len(password) > 1024:
-                    await send(pid, {'type':'auth_error', 'text':'Credenciais invalidas.'})
+                    await ws.send_json({'type':'auth_error', 'text':'Credenciais invalidas.'})
                     continue
                 verified = authenticate(DB_PATH, username, password)
                 if verified is None:
-                    await send(pid, {'type':'auth_error', 'text':'Credenciais invalidas.'})
+                    await ws.send_json({'type':'auth_error', 'text':'Credenciais invalidas.'})
                     continue
                 account_id = verified
-                await send(pid, {'type':'auth_ok', 'token':issue_session(DB_PATH, account_id)})
+                await ws.send_json({'type':'auth_ok', 'token':issue_session(DB_PATH, account_id)})
                 await enter_world()
                 continue
             if kind == 'auth_resume':
                 account_id = resolve_session(DB_PATH, msg.get('token'))
-                await send(pid, {'type':'auth_ok'} if account_id else {'type':'auth_error', 'text':'Sessao invalida.'})
+                await ws.send_json({'type':'auth_ok'} if account_id else {'type':'auth_error', 'text':'Sessao invalida.'})
                 if account_id:
                     await enter_world()
                 continue
             if require_auth and account_id is None:
-                await send(pid, {'type':'auth_required', 'text':'Autenticacao necessaria.'})
+                await ws.send_json({'type':'auth_required', 'text':'Autenticacao necessaria.'})
                 continue
             if kind == 'list_heroes':
                 await send(pid, {'type': 'hero_list', 'heroes': [h for h in list_saved_heroes() if not require_auth or owns_character(DB_PATH, account_id, h['name'])]})
