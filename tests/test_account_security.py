@@ -1,6 +1,7 @@
 """Testes de segurança sem modificar a base de dados real."""
 import os
 import sqlite3
+from contextlib import closing
 import sys
 import tempfile
 import unittest
@@ -14,7 +15,7 @@ class AccountSecurityTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.db = os.path.join(self.tmp.name, "characters.sqlite3")
-        with sqlite3.connect(self.db) as conn:
+        with closing(sqlite3.connect(self.db)) as conn, conn:
             conn.execute("CREATE TABLE characters (name TEXT PRIMARY KEY, data TEXT NOT NULL)")
             conn.execute("INSERT INTO characters VALUES ('John', '{}')")
         init_accounts(self.db)
@@ -23,7 +24,7 @@ class AccountSecurityTests(unittest.TestCase):
         self.tmp.cleanup()
 
     def test_preserves_legacy_character(self):
-        with sqlite3.connect(self.db) as conn:
+        with closing(sqlite3.connect(self.db)) as conn, conn:
             self.assertEqual(conn.execute("SELECT name FROM characters").fetchone()[0], "John")
 
     def test_password_and_case_insensitive_username(self):
