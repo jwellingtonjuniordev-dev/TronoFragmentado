@@ -10,7 +10,7 @@ import uuid
 import sqlite3
 import os
 from pathlib import Path
-from contextlib import asynccontextmanager, suppress
+from contextlib import asynccontextmanager, suppress, closing
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from account_security import authenticate, issue_session, resolve_session, owns_character, claim_new_character
 
@@ -429,7 +429,7 @@ def character_name_exists(name):
 
 def list_saved_heroes():
     # Consulta apenas nomes e classes, sem expor inventario ou progresso completo.
-    with sqlite3.connect(DB_PATH) as db:
+    with closing(sqlite3.connect(DB_PATH)) as db:
         rows = db.execute('SELECT name, data FROM characters ORDER BY name COLLATE NOCASE').fetchall()
     result = []
     for name, raw in rows:
@@ -441,7 +441,7 @@ def list_saved_heroes():
     return result
 
 def load_character(name):
-    with sqlite3.connect(DB_PATH) as db:
+    with closing(sqlite3.connect(DB_PATH)) as db:
         row = db.execute('SELECT data FROM characters WHERE name=? COLLATE NOCASE',(name,)).fetchone()
     return json.loads(row[0]) if row else None
 
