@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 from contextlib import asynccontextmanager, suppress, closing
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from account_security import authenticate, issue_session, resolve_session, owns_character, claim_new_character
+from account_security import authenticate, issue_session, resolve_session, owns_character, claim_new_character, revoke_session
 
 WIDTH, HEIGHT = 1920., 1280.
 SPEED_PER_TICK, RADIUS = 14., 11.
@@ -1109,6 +1109,7 @@ async def socket(ws: WebSocket):
     pid = str(uuid.uuid4())
     require_auth = os.environ.get('TRONO_REQUIRE_AUTH', '0') == '1'
     account_id = None
+    session_token = None
     p = {'id':pid, 'x':480., 'y':360., 'hp':100, 'max_hp':100, 'level':1, 'xp':0,
          'gold':0, 'inventory':{}, 'quest':'not_started', 'kills':0,
          'facing':'down', 'walking':False, 'last_attack':0.,
@@ -1150,15 +1151,27 @@ async def socket(ws: WebSocket):
                     await ws.send_json({'type':'auth_error', 'text':'Credenciais invalidas.'})
                     continue
                 account_id = verified
-                await ws.send_json({'type':'auth_ok', 'token':issue_session(DB_PATH, account_id)})
+                session_token = issue_session(DB_PATH, account_id)
+                await ws.send_json({'type':'auth_ok', 'token':session_token})
                 await enter_world()
                 continue
             if kind == 'auth_resume':
                 account_id = resolve_session(DB_PATH, msg.get('token'))
+                session_token = msg.get('token') if account_id else None
                 await ws.send_json({'type':'auth_ok'} if account_id else {'type':'auth_error', 'text':'Sessao invalida.'})
                 if account_id:
                     await enter_world()
                 continue
+            if kind == 'auth_logout':
+                if account_id is None or not session_token:
+                    await ws.send_json({'type':'auth_error', 'text':'Sessao nao autenticada.'})
+                    continue
+                revoke_session(DB_PATH, session_token)
+                session_token = None
+                account_id = None
+                await ws.send_json({'type':'auth_logged_out'})
+                await ws.close(code=1000)
+                break
             if require_auth and account_id is None:
                 await ws.send_json({'type':'auth_required', 'text':'Autenticacao necessaria.'})
                 continue
