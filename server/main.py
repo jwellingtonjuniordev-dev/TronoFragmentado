@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 from contextlib import asynccontextmanager, suppress
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from account_security import authenticate, issue_session, resolve_session, owns_character, claim_new_character
 
 WIDTH, HEIGHT = 1920., 1280.
 SPEED_PER_TICK, RADIUS = 14., 11.
@@ -1106,6 +1107,8 @@ def health():
 async def socket(ws: WebSocket):
     await ws.accept()
     pid = str(uuid.uuid4())
+    require_auth = os.environ.get('TRONO_REQUIRE_AUTH', '0') == '1'
+    account_id = None
     p = {'id':pid, 'x':480., 'y':360., 'hp':100, 'max_hp':100, 'level':1, 'xp':0,
          'gold':0, 'inventory':{}, 'quest':'not_started', 'kills':0,
          'facing':'down', 'walking':False, 'last_attack':0.,
@@ -1127,8 +1130,27 @@ async def socket(ws: WebSocket):
             if not isinstance(msg, dict):
                 continue
             kind = msg.get('type')
+            if kind == 'auth_login':
+                username, password = msg.get('username'), msg.get('password')
+                if not isinstance(username, str) or not isinstance(password, str) or len(username) > 32 or len(password) > 1024:
+                    await send(pid, {'type':'auth_error', 'text':'Credenciais invalidas.'})
+                    continue
+                verified = authenticate(DB_PATH, username, password)
+                if verified is None:
+                    await send(pid, {'type':'auth_error', 'text':'Credenciais invalidas.'})
+                    continue
+                account_id = verified
+                await send(pid, {'type':'auth_ok', 'token':issue_session(DB_PATH, account_id)})
+                continue
+            if kind == 'auth_resume':
+                account_id = resolve_session(DB_PATH, msg.get('token'))
+                await send(pid, {'type':'auth_ok'} if account_id else {'type':'auth_error', 'text':'Sessao invalida.'})
+                continue
+            if require_auth and account_id is None:
+                await send(pid, {'type':'auth_required', 'text':'Autenticacao necessaria.'})
+                continue
             if kind == 'list_heroes':
-                await send(pid, {'type': 'hero_list', 'heroes': list_saved_heroes()})
+                await send(pid, {'type': 'hero_list', 'heroes': [h for h in list_saved_heroes() if not require_auth or owns_character(DB_PATH, account_id, h['name'])]})
                 continue
             if kind == 'check_hero_name':
                 # Verificacao no servidor: a interface nao decide se um nome e unico.
@@ -1145,6 +1167,12 @@ async def socket(ws: WebSocket):
                     await send(pid,{'type':'notice','text':'Nome: 3-20 letras/numeros/underscore.'}); continue
                 if any(other['name']==name for other in players.values() if other['id']!=pid):
                     await send(pid,{'type':'notice','text':'Esse heroi ja esta ligado.'}); continue
+                if require_auth and kind == 'select_hero' and not owns_character(DB_PATH, account_id, name):
+                    await send(pid, {'type':'notice','text':'Heroi nao pertence a esta conta.'})
+                    continue
+                if require_auth and kind == 'name' and character_name_exists(name) and not owns_character(DB_PATH, account_id, name):
+                    await send(pid, {'type':'notice','text':'Heroi nao pertence a esta conta.'})
+                    continue
                 # Selecionar nunca cria um heroi e nunca herda dados do anterior.
                 data = load_character(name)
                 if kind == 'select_hero' and data is None:
@@ -1198,6 +1226,8 @@ async def socket(ws: WebSocket):
                 removed_incompatible = reconcile_class_equipment(p)
                 if removed_incompatible:
                     await send(pid, {'type':'notice','text':'Equipamento de outra classe movido para a mochila: ' + ', '.join(removed_incompatible)})
+                if require_auth and data is None:
+                    claim_new_character(DB_PATH, account_id, name)
                 save_character(p)
                 await send(pid,{'type':'notice','text':f'Heroi {name} carregado e guardado.'})
                 await send(pid, {'type':'hero_selected','name':p['name']})
