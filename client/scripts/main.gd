@@ -856,6 +856,16 @@ func _ask_sell(item: String, gear_id: String = "") -> void:
 func _equip_label(value: Variant) -> String:
 	return "Nao equipado" if value == null or str(value) == "" else str(value)
 
+func _cancel_hero_creation() -> void:
+	# ESC cancela a criação em qualquer etapa, sem alterar o herói ativo.
+	pending_new_hero_name = ""
+	name_input.clear()
+	name_input.hide()
+	class_picker.hide()
+	name_input.release_focus()
+	class_picker.release_focus()
+	notice = "Criacao de heroi cancelada."
+
 func _submit_name(value: String) -> void:
 	# Primeiro consulta o servidor; nunca escolhe classe antes de validar o nome.
 	if socket.get_ready_state() != WebSocketPeer.STATE_OPEN:
@@ -963,6 +973,11 @@ func _navigate_paged_panel(direction: int) -> bool:
 	return true
 
 func _input(event: InputEvent) -> void:
+	# A caixa LineEdit consome eventos de teclado; tratar ESC antes da GUI.
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE and (name_input.visible or class_picker.visible):
+		_cancel_hero_creation()
+		get_viewport().set_input_as_handled()
+		return
 	# O menu de herois tem prioridade sobre a navegacao/combate por clique.
 	# Nao marcar o evento como handled: o OptionButton e o seu PopupMenu
 	# precisam de receber o clique atraves do sistema de GUI do Godot.
@@ -1893,6 +1908,9 @@ func _process(delta: float) -> void:
 			continue
 		match payload.get("type", ""):
 			"hero_name_check":
+				# Respostas atrasadas não podem reabrir a criação cancelada.
+				if not name_input.visible:
+					continue
 				var candidate := str(payload.get("name", ""))
 				if bool(payload.get("exists", false)):
 					notice = "O nome '" + candidate + "' ja existe. Escolhe outro nome."
@@ -2136,8 +2154,9 @@ func _process(delta: float) -> void:
 		saved_hero_picker.visible = not saved_hero_picker.visible
 		if saved_hero_picker.visible and socket.get_ready_state() == WebSocketPeer.STATE_OPEN:
 			socket.send_text(JSON.stringify({"type":"list_heroes"}))
-	if _pressed_once(KEY_N):
+	if _pressed_once(KEY_N) and not name_input.visible and not class_picker.visible:
 		saved_hero_picker.hide()
+		name_input.clear()
 		name_input.show()
 		class_picker.hide()
 		pending_new_hero_name = ""
