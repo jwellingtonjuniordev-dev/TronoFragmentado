@@ -78,3 +78,13 @@ def owns_character(db_path, account_id, name):
     with closing(sqlite3.connect(db_path)) as db, db:
         return db.execute("SELECT 1 FROM character_owners WHERE account_id=? AND character_name=?",
                           (account_id, name)).fetchone() is not None
+
+
+def revoke_session(db_path, token):
+    """Revoga um token especifico sem afetar outras sessoes da conta."""
+    if not isinstance(token, str) or not (1 <= len(token) <= 256):
+        return False
+    digest = hashlib.sha256(token.encode("utf-8")).hexdigest()
+    with closing(sqlite3.connect(db_path)) as db, db:
+        cursor = db.execute("DELETE FROM account_sessions WHERE token_hash=?", (digest,))
+        return cursor.rowcount == 1
