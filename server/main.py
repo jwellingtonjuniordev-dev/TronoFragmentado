@@ -1118,12 +1118,22 @@ async def socket(ws: WebSocket):
             p['x'],p['y'] = candidate
             break
     fresh_hero_template = copy.deepcopy(p)
-    connections[pid], players[pid] = ws, p
-    await send(pid, {'type':'welcome','id':pid,'players':[public_player(v) for v in players.values()],
-                     'monsters':public_monsters()})
-    await send(pid, {'type':'notice','text':'Pressiona Z para escolher um heroi existente, ou N para criar um novo.'})
-    await status(pid)
-    await broadcast({'type':'join','player':public_player(p)})
+    joined = False
+    async def enter_world():
+        nonlocal joined
+        if joined:
+            return
+        connections[pid], players[pid] = ws, p
+        joined = True
+        await send(pid, {'type':'welcome','id':pid,'players':[public_player(v) for v in players.values()],
+                         'monsters':public_monsters()})
+        await send(pid, {'type':'notice','text':'Pressiona Z para escolher um heroi existente, ou N para criar um novo.'})
+        await status(pid)
+        await broadcast({'type':'join','player':public_player(p)})
+    if require_auth:
+        await send(pid, {'type':'auth_required', 'text':'Inicia sessao para entrar no mundo.'})
+    else:
+        await enter_world()
     try:
         while True:
             msg = await ws.receive_json()
@@ -1141,10 +1151,13 @@ async def socket(ws: WebSocket):
                     continue
                 account_id = verified
                 await send(pid, {'type':'auth_ok', 'token':issue_session(DB_PATH, account_id)})
+                await enter_world()
                 continue
             if kind == 'auth_resume':
                 account_id = resolve_session(DB_PATH, msg.get('token'))
                 await send(pid, {'type':'auth_ok'} if account_id else {'type':'auth_error', 'text':'Sessao invalida.'})
+                if account_id:
+                    await enter_world()
                 continue
             if require_auth and account_id is None:
                 await send(pid, {'type':'auth_required', 'text':'Autenticacao necessaria.'})
@@ -2122,6 +2135,7 @@ async def socket(ws: WebSocket):
     except (WebSocketDisconnect, RuntimeError, ValueError):
         pass
     finally:
-        if p['name']: save_character(p)
-        connections.pop(pid,None); players.pop(pid,None)
-        await broadcast({'type':'leave','id':pid})
+        if joined:
+            if p['name']: save_character(p)
+            connections.pop(pid,None); players.pop(pid,None)
+            await broadcast({'type':'leave','id':pid})
