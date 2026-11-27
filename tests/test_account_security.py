@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "server"))
 from account_security import (init_accounts, create_account, authenticate,
-                              issue_session, resolve_session, claim_new_character, owns_character)
+                              issue_session, resolve_session, revoke_session, claim_new_character, owns_character)
 
 class AccountSecurityTests(unittest.TestCase):
     def setUp(self):
@@ -45,6 +45,15 @@ class AccountSecurityTests(unittest.TestCase):
         self.assertFalse(owns_character(self.db, b, "Athena"))
         with self.assertRaises(sqlite3.IntegrityError):
             claim_new_character(self.db, b, "ATHENA")
+
+    def test_logout_revokes_only_selected_session(self):
+        account = create_account(self.db, "ContaTeste", "Senha-longa-1234!")
+        first = issue_session(self.db, account)
+        second = issue_session(self.db, account)
+        self.assertTrue(revoke_session(self.db, first))
+        self.assertIsNone(resolve_session(self.db, first))
+        self.assertEqual(resolve_session(self.db, second), account)
+        self.assertFalse(revoke_session(self.db, first))
 
     def test_password_policy(self):
         with self.assertRaises(ValueError):
